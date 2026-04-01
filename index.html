@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACME 発注処理システム</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3347;
+    --border2: #3d4260;
+    --accent: #4f7fff;
+    --accent2: #7c5cfc;
+    --green: #2dd4a7;
+    --amber: #f5a623;
+    --red: #ff4f6a;
+    --text: #e8eaf2;
+    --text2: #8b90a8;
+    --text3: #555a72;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Noto Sans JP', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-badge {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+  .header-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text2);
+    font-family: var(--mono);
+  }
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  /* Layout */
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr 320px;
+    height: calc(100vh - 52px);
+  }
+
+  /* Panel base */
+  .panel {
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .panel:last-child { border-right: none; }
+
+  .panel-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--text2);
+    text-transform: uppercase;
+    font-family: var(--mono);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  /* Upload zone */
+  .upload-zone {
+    margin: 16px;
+    border: 1.5px dashed var(--border2);
+    border-radius: 8px;
+    padding: 24px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--surface);
+  }
+  .upload-zone:hover, .upload-zone.drag {
+    border-color: var(--accent);
+    background: rgba(79,127,255,0.04);
+  }
+  .upload-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    opacity: 0.5;
+  }
+  .upload-label {
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 4px;
+  }
+  .upload-sub {
+    font-size: 10px;
+    color: var(--text3);
+    font-family: var(--mono);
+  }
+  #fileInput { display: none; }
+
+  /* Order list */
+  .order-item {
+    margin: 0 12px 6px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .order-item:hover { border-color: var(--border2); }
+  .order-item.active {
+    border-color: var(--accent);
+    background: rgba(79,127,255,0.06);
+  }
+  .order-item-name {
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .order-item-meta {
+    font-size: 10px;
+    color: var(--text2);
+    font-family: var(--mono);
+    display: flex;
+    gap: 8px;
+  }
+  .order-badge {
+    display: inline-block;
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-weight: 500;
+  }
+  .badge-pending { background: rgba(245,166,35,0.15); color: var(--amber); border: 1px solid rgba(245,166,35,0.3); }
+  .badge-done { background: rgba(45,212,167,0.12); color: var(--green); border: 1px solid rgba(45,212,167,0.25); }
+  .badge-ai { background: rgba(124,92,252,0.12); color: #a78bfa; border: 1px solid rgba(124,92,252,0.25); }
+
+  /* Center panel - form */
+  .center-panel {
+    background: var(--bg);
+    overflow-y: auto;
+  }
+
+  .form-section {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    text-transform: uppercase;
+    font-family: var(--mono);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .form-row.cols3 { grid-template-columns: 1fr 1fr 1fr; }
+  .form-row.cols4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .form-row.single { grid-template-columns: 1fr; }
+
+  .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .form-label {
+    font-size: 10px;
+    color: var(--text2);
+    font-family: var(--mono);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  .form-input, .form-select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 7px 10px;
+    color: var(--text);
+    font-size: 12px;
+    font-family: var(--sans);
+    transition: border-color 0.15s;
+    width: 100%;
+    -webkit-appearance: none;
+  }
+  .form-input:focus, .form-select:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(79,127,255,0.04);
+  }
+  .form-input.ai-filled {
+    border-color: rgba(124,92,252,0.4);
+    background: rgba(124,92,252,0.05);
+  }
+  .form-input.modified {
+    border-color: rgba(245,166,35,0.4);
+    background: rgba(245,166,35,0.04);
+  }
+
+  /* Window section */
+  .window-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 24px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .window-tab {
+    padding: 6px 14px;
+    border-radius: 5px 5px 0 0;
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--text2);
+    border: 1px solid transparent;
+    border-bottom: none;
+    transition: all 0.15s;
+    font-family: var(--mono);
+  }
+  .window-tab.active {
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--text);
+    border-bottom-color: var(--surface);
+    margin-bottom: -1px;
+  }
+  .window-tab:hover:not(.active) { color: var(--text); }
+
+  .add-window-btn {
+    padding: 6px 10px;
+    border-radius: 5px 5px 0 0;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--text3);
+    border: 1px dashed var(--border);
+    border-bottom: none;
+    background: transparent;
+    transition: all 0.15s;
+    line-height: 1;
+  }
+  .add-window-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* 要尺 result */
+  .yousyaku-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 12px;
+  }
+  .yousyaku-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .yousyaku-row:last-child { border-bottom: none; }
+  .yousyaku-label { font-size: 11px; color: var(--text2); font-family: var(--mono); }
+  .yousyaku-val {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    font-family: var(--mono);
+  }
+  .yousyaku-val.highlight {
+    color: var(--green);
+    font-size: 15px;
+  }
+  .yousyaku-formula {
+    font-size: 9px;
+    color: var(--text3);
+    font-family: var(--mono);
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    line-height: 1.8;
+  }
+
+  /* Right panel - preview/output */
+  .right-panel { background: var(--surface); }
+
+  .preview-order {
+    margin: 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    font-size: 11px;
+  }
+  .preview-title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+    font-family: var(--mono);
+  }
+  .preview-table th {
+    background: var(--surface2);
+    padding: 5px 7px;
+    text-align: left;
+    color: var(--text2);
+    font-weight: 500;
+    border: 1px solid var(--border);
+    font-size: 9px;
+    letter-spacing: 0.05em;
+  }
+  .preview-table td {
+    padding: 5px 7px;
+    border: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+  .preview-table td.highlight-cell {
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  /* Action buttons */
+  .action-bar {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .btn {
+    padding: 9px 16px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    font-family: var(--sans);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+  }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border2);
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { color: var(--text); border-color: var(--border2); }
+
+  /* AI processing overlay */
+  .ai-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,17,23,0.85);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .ai-overlay.show { display: flex; }
+  .ai-box {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    padding: 32px 40px;
+    text-align: center;
+    max-width: 320px;
+  }
+  .ai-spinner {
+    width: 36px;
+    height: 36px;
+    border: 2.5px solid var(--border2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .ai-label { font-size: 13px; color: var(--text); margin-bottom: 6px; font-weight: 500; }
+  .ai-sub { font-size: 11px; color: var(--text2); font-family: var(--mono); }
+
+  /* API key input */
+  .apikey-section {
+    margin: 12px;
+    padding: 12px 14px;
+    background: rgba(79,127,255,0.05);
+    border: 1px solid rgba(79,127,255,0.2);
+    border-radius: 6px;
+  }
+  .apikey-label { font-size: 10px; color: var(--text2); font-family: var(--mono); margin-bottom: 6px; }
+  .apikey-row { display: flex; gap: 6px; }
+  .apikey-input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 10px;
+    color: var(--text);
+    font-size: 11px;
+    font-family: var(--mono);
+  }
+  .apikey-input:focus { outline: none; border-color: var(--accent); }
+  .apikey-save {
+    padding: 6px 12px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 12px;
+    color: var(--text);
+    z-index: 300;
+    transform: translateY(60px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 320px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-color: rgba(45,212,167,0.4); }
+  .toast.error { border-color: rgba(255,79,106,0.4); }
+
+  /* Warning strip */
+  .warn-strip {
+    margin: 8px 12px;
+    padding: 8px 12px;
+    background: rgba(245,166,35,0.08);
+    border: 1px solid rgba(245,166,35,0.2);
+    border-radius: 5px;
+    font-size: 10px;
+    color: var(--amber);
+    font-family: var(--mono);
+    line-height: 1.6;
+  }
+
+  .divider { height: 1px; background: var(--border); margin: 0 12px; }
+
+  /* 印刷用スタイル */
+  @media print {
+    @page { size: A4 landscape; margin: 10mm 12mm; }
+    body { background: #fff !important; color: #000 !important; font-size: 11pt; }
+    .header, .layout > .panel:first-child, .layout > .panel:last-child,
+    .action-bar, .window-tabs, #emptyState, #previewEmpty,
+    .ai-overlay, .toast { display: none !important; }
+    .layout { display: block !important; height: auto !important; }
+    .center-panel { display: none !important; }
+    #printArea {
+      display: block !important;
+      padding: 0;
+      color: #000;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+    .po-title {
+      text-align: center;
+      font-size: 16pt;
+      font-weight: bold;
+      letter-spacing: 0.3em;
+      margin-bottom: 6mm;
+      border-bottom: 2px solid #000;
+      padding-bottom: 3mm;
+    }
+    .po-meta {
+      font-size: 9pt;
+      margin-bottom: 4mm;
+      display: flex;
+      justify-content: space-between;
+    }
+    .po-section { margin-bottom: 4mm; }
+    .po-section-title {
+      font-size: 9pt;
+      font-weight: bold;
+      border-left: 3px solid #000;
+      padding-left: 4px;
+      margin-bottom: 2mm;
+    }
+    .po-info-table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 4mm; }
+    .po-info-table th {
+      background: #f0f0f0;
+      border: 1px solid #aaa;
+      padding: 3px 6px;
+      font-weight: bold;
+      white-space: nowrap;
+      width: 80px;
+    }
+    .po-info-table td { border: 1px solid #aaa; padding: 3px 6px; }
+    .po-main-table { width: 100%; border-collapse: collapse; font-size: 8pt; }
+    .po-main-table th {
+      background: #e8e8e8;
+      border: 1px solid #888;
+      padding: 3px 2px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 7pt;
+    }
+    .po-main-table td {
+      border: 1px solid #aaa;
+      padding: 3px 2px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 8pt;
+    }
+    .po-main-table td.left { text-align: left; }
+    .po-yousyaku { font-weight: bold; font-size: 10pt; }
+    .po-total {
+      text-align: right;
+      font-size: 11pt;
+      font-weight: bold;
+      margin-top: 3mm;
+      border-top: 1px solid #000;
+      padding-top: 2mm;
+    }
+    .po-footer {
+      margin-top: 6mm;
+      font-size: 8pt;
+      border-top: 1px solid #ccc;
+      padding-top: 3mm;
+      display: flex;
+      justify-content: space-between;
+    }
+    .po-sign-box {
+      border: 1px solid #000;
+      width: 60mm;
+      height: 15mm;
+      display: inline-block;
+    }
+    .po-sender {
+      font-size: 9pt;
+      text-align: right;
+      line-height: 1.8;
+    }
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text3);
+    font-size: 12px;
+    gap: 8px;
+  }
+  .empty-icon { font-size: 32px; opacity: 0.3; }
+
+  /* Highlight for AI extracted fields */
+  .ai-tag {
+    font-size: 8px;
+    padding: 1px 5px;
+    background: rgba(124,92,252,0.15);
+    color: #a78bfa;
+    border-radius: 3px;
+    font-family: var(--mono);
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+
+  select option { background: var(--surface); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">
+    <span class="logo-badge">ACME</span>
+    発注処理システム
+  </div>
+  <div class="header-status">
+    <div class="status-dot"></div>
+    Claude API 接続中
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- Left: 案件リスト -->
+  <div class="panel" id="leftPanel">
+    <div class="panel-header">
+      案件リスト
+      <span style="color:var(--text3);font-size:9px;" id="orderCount">0件</span>
+    </div>
+
+    <div class="apikey-section">
+      <div class="apikey-label">Claude API Key</div>
+      <div class="apikey-row">
+        <input type="password" class="apikey-input" id="apiKeyInput" placeholder="sk-ant-..." />
+        <button class="apikey-save" onclick="saveApiKey()">保存</button>
+      </div>
+    </div>
+
+    <div style="padding:12px 12px 8px;">
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon">⬆</div>
+        <div class="upload-label">PDFをドロップ または クリック</div>
+        <div class="upload-sub">ACME発注書（複数可）</div>
+      </div>
+      <input type="file" id="fileInput" accept=".pdf,image/*" multiple onchange="handleFileSelect(event)">
+    </div>
+
+    <div id="orderList" style="flex:1;padding-bottom:12px;">
+      <!-- サンプルデータ -->
+    </div>
+  </div>
+
+  <!-- Center: 編集フォーム -->
+  <div class="center-panel panel" id="centerPanel">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">📋</div>
+      <div>案件を選択または PDFをアップロード</div>
+    </div>
+
+    <div id="formArea" style="display:none;">
+      <!-- 基本情報 -->
+      <div class="form-section">
+        <div class="section-title">顧客情報</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">お客様名 <span class="ai-tag">AI</span></label>
+            <input type="text" class="form-input ai-filled" id="f_name" oninput="markModified(this)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">フリガナ</label>
+            <input type="text" class="form-input ai-filled" id="f_kana" oninput="markModified(this)">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">電話番号 <span class="ai-tag">AI</span></label>
+            <input type="text" class="form-input ai-filled" id="f_tel" oninput="markModified(this)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">郵便番号 <span class="ai-tag">AI</span></label>
+            <input type="text" class="form-input ai-filled" id="f_zip" oninput="markModified(this)">
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="form-group">
+            <label class="form-label">住所 <span class="ai-tag">AI</span></label>
+            <input type="text" class="form-input ai-filled" id="f_address" oninput="markModified(this)">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">お買上店舗 <span class="ai-tag">AI</span></label>
+            <input type="text" class="form-input ai-filled" id="f_store" oninput="markModified(this)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">担当者 <span class="ai-tag">AI</span></label>
+            <input type="text" class="form-input ai-filled" id="f_staff" oninput="markModified(this)">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">配送方法 <span class="ai-tag">AI</span></label>
+            <select class="form-select" id="f_delivery">
+              <option value="customer">お客様直送</option>
+              <option value="store">店入れ</option>
+              <option value="contractor">取付業者直送</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">配送希望日</label>
+            <input type="text" class="form-input ai-filled" id="f_delivdate" oninput="markModified(this)">
+          </div>
+        </div>
+      </div>
+
+      <!-- 窓タブ -->
+      <div class="window-tabs" id="windowTabs"></div>
+
+      <div id="windowForm" class="form-section">
+        <!-- 動的に生成 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: プレビュー & 出力 -->
+  <div class="panel right-panel" id="rightPanel">
+    <div class="panel-header">発注書プレビュー</div>
+
+    <div class="empty-state" id="previewEmpty">
+      <div class="empty-icon">📄</div>
+      <div>案件を選択すると表示</div>
+    </div>
+
+    <div id="previewArea" style="display:none;flex:1;overflow-y:auto;">
+      <div class="preview-order" id="previewContent"></div>
+    </div>
+
+    <div class="action-bar" id="actionBar" style="display:none;">
+      <button class="btn btn-primary" onclick="generateOrder()">📤 発注書を生成・保存</button>
+      <button class="btn btn-secondary" onclick="exportPDF()">🖨 PDF出力（FAX用）</button>
+      <button class="btn btn-ghost" onclick="copyToClipboard()">📋 テキストコピー</button>
+    </div>
+  </div>
+</div>
+
+<!-- 印刷専用エリア -->
+<div id="printArea" style="display:none;"></div>
+
+<!-- AI処理中オーバーレイ -->
+<div class="ai-overlay" id="aiOverlay">
+  <div class="ai-box">
+    <div class="ai-spinner"></div>
+    <div class="ai-label" id="aiLabel">PDF解析中...</div>
+    <div class="ai-sub" id="aiSub">Claude APIが発注書を読み取っています</div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// 品番マスタ（ACME専用発注書作成フォームから）
+// ============================================================
+const FABRIC_MASTER = [
+  { id:13,  type:'ドレープ', maker:'LONDAY 22-4600 キナリ',      acme:'OLD TOWN',         repeat:0,    width:110, yoko:false, supplier:'リック',     hem:'3つ折', vAllowance:40, tassel:null,  note:'防炎ラベル要' },
+  { id:14,  type:'ドレープ', maker:'INOUEバリⅡ IV',             acme:'TRAVELODGE',       repeat:0,    width:150, yoko:false, supplier:'アイムス',    hem:'3つ折', vAllowance:40, tassel:null,  note:'形態安定記載' },
+  { id:15,  type:'ドレープ', maker:'INOUEバリⅡ BE',             acme:'TRAVELODGE',       repeat:0,    width:150, yoko:false, supplier:'アイムス',    hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:16,  type:'ドレープ', maker:'INOUEバリⅡ BR',             acme:'TRAVELODGE',       repeat:0,    width:150, yoko:false, supplier:'アイムス',    hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:17,  type:'ドレープ', maker:'INOUEバリⅡ DBR',            acme:'TRAVELODGE',       repeat:0,    width:150, yoko:false, supplier:'アイムス',    hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:18,  type:'ドレープ', maker:'INOUEバリⅡ GN',             acme:'TRAVELODGE',       repeat:0,    width:150, yoko:false, supplier:'アイムス',    hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:20,  type:'ドレープ', maker:'INOUEバリⅡ NB',             acme:'TRAVELODGE',       repeat:0,    width:150, yoko:false, supplier:'アイムス',    hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:21,  type:'ドレープ', maker:'INOUEバリⅡ GRY',            acme:'TRAVELODGE',       repeat:0,    width:150, yoko:false, supplier:'アイムス',    hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:22,  type:'レース',   maker:'GOYO INTEXフィエロ SL29201', acme:'NEWDAY',           repeat:0,    width:297, yoko:true,  supplier:'五洋',        hem:'WL',    vAllowance:null,tassel:null,  note:null },
+  { id:23,  type:'レース',   maker:'GOYO INTEXフィエロ SL29202', acme:'NEWDAY',           repeat:0,    width:297, yoko:true,  supplier:'五洋',        hem:'WL',    vAllowance:null,tassel:null,  note:null },
+  { id:24,  type:'レース',   maker:'SUMINOE U-5397',             acme:'ROADWAY',          repeat:0,    width:300, yoko:true,  supplier:'スミノエ',    hem:'WL',    vAllowance:null,tassel:null,  note:'形態安定記載' },
+  { id:34,  type:'レース',   maker:'LIF/LIN LL3001w',            acme:'ALPINE',           repeat:0,    width:147, yoko:false, supplier:'LL TRADE',   hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:35,  type:'レース',   maker:'LIF/LIN LL3002w',            acme:'RAMONA',           repeat:0,    width:147, yoko:false, supplier:'LL TRADE',   hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:36,  type:'レース',   maker:'LIF/LIN LL3003w',            acme:'SOLANA',           repeat:0,    width:147, yoko:false, supplier:'LL TRADE',   hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:37,  type:'ドレープ', maker:'LIF/LIN LL2115w',            acme:'TRAD CHECK',       repeat:17.2, width:147, yoko:false, supplier:'LL TRADE',   hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:38,  type:'ドレープ', maker:'LIF/LIN LL2153w',            acme:'TRAD STRIPE',      repeat:0,    width:147, yoko:false, supplier:'LL TRADE',   hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:39,  type:'遮光裏地', maker:'N7562ブラックアウト裏地 N7562G', acme:'BLACK OUT LINING A', repeat:0, width:145, yoko:false, supplier:'サンコロナ', hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:40,  type:'遮光裏地', maker:'N7562ブラックアウト裏地 N7562W', acme:'BLACK OUT LINING A', repeat:0, width:145, yoko:false, supplier:'サンコロナ', hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:42,  type:'遮光裏地', maker:'Royal 裏地 02',              acme:'BLACK OUT LINING B', repeat:0,  width:150, yoko:false, supplier:'アイムス',   hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:43,  type:'遮光裏地', maker:'Royal 裏地 03',              acme:'BLACK OUT LINING B', repeat:0,  width:150, yoko:false, supplier:'アイムス',   hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:45,  type:'遮光裏地', maker:'Royal 裏地 29',              acme:'BLACK OUT LINING B', repeat:0,  width:150, yoko:false, supplier:'アイムス',   hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:51,  type:'ドレープ', maker:'MAYA PAPAYAS 450281',        acme:'PAPAYA',           repeat:17.1, width:137, yoko:false, supplier:null,         hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:53,  type:'ドレープ', maker:'URBAN CATERPILLAR 450202',   acme:'BLOOM',            repeat:22.9, width:137, yoko:false, supplier:null,         hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:54,  type:'ドレープ', maker:'URBAN CATERPILLAR 450200',   acme:'BLOOM',            repeat:22.9, width:137, yoko:false, supplier:null,         hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:57,  type:'ドレープ', maker:'OVERSHOT NV/OR',             acme:'OVER SHOT',        repeat:38,   width:150, yoko:false, supplier:null,         hem:'10cm2ッ折', vAllowance:30, tassel:50, note:'縫製代のみ' },
+  { id:58,  type:'ドレープ', maker:'OVERSHOT NAVY',              acme:'OVER SHOT',        repeat:38,   width:150, yoko:false, supplier:null,         hem:'10cm2ッ折', vAllowance:30, tassel:50, note:null },
+  { id:59,  type:'ドレープ', maker:'OVERSHOT BEIGE',             acme:'OVER SHOT',        repeat:38,   width:150, yoko:false, supplier:null,         hem:'10cm2ッ折', vAllowance:30, tassel:50, note:null },
+  { id:71,  type:'レース',   maker:'2419 A534',                  acme:'McCarthy',         repeat:0,    width:300, yoko:true,  supplier:null,         hem:'WL',    vAllowance:null,tassel:null,  note:null },
+  { id:72,  type:'ドレープ', maker:'GLASSELL IVORY',             acme:'GLASSELL',         repeat:56.7, width:140, yoko:false, supplier:null,         hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:73,  type:'ドレープ', maker:'GLASSELL BROWN',             acme:'GLASSELL',         repeat:56.7, width:140, yoko:false, supplier:null,         hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:74,  type:'ドレープ', maker:'LUCIO IVORY',                acme:'STANTON',          repeat:0,    width:145, yoko:false, supplier:null,         hem:'すくい縫い10cm2つ折', vAllowance:30, tassel:50, note:null },
+  { id:75,  type:'ドレープ', maker:'LUCIO MUSTARD',              acme:'STANTON',          repeat:0,    width:145, yoko:false, supplier:null,         hem:'すくい縫い10cm2つ折', vAllowance:30, tassel:50, note:null },
+  { id:76,  type:'ドレープ', maker:'LUCIO COGNAC',               acme:'STANTON',          repeat:0,    width:145, yoko:false, supplier:null,         hem:'すくい縫い10cm2つ折', vAllowance:30, tassel:50, note:null },
+  { id:77,  type:'ドレープ', maker:'LUCIO STONE',                acme:'STANTON',          repeat:0,    width:145, yoko:false, supplier:null,         hem:'すくい縫い10cm2つ折', vAllowance:30, tassel:50, note:null },
+  { id:78,  type:'ドレープ', maker:'LUCIO NOUGAT',               acme:'STANTON',          repeat:0,    width:145, yoko:false, supplier:null,         hem:'すくい縫い10cm2つ折', vAllowance:30, tassel:50, note:null },
+  { id:79,  type:'ドレープ', maker:'LUCIO PEACOCK',              acme:'STANTON',          repeat:0,    width:145, yoko:false, supplier:null,         hem:'すくい縫い10cm2つ折', vAllowance:30, tassel:50, note:null },
+  { id:80,  type:'ドレープ', maker:'LUCIO FERN',                 acme:'STANTON',          repeat:0,    width:145, yoko:false, supplier:null,         hem:'すくい縫い10cm2つ折', vAllowance:30, tassel:50, note:null },
+  { id:81,  type:'ドレープ', maker:'LUCIO SMOKE',                acme:'STANTON',          repeat:0,    width:145, yoko:false, supplier:null,         hem:'すくい縫い10cm2つ折', vAllowance:30, tassel:50, note:null },
+  { id:82,  type:'ドレープ', maker:'ボールバイオ 54659 YELLOW #1', acme:'CHINO',          repeat:6.4,  width:149, yoko:false, supplier:null,         hem:'3つ折', vAllowance:40, tassel:null,  note:'縫製代のみ' },
+  { id:83,  type:'ドレープ', maker:'ボールバイオ 54659 GREY #2',  acme:'CHINO',          repeat:6.4,  width:149, yoko:false, supplier:null,         hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:84,  type:'ドレープ', maker:'WRANGLER BONSAI',            acme:'LENNOX',           repeat:0,    width:137, yoko:false, supplier:null,         hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:85,  type:'ドレープ', maker:'WRANGLER SNOW',              acme:'LENNOX',           repeat:0,    width:137, yoko:false, supplier:null,         hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:88,  type:'ドレープ', maker:'WHISP SLATE',                acme:'MONTCLAIR',        repeat:0,    width:300, yoko:true,  supplier:null,         hem:null,    vAllowance:null,tassel:null,  note:null },
+  { id:89,  type:'ドレープ', maker:'WHISP RHINO',                acme:'MONTCLAIR',        repeat:0,    width:300, yoko:true,  supplier:null,         hem:null,    vAllowance:null,tassel:null,  note:null },
+  { id:93,  type:'ドレープ', maker:'ALAMITOS カーキ',             acme:'ALAMITOS',         repeat:0,    width:150, yoko:false, supplier:null,         hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:94,  type:'ドレープ', maker:'ALAMITOS ベージュ',           acme:'ALAMITOS',         repeat:0,    width:150, yoko:false, supplier:null,         hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:95,  type:'レース',   maker:'12-TA2023-1',                acme:'NOZAY',            repeat:0,    width:148, yoko:false, supplier:null,         hem:'WL',    vAllowance:null,tassel:null,  note:'JSF-8タグ' },
+  { id:96,  type:'レース',   maker:'12-TA2024-1',                acme:'VICHY',            repeat:0,    width:146, yoko:false, supplier:null,         hem:'WL',    vAllowance:null,tassel:null,  note:'JSF-8タグ' },
+  { id:97,  type:'レース',   maker:'GP20210/6-3 ベージュ',        acme:'VERNEUIL',         repeat:0,    width:300, yoko:true,  supplier:null,         hem:'WL',    vAllowance:null,tassel:null,  note:'JSF-8タグ' },
+  { id:98,  type:'レース',   maker:'GP20210/6-2 ホワイト',        acme:'VERNEUIL',         repeat:0,    width:300, yoko:true,  supplier:null,         hem:'WL',    vAllowance:null,tassel:null,  note:'JSF-8タグ' },
+  { id:99,  type:'ドレープ', maker:'TBO SAN JUAN ALOE',          acme:'TBO SAN JUAN',     repeat:22.9, width:138, yoko:false, supplier:null,         hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:100, type:'ドレープ', maker:'PALMAVRDE SANDSTONE',        acme:'PALMAVRDE',        repeat:68.6, width:138, yoko:false, supplier:null,         hem:'3つ折', vAllowance:40, tassel:null,  note:null },
+  { id:101, type:'レース',   maker:'SUMINOE U-5394 ホワイト',     acme:'VACAY',            repeat:0,    width:150, yoko:false, supplier:'スミノエ',   hem:'3つ折', vAllowance:null,tassel:null,  note:null },
+  { id:102, type:'レース',   maker:'SUMINOE U-5395 ベージュ',     acme:'VACAY',            repeat:0,    width:150, yoko:false, supplier:'スミノエ',   hem:'3つ折', vAllowance:null,tassel:null,  note:null },
+  { id:103, type:'ドレープ', maker:'FLEX1 IVORY',                acme:'LEAF IVORY',       repeat:62,   width:136, yoko:false, supplier:null,         hem:'すくい縫い10cm2つ折', vAllowance:30, tassel:50, note:null },
+  { id:104, type:'ドレープ', maker:'FLEX1 KHAKI',                acme:'LEAF GREEN',       repeat:62,   width:136, yoko:false, supplier:null,         hem:'すくい縫い10cm2つ折', vAllowance:30, tassel:50, note:null },
+];
+
+// ============================================================
+// 要尺計算エンジン
+// ============================================================
+function calcYousyaku(w, h, hida, opening, fabric, hasTagssel) {
+  if (!fabric) return null;
+
+  // 縫い代
+  const hSideAllowance = (opening === '片開き') ? 15 : 30; // 左右
+  const vAllowance = fabric.vAllowance || 40; // 上下
+
+  // 横づかい判定（生地巾≥290 且つ yoko=true）
+  if (fabric.yoko && fabric.width >= 290) {
+    // ③横づかい
+    const yousyaku = Math.ceil(((w * hida + hSideAllowance) / 100) * 10) / 10;
+    const tasselAdd = hasTagssel ? 0.2 : 0;
+    return {
+      type: '③横づかい',
+      nubaki: null,
+      cutLen: null,
+      yousyaku: Math.round((yousyaku + tasselAdd) * 10) / 10,
+      formula: `(仕上がり幅${w}×倍ヒダ${hida}+縫い代${hSideAllowance})÷100 = ${yousyaku}m`,
+      note: null
+    };
+  }
+
+  // リピート判定
+  if (fabric.repeat > 0) {
+    // ②リピート有り
+    const nubaki = Math.ceil(((w * hida) + hSideAllowance) / fabric.width);
+    const repeatCount = Math.ceil((h + vAllowance) / fabric.repeat);
+    const cutLen = repeatCount * fabric.repeat;
+    const yousyaku = Math.round((cutLen * nubaki / 100) * 10) / 10;
+    const tasselAdd = hasTagssel ? 0.2 : 0;
+    return {
+      type: '②リピート有り',
+      nubaki,
+      cutLen,
+      repeatCount,
+      repeatSize: fabric.repeat,
+      yousyaku: Math.round((yousyaku + tasselAdd) * 10) / 10,
+      formula: `継ぎ巾=${nubaki}枚 / リピート数=${repeatCount}回 / 裁ち切り=${cutLen}cm`,
+      note: null
+    };
+  }
+
+  // ①リピート無し
+  const nubaki = Math.ceil(((w * hida) + hSideAllowance) / fabric.width);
+  const cutLen = h + vAllowance;
+  const yousyaku = Math.round((cutLen * nubaki / 100) * 10) / 10;
+  const tasselAdd = hasTagssel ? 0.2 : 0;
+  return {
+    type: '①リピート無し',
+    nubaki,
+    cutLen,
+    yousyaku: Math.round((yousyaku + tasselAdd) * 10) / 10,
+    formula: `継ぎ巾=ROUNDUP((${w}×${hida}+${hSideAllowance})÷${fabric.width},0)=${nubaki}枚 / 裁ち切り=${cutLen}cm`,
+    note: tasselAdd > 0 ? `タッセル分+${tasselAdd}m含む` : null
+  };
+}
+
+// ============================================================
+// アプリ状態
+// ============================================================
+let orders = [];
+let currentOrderId = null;
+let currentWindowIdx = 0;
+let apiKey = localStorage.getItem('acme_api_key') || '';
+
+if (apiKey) document.getElementById('apiKeyInput').value = apiKey;
+
+// サンプルデータ
+function loadSampleData() {
+  orders = [
+    {
+      id: 'order_001',
+      filename: '寺島様_発注書.pdf',
+      status: 'ai_done',
+      customer: {
+        name: '寺島 玄',
+        kana: 'テラシマ ゲン',
+        tel: '090-2762-6385',
+        zip: '907-1541',
+        address: '沖縄県八重山郡竹富島上原10-320',
+        store: '高輪店',
+        staff: '高橋',
+        delivery: 'customer',
+        delivdate: '12-14時'
+      },
+      windows: [
+        {
+          label: '①掃き出し窓',
+          type: 'ドレープ',
+          style: '1.5倍ヒダ',
+          fabricId: 103,
+          finishW: 367, finishH: 202,
+          opening: '両開き',
+          hook: 'Aフック',
+          windows: 1,
+          tassel: 2,
+          lining: 'なし',
+          amount: 148000
+        },
+        {
+          label: '②掃き出し窓',
+          type: 'ドレープ',
+          style: '1.5倍ヒダ',
+          fabricId: 103,
+          finishW: 168, finishH: 202,
+          opening: '両開き',
+          hook: 'Aフック',
+          windows: 1,
+          tassel: 2,
+          lining: 'なし',
+          amount: 90100
+        }
+      ]
+    },
+    {
+      id: 'order_002',
+      filename: '羽淵様_発注書.pdf',
+      status: 'pending',
+      customer: {
+        name: '羽淵 崇之',
+        kana: 'ハブチ タカユキ',
+        tel: '090-2038-5429',
+        zip: '664-0887',
+        address: '兵庫県伊丹市南野北1-12-43',
+        store: '堀江店',
+        staff: '長谷場',
+        delivery: 'customer',
+        delivdate: ''
+      },
+      windows: [
+        {
+          label: '①掃き出し窓',
+          type: 'ドレープ',
+          style: '1.5倍ヒダ',
+          fabricId: 75,
+          finishW: 176, finishH: 230,
+          opening: '両開き',
+          hook: 'Aフック',
+          windows: 1,
+          tassel: 2,
+          lining: 'なし',
+          amount: 71500
+        },
+        {
+          label: '②掃き出し窓',
+          type: 'ドレープ',
+          style: '1.5倍ヒダ',
+          fabricId: 75,
+          finishW: 178, finishH: 207,
+          opening: '両開き',
+          hook: 'Aフック',
+          windows: 1,
+          tassel: 2,
+          lining: 'なし',
+          amount: 66300
+        }
+      ]
+    }
+  ];
+  renderOrderList();
+}
+
+// ============================================================
+// UI描画
+// ============================================================
+function renderOrderList() {
+  const list = document.getElementById('orderList');
+  document.getElementById('orderCount').textContent = `${orders.length}件`;
+  list.innerHTML = orders.map(o => `
+    <div class="order-item ${o.id === currentOrderId ? 'active' : ''}" onclick="selectOrder('${o.id}')">
+      <div class="order-item-name">${o.customer.name} 様</div>
+      <div class="order-item-meta">
+        <span>${o.store || o.customer.store || '—'}</span>
+        <span>${o.windows.length}窓</span>
+        <span class="order-badge ${o.status === 'ai_done' ? 'badge-ai' : o.status === 'done' ? 'badge-done' : 'badge-pending'}">
+          ${o.status === 'ai_done' ? 'AI済' : o.status === 'done' ? '完了' : '未処理'}
+        </span>
+      </div>
+      <div style="font-size:9px;color:var(--text3);margin-top:3px;font-family:var(--mono);">${o.filename}</div>
+    </div>
+  `).join('');
+}
+
+function selectOrder(id) {
+  currentOrderId = id;
+  currentWindowIdx = 0;
+  renderOrderList();
+  renderForm();
+  renderWindowTabs();
+  renderWindowForm();
+  renderPreview();
+}
+
+function renderForm() {
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('formArea').style.display = 'block';
+  document.getElementById('previewEmpty').style.display = 'none';
+  document.getElementById('previewArea').style.display = 'flex';
+  document.getElementById('previewArea').style.flexDirection = 'column';
+  document.getElementById('actionBar').style.display = 'flex';
+
+  const c = order.customer;
+  document.getElementById('f_name').value = c.name || '';
+  document.getElementById('f_kana').value = c.kana || '';
+  document.getElementById('f_tel').value = c.tel || '';
+  document.getElementById('f_zip').value = c.zip || '';
+  document.getElementById('f_address').value = c.address || '';
+  document.getElementById('f_store').value = c.store || '';
+  document.getElementById('f_staff').value = c.staff || '';
+  document.getElementById('f_delivery').value = c.delivery || 'customer';
+  document.getElementById('f_delivdate').value = c.delivdate || '';
+}
+
+function renderWindowTabs() {
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+  const tabs = document.getElementById('windowTabs');
+  tabs.innerHTML = order.windows.map((w, i) => `
+    <div class="window-tab ${i === currentWindowIdx ? 'active' : ''}" onclick="selectWindow(${i})">${w.label}</div>
+  `).join('') + `<button class="add-window-btn" onclick="addWindow()">+</button>`;
+}
+
+function selectWindow(i) {
+  currentWindowIdx = i;
+  renderWindowTabs();
+  renderWindowForm();
+  renderPreview();
+}
+
+function addWindow() {
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+  const n = order.windows.length + 1;
+  order.windows.push({
+    label: `③窓`,
+    type: 'ドレープ',
+    style: '1.5倍ヒダ',
+    fabricId: null,
+    finishW: null, finishH: null,
+    opening: '両開き',
+    hook: 'Aフック',
+    windows: 1,
+    tassel: 0,
+    lining: 'なし',
+    amount: 0
+  });
+  currentWindowIdx = order.windows.length - 1;
+  renderWindowTabs();
+  renderWindowForm();
+}
+
+function getFabricOptions() {
+  return FABRIC_MASTER.map(f =>
+    `<option value="${f.id}">${f.id}. ${f.maker}（${f.acme}）</option>`
+  ).join('');
+}
+
+function renderWindowForm() {
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+  const win = order.windows[currentWindowIdx];
+  if (!win) return;
+
+  const fabric = FABRIC_MASTER.find(f => f.id === win.fabricId);
+  const hidaVal = win.style === '1.5倍ヒダ' ? 1.5 : win.style === '2倍ヒダ' ? 2 : 1;
+  const calc = (win.finishW && win.finishH && fabric) ?
+    calcYousyaku(win.finishW, win.finishH, hidaVal, win.opening, fabric, win.tassel > 0) : null;
+
+  const wf = document.getElementById('windowForm');
+  wf.innerHTML = `
+    <div class="section-title">窓情報</div>
+    <div class="form-row cols4">
+      <div class="form-group">
+        <label class="form-label">種類 <span class="ai-tag">AI</span></label>
+        <select class="form-select" onchange="updateWindow('type',this.value)">
+          <option ${win.type==='ドレープ'?'selected':''}>ドレープ</option>
+          <option ${win.type==='レース'?'selected':''}>レース</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">スタイル <span class="ai-tag">AI</span></label>
+        <select class="form-select" onchange="updateWindow('style',this.value)">
+          <option ${win.style==='1.5倍ヒダ'?'selected':''}>1.5倍ヒダ</option>
+          <option ${win.style==='2倍ヒダ'?'selected':''}>2倍ヒダ</option>
+          <option ${win.style==='フラット'?'selected':''}>フラット</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">開き方 <span class="ai-tag">AI</span></label>
+        <select class="form-select" onchange="updateWindow('opening',this.value);recalc()">
+          <option ${win.opening==='両開き'?'selected':''}>両開き</option>
+          <option ${win.opening==='片開き'?'selected':''}>片開き</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">フック <span class="ai-tag">AI</span></label>
+        <select class="form-select" onchange="updateWindow('hook',this.value)">
+          <option ${win.hook==='Aフック'?'selected':''}>Aフック</option>
+          <option ${win.hook==='Bフック'?'selected':''}>Bフック</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">仕上がり幅 cm <span class="ai-tag">AI</span></label>
+        <input type="number" class="form-input ai-filled" value="${win.finishW||''}" oninput="updateWindow('finishW',+this.value);recalc()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">仕上がり丈 cm <span class="ai-tag">AI</span></label>
+        <input type="number" class="form-input ai-filled" value="${win.finishH||''}" oninput="updateWindow('finishH',+this.value);recalc()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">窓数</label>
+        <input type="number" class="form-input" value="${win.windows||1}" min="1" oninput="updateWindow('windows',+this.value)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">タッセル本数</label>
+        <input type="number" class="form-input" value="${win.tassel||0}" min="0" oninput="updateWindow('tassel',+this.value);recalc()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">裏地</label>
+        <select class="form-select" onchange="updateWindow('lining',this.value)">
+          <option ${win.lining==='なし'?'selected':''}>なし</option>
+          <option ${win.lining==='遮光裏地A'?'selected':''}>遮光裏地A</option>
+          <option ${win.lining==='遮光裏地B'?'selected':''}>遮光裏地B</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">金額（税抜）</label>
+        <input type="number" class="form-input ai-filled" value="${win.amount||''}" oninput="updateWindow('amount',+this.value);renderPreview()">
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:16px;">品番マスタ連動</div>
+    <div class="form-row single">
+      <div class="form-group">
+        <label class="form-label">生地品番 <span class="ai-tag">AI</span></label>
+        <select class="form-select" onchange="updateWindow('fabricId',+this.value);recalc()">
+          <option value="">-- 選択 --</option>
+          ${getFabricOptions()}
+        </select>
+      </div>
+    </div>
+
+    ${fabric ? `
+    <div class="warn-strip" style="background:rgba(45,212,167,0.06);border-color:rgba(45,212,167,0.2);color:var(--green);">
+      巾: ${fabric.width}cm ／ リピート: ${fabric.repeat > 0 ? fabric.repeat+'cm' : '無し'} ／ 裾: ${fabric.hem||'—'} ／ 上下縫い代: ${fabric.vAllowance||'—'}cm ／ 発注先: ${fabric.supplier||'要確認'}
+      ${fabric.note ? ' ／ ⚠ '+fabric.note : ''}
+    </div>
+    ` : ''}
+
+    <div class="section-title" style="margin-top:16px;">要尺計算結果</div>
+    ${calc ? `
+    <div class="yousyaku-box">
+      <div class="yousyaku-row">
+        <span class="yousyaku-label">計算方式</span>
+        <span class="yousyaku-val">${calc.type}</span>
+      </div>
+      ${calc.nubaki ? `<div class="yousyaku-row">
+        <span class="yousyaku-label">継ぎ巾数</span>
+        <span class="yousyaku-val">${calc.nubaki} 枚</span>
+      </div>` : ''}
+      ${calc.cutLen ? `<div class="yousyaku-row">
+        <span class="yousyaku-label">裁ち切り</span>
+        <span class="yousyaku-val">${calc.cutLen} cm</span>
+      </div>` : ''}
+      <div class="yousyaku-row">
+        <span class="yousyaku-label">要尺</span>
+        <span class="yousyaku-val highlight">${calc.yousyaku} m</span>
+      </div>
+      <div class="yousyaku-formula">${calc.formula}${calc.note ? '\n'+calc.note : ''}</div>
+    </div>
+    ` : `<div class="warn-strip">品番と仕上がりサイズを入力すると自動計算されます</div>`}
+  `;
+
+  // 品番セレクトの現在値をセット
+  const sel = wf.querySelector('select:last-of-type');
+  if (win.fabricId) {
+    const opts = wf.querySelectorAll('select');
+    opts.forEach(s => {
+      if ([...s.options].some(o => o.value == win.fabricId)) s.value = win.fabricId;
+    });
+  }
+}
+
+function updateWindow(key, val) {
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+  order.windows[currentWindowIdx][key] = val;
+}
+
+function recalc() {
+  renderWindowForm();
+  renderPreview();
+}
+
+function markModified(el) {
+  el.classList.remove('ai-filled');
+  el.classList.add('modified');
+  updateCustomerFromForm();
+  renderPreview();
+}
+
+function updateCustomerFromForm() {
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+  order.customer.name = document.getElementById('f_name').value;
+  order.customer.kana = document.getElementById('f_kana').value;
+  order.customer.tel = document.getElementById('f_tel').value;
+  order.customer.zip = document.getElementById('f_zip').value;
+  order.customer.address = document.getElementById('f_address').value;
+  order.customer.store = document.getElementById('f_store').value;
+  order.customer.staff = document.getElementById('f_staff').value;
+  order.customer.delivery = document.getElementById('f_delivery').value;
+  order.customer.delivdate = document.getElementById('f_delivdate').value;
+}
+
+// ============================================================
+// プレビュー描画
+// ============================================================
+function renderPreview() {
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+
+  const today = new Date().toLocaleDateString('ja-JP', {year:'numeric',month:'2-digit',day:'2-digit'});
+  const c = order.customer;
+
+  const rowsHtml = order.windows.map((win, i) => {
+    const fabric = FABRIC_MASTER.find(f => f.id === win.fabricId);
+    const hidaVal = win.style === '1.5倍ヒダ' ? 1.5 : win.style === '2倍ヒダ' ? 2 : 1;
+    const calc = (win.finishW && win.finishH && fabric) ?
+      calcYousyaku(win.finishW, win.finishH, hidaVal, win.opening, fabric, win.tassel > 0) : null;
+    return `
+      <tr>
+        <td>${win.label}</td>
+        <td>${win.type}</td>
+        <td>${win.style}</td>
+        <td>${fabric ? fabric.maker : '—'}</td>
+        <td>${win.finishW||'—'}</td>
+        <td>${win.finishH||'—'}</td>
+        <td>${win.opening}</td>
+        <td>${win.hook}</td>
+        <td>${win.windows}</td>
+        <td>${win.tassel||0}</td>
+        <td>${win.lining}</td>
+        <td>${fabric ? fabric.hem||'—' : '—'}</td>
+        <td>${calc ? calc.cutLen||'—' : '—'}</td>
+        <td class="highlight-cell">${calc ? calc.yousyaku+'m' : '—'}</td>
+      </tr>
+    `;
+  }).join('');
+
+  document.getElementById('previewContent').innerHTML = `
+    <div class="preview-title">A C M E 専 用 発 注 書</div>
+    <div style="font-size:9px;color:var(--text2);font-family:var(--mono);margin-bottom:10px;">
+      進弘産業株式会社 御中 ／ 発行: ${today} ／ 納期: 午前〆 7日後出荷
+    </div>
+    <table class="preview-table" style="margin-bottom:10px;">
+      <tr>
+        <th>お客様名</th><td colspan="3">${c.name} 様 （${c.kana}）</td>
+      </tr>
+      <tr>
+        <th>住所</th><td colspan="3">〒${c.zip} ${c.address}</td>
+      </tr>
+      <tr>
+        <th>TEL</th><td>${c.tel}</td><th>店舗</th><td>${c.store} ／ ${c.staff}</td>
+      </tr>
+    </table>
+    <div style="overflow-x:auto;">
+      <table class="preview-table">
+        <thead>
+          <tr>
+            <th>場所</th><th>種類</th><th>スタイル</th><th>生地名</th>
+            <th>幅cm</th><th>丈cm</th><th>開き</th><th>フック</th>
+            <th>窓数</th><th>タッセル</th><th>裏地</th><th>裾</th>
+            <th>裁ち切</th><th>要尺</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    </div>
+    <div style="margin-top:10px;text-align:right;font-family:var(--mono);font-size:11px;color:var(--text2);">
+      合計（税抜）: <span style="color:var(--text);font-size:13px;font-weight:500;">
+        ¥${order.windows.reduce((s,w)=>s+(w.amount||0),0).toLocaleString()}
+      </span>
+    </div>
+  `;
+}
+
+// ============================================================
+// API Key
+// ============================================================
+function saveApiKey() {
+  apiKey = document.getElementById('apiKeyInput').value.trim();
+  localStorage.setItem('acme_api_key', apiKey);
+  showToast('APIキーを保存しました', 'success');
+}
+
+// ============================================================
+// ファイルアップロード & Claude API呼び出し
+// ============================================================
+function handleFileSelect(e) {
+  const files = [...e.target.files];
+  files.forEach(f => processFile(f));
+}
+
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag');
+  [...e.dataTransfer.files].forEach(f => processFile(f));
+});
+
+async function processFile(file) {
+  if (!apiKey) {
+    showToast('APIキーを設定してください', 'error');
+    return;
+  }
+
+  showAI('PDF解析中...', `${file.name} を Claude が読み取っています`);
+
+  try {
+    const base64 = await fileToBase64(file);
+    const mediaType = file.type || 'application/pdf';
+    const isPDF = mediaType === 'application/pdf';
+
+    const messages = [{
+      role: 'user',
+      content: [
+        {
+          type: isPDF ? 'document' : 'image',
+          source: { type: 'base64', media_type: mediaType, data: base64 }
+        },
+        {
+          type: 'text',
+          text: `このACME発注書（カーテン受発注書）から以下の情報をJSON形式で抽出してください。
+JSON以外のテキストは出力しないでください。
+
+{
+  "customer": {
+    "name": "お客様名（漢字）",
+    "kana": "フリガナ",
+    "tel": "電話番号",
+    "zip": "郵便番号",
+    "address": "住所",
+    "store": "お買上店舗名",
+    "staff": "担当者名",
+    "delivery": "customer（お客様直送）またはstore（店入れ）またはcontractor（業者直送）",
+    "delivdate": "配送希望日時"
+  },
+  "windows": [
+    {
+      "label": "①掃き出し窓（などの場所）",
+      "type": "ドレープ or レース",
+      "style": "1.5倍ヒダ or 2倍ヒダ etc",
+      "fabricName": "品名・生地名",
+      "fabricCode": "品番（数字）",
+      "finishW": 仕上がり幅（数値cm）,
+      "finishH": 仕上がり丈（数値cm）,
+      "opening": "両開き or 片開き",
+      "hook": "Aフック or Bフック",
+      "windows": 窓数（数値）,
+      "tassel": タッセル本数（数値）,
+      "lining": "なし or 裏地種別",
+      "amount": 本体金額（数値・税抜）
+    }
+  ]
+}`
+        }
+      ]
+    }];
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-5',
+        max_tokens: 2000,
+        messages
+      })
+    });
+
+    const data = await resp.json();
+    hideAI();
+
+    if (data.error) throw new Error(data.error.message);
+
+    const text = data.content.find(c => c.type === 'text')?.text || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    // 品番マスタとのマッチング
+    parsed.windows.forEach(win => {
+      if (win.fabricCode) {
+        const m = FABRIC_MASTER.find(f => f.id === +win.fabricCode);
+        if (m) win.fabricId = m.id;
+      } else if (win.fabricName) {
+        // 名前マッチング
+        const name = win.fabricName.toLowerCase();
+        const m = FABRIC_MASTER.find(f =>
+          f.maker.toLowerCase().includes(name) || f.acme.toLowerCase().includes(name)
+        );
+        if (m) win.fabricId = m.id;
+      }
+    });
+
+    const newOrder = {
+      id: 'order_' + Date.now(),
+      filename: file.name,
+      status: 'ai_done',
+      customer: parsed.customer,
+      windows: parsed.windows
+    };
+
+    orders.unshift(newOrder);
+    currentOrderId = newOrder.id;
+    currentWindowIdx = 0;
+    renderOrderList();
+    renderForm();
+    renderWindowTabs();
+    renderWindowForm();
+    renderPreview();
+    showToast('PDF解析完了！内容を確認してください', 'success');
+
+  } catch (err) {
+    hideAI();
+    showToast('エラー: ' + err.message, 'error');
+    console.error(err);
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = () => rej(new Error('ファイル読み込み失敗'));
+    r.readAsDataURL(file);
+  });
+}
+
+// ============================================================
+// 出力操作
+// ============================================================
+function generateOrder() {
+  updateCustomerFromForm();
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+  order.status = 'done';
+  renderOrderList();
+  showToast('発注書を生成しました。Googleドライブ連携は本番実装時に有効化されます', 'success');
+}
+
+function exportPDF() {
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+  updateCustomerFromForm();
+
+  const today = new Date().toLocaleDateString('ja-JP', {year:'numeric', month:'2-digit', day:'2-digit'});
+  const c = order.customer;
+
+  const rowsHtml = order.windows.map((win, i) => {
+    const fabric = FABRIC_MASTER.find(f => f.id === win.fabricId);
+    const hidaVal = win.style === '1.5倍ヒダ' ? 1.5 : win.style === '2倍ヒダ' ? 2 : 1;
+    const calc = (win.finishW && win.finishH && fabric) ?
+      calcYousyaku(win.finishW, win.finishH, hidaVal, win.opening, fabric, win.tassel > 0) : null;
+    return `
+      <tr>
+        <td class="left">${win.label}</td>
+        <td>${win.type}</td>
+        <td>${win.style}</td>
+        <td class="left">${fabric ? fabric.maker : (win.fabricName||'—')}</td>
+        <td>${win.finishW||'—'}</td>
+        <td>${win.finishH||'—'}</td>
+        <td>${win.opening}</td>
+        <td>${win.hook}</td>
+        <td>${win.windows||1}</td>
+        <td>${win.tassel||0}</td>
+        <td>${win.lining||'なし'}</td>
+        <td>${fabric ? (fabric.hem||'—') : '—'}</td>
+        <td>${calc ? (calc.cutLen||'—') : '—'}</td>
+        <td class="po-yousyaku">${calc ? calc.yousyaku + 'm' : '—'}</td>
+        <td>¥${(win.amount||0).toLocaleString()}</td>
+      </tr>
+    `;
+  }).join('');
+
+  const total = order.windows.reduce((s, w) => s + (w.amount||0), 0);
+  const totalTax = Math.round(total * 1.1);
+
+  const deliveryLabel = {
+    customer: 'お客様直送',
+    store: '店入れ',
+    contractor: '取付業者直送'
+  }[c.delivery] || 'お客様直送';
+
+  const printHtml = `
+    <div class="po-title">A C M E 専 用 発 注 書</div>
+    <div class="po-meta">
+      <div>進弘産業株式会社 御中　／　FAX: 05-8669-1384</div>
+      <div>発行日: ${today}　／　納期: 午前〆 7日後出荷</div>
+    </div>
+
+    <div style="display:flex; gap:8mm; margin-bottom:4mm;">
+      <div style="flex:1;">
+        <div class="po-section-title">お客様情報</div>
+        <table class="po-info-table">
+          <tr><th>お客様名</th><td><strong>${c.name} 様</strong>（${c.kana||''}）</td></tr>
+          <tr><th>住所</th><td>〒${c.zip||''} ${c.address||''}</td></tr>
+          <tr><th>TEL</th><td>${c.tel||''}</td></tr>
+        </table>
+      </div>
+      <div style="flex:1;">
+        <div class="po-section-title">配送情報</div>
+        <table class="po-info-table">
+          <tr><th>お買上店舗</th><td>${c.store||''}</td></tr>
+          <tr><th>担当者</th><td>${c.staff||''}</td></tr>
+          <tr><th>配送方法</th><td>${deliveryLabel}${c.delivdate ? '　' + c.delivdate : ''}</td></tr>
+        </table>
+      </div>
+      <div style="flex:0 0 50mm; text-align:right;">
+        <div class="po-section-title">発注元</div>
+        <div class="po-sender">
+          andC株式会社<br>
+          〒152-0003<br>
+          東京都目黒区碑文谷4-24-13-207<br>
+          TEL: 03-6303-3706<br>
+          FAX: 03-5726-8198
+        </div>
+      </div>
+    </div>
+
+    <div class="po-section-title">発注明細</div>
+    <table class="po-main-table">
+      <thead>
+        <tr>
+          <th>取付場所</th>
+          <th>種類</th>
+          <th>スタイル</th>
+          <th>メーカー生地名</th>
+          <th>仕上がり幅<br>（cm）</th>
+          <th>仕上がり丈<br>（cm）</th>
+          <th>開き方</th>
+          <th>フック</th>
+          <th>窓数</th>
+          <th>タッセル<br>（本）</th>
+          <th>裏地</th>
+          <th>裾</th>
+          <th>裁ち切り<br>（cm）</th>
+          <th>要尺（m）</th>
+          <th>金額（税抜）</th>
+        </tr>
+      </thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+
+    <div class="po-total">
+      合計（税抜）: ¥${total.toLocaleString()}　／　合計（税込）: ¥${totalTax.toLocaleString()}
+    </div>
+
+    <div class="po-footer">
+      <div>
+        <div>内容ご確認・ご署名</div>
+        <div class="po-sign-box"></div>
+      </div>
+      <div style="font-size:8pt; color:#555; line-height:1.8;">
+        ※受注生産のため、ご注文後の生地・サイズ変更・キャンセル不可<br>
+        ※仕上がり丈 ±5% 許容範囲<br>
+        ※在庫管理表をもとにどの反からカットするか別途ご指示ください
+      </div>
+    </div>
+  `;
+
+  document.getElementById('printArea').innerHTML = printHtml;
+  window.print();
+}
+
+function copyToClipboard() {
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+  const c = order.customer;
+  let text = `【ACME専用発注書】\n`;
+  text += `お客様: ${c.name} 様\n住所: 〒${c.zip} ${c.address}\nTEL: ${c.tel}\n店舗: ${c.store}\n\n`;
+  order.windows.forEach(win => {
+    const fabric = FABRIC_MASTER.find(f => f.id === win.fabricId);
+    const hidaVal = win.style === '1.5倍ヒダ' ? 1.5 : 2;
+    const calc = (win.finishW && win.finishH && fabric) ?
+      calcYousyaku(win.finishW, win.finishH, hidaVal, win.opening, fabric, win.tassel > 0) : null;
+    text += `${win.label}: ${fabric ? fabric.maker : win.fabricName} W${win.finishW}×H${win.finishH}cm `;
+    text += `${win.opening} ${win.hook} 要尺:${calc ? calc.yousyaku+'m' : '—'}\n`;
+  });
+  navigator.clipboard.writeText(text).then(() => showToast('コピーしました', 'success'));
+}
+
+// ============================================================
+// UI Helpers
+// ============================================================
+function showAI(label, sub) {
+  document.getElementById('aiLabel').textContent = label;
+  document.getElementById('aiSub').textContent = sub;
+  document.getElementById('aiOverlay').classList.add('show');
+}
+function hideAI() {
+  document.getElementById('aiOverlay').classList.remove('show');
+}
+
+let toastTimer;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+  t.innerHTML = `<span style="color:${type==='success'?'var(--green)':type==='error'?'var(--red)':'var(--accent)'}">${icon}</span> ${msg}`;
+  t.className = `toast show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// 初期化
+loadSampleData();
+selectOrder('order_001');
+</script>
+</body>
+</html>
