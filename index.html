@@ -679,7 +679,7 @@
       <span style="color:var(--text3);font-size:9px;" id="orderCount">0件</span>
     </div>
 
-    <div class="apikey-section">
+    <div class="apikey-section" style="display:none;">
       <div class="apikey-label">Claude API Key</div>
       <div class="apikey-row">
         <input type="password" class="apikey-input" id="apiKeyInput" placeholder="sk-ant-..." />
@@ -1070,7 +1070,7 @@ function selectOrder(id) {
 
 function renderForm() {
   const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
+  if (!order) 
   document.getElementById('emptyState').style.display = 'none';
   document.getElementById('formArea').style.display = 'block';
   document.getElementById('previewEmpty').style.display = 'none';
@@ -1092,7 +1092,7 @@ function renderForm() {
 
 function renderWindowTabs() {
   const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
+  if (!order) 
   const tabs = document.getElementById('windowTabs');
   tabs.innerHTML = order.windows.map((w, i) => `
     <div class="window-tab ${i === currentWindowIdx ? 'active' : ''}" onclick="selectWindow(${i})">${w.label}</div>
@@ -1108,7 +1108,7 @@ function selectWindow(i) {
 
 function addWindow() {
   const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
+  if (!order) 
   const n = order.windows.length + 1;
   order.windows.push({
     label: `③窓`,
@@ -1136,9 +1136,9 @@ function getFabricOptions() {
 
 function renderWindowForm() {
   const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
+  if (!order) 
   const win = order.windows[currentWindowIdx];
-  if (!win) return;
+  if (!win) 
 
   const fabric = FABRIC_MASTER.find(f => f.id === win.fabricId);
   const hidaVal = win.style === '1.5倍ヒダ' ? 1.5 : win.style === '2倍ヒダ' ? 2 : 1;
@@ -1268,7 +1268,7 @@ function renderWindowForm() {
 
 function updateWindow(key, val) {
   const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
+  if (!order) 
   order.windows[currentWindowIdx][key] = val;
 }
 
@@ -1286,7 +1286,7 @@ function markModified(el) {
 
 function updateCustomerFromForm() {
   const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
+  if (!order) 
   order.customer.name = document.getElementById('f_name').value;
   order.customer.kana = document.getElementById('f_kana').value;
   order.customer.tel = document.getElementById('f_tel').value;
@@ -1303,7 +1303,7 @@ function updateCustomerFromForm() {
 // ============================================================
 function renderPreview() {
   const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
+  if (!order) 
 
   const today = new Date().toLocaleDateString('ja-JP', {year:'numeric',month:'2-digit',day:'2-digit'});
   const c = order.customer;
@@ -1397,9 +1397,9 @@ uploadZone.addEventListener('drop', e => {
 });
 
 async function processFile(file) {
-  if (!apiKey) {
-    showToast('APIキーを設定してください', 'error');
-    return;
+  
+    
+    
   }
 
   showAI('PDF解析中...', `${file.name} を Claude が読み取っています`);
@@ -1455,11 +1455,11 @@ JSON以外のテキストは出力しないでください。
       ]
     }];
 
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
+        
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
@@ -1533,7 +1533,7 @@ function fileToBase64(file) {
 function generateOrder() {
   updateCustomerFromForm();
   const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
+  if (!order) 
   order.status = 'done';
   renderOrderList();
   showToast('発注書を生成しました。Googleドライブ連携は本番実装時に有効化されます', 'success');
@@ -1541,7 +1541,7 @@ function generateOrder() {
 
 function exportPDF() {
   const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
+  if (!order) 
   updateCustomerFromForm();
 
   const today = new Date().toLocaleDateString('ja-JP', {year:'numeric', month:'2-digit', day:'2-digit'});
@@ -1665,7 +1665,7 @@ function exportPDF() {
 
 function copyToClipboard() {
   const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
+  if (!order) 
   const c = order.customer;
   let text = `【ACME専用発注書】\n`;
   text += `お客様: ${c.name} 様\n住所: 〒${c.zip} ${c.address}\nTEL: ${c.tel}\n店舗: ${c.store}\n\n`;
