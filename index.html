@@ -24,7 +24,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height
 .ac-header{background:var(--bg);border-bottom:1px solid var(--line);height:56px;display:flex;align-items:center;padding:0 20px 0 0;position:sticky;top:0;z-index:100;flex-shrink:0;}
 
 /* ===== サイドバー ===== */
-.ac-side{width:var(--nav-w);background:var(--accent-ink);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;height:100%;}
+.ac-side{width:var(--nav-w);background:var(--accent-ink);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;min-height:100%;}
 .ac-side__brand{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.12);}
 .ac-side__logo{background:rgba(255,255,255,.15);color:#fff;font-size:11px;font-weight:700;letter-spacing:.15em;padding:4px 10px;border-radius:4px;display:inline-block;margin-bottom:8px;font-family:var(--mono);}
 .ac-side__title{font-size:13px;color:rgba(255,255,255,.85);font-weight:500;line-height:1.3;}
@@ -283,10 +283,10 @@ select option{background:var(--bg);}
 
 <!-- ヘッダー -->
 <div class="ac-header">
-  <aside class="ac-side" style="height:56px;flex-direction:row;align-items:center;padding:0 18px;gap:10px;border-bottom:none;width:var(--nav-w);flex-shrink:0;">
+  <div style="width:var(--nav-w);flex-shrink:0;display:flex;align-items:center;gap:10px;padding:0 18px;background:var(--accent-ink);">
     <div class="ac-side__logo" style="margin:0;">ACME</div>
     <div style="font-size:13px;color:rgba(255,255,255,.85);font-weight:500;">発注処理システム</div>
-  </aside>
+  </div>
   <div class="ac-top">
     <div class="ac-top__crumbs" id="headerCrumb">メイン / <b>ダッシュボード</b></div>
     <div class="ac-top__right">
@@ -336,9 +336,9 @@ select option{background:var(--bg);}
     <div class="page active" id="page-dashboard">
       <!-- ステップバー -->
       <div class="ac-steps" id="stepBar">
-        <div class="ac-step" id="step1"><span class="ac-step__num">1</span>PDF読込</div>
+        <div class="ac-step active" id="step1"><span class="ac-step__num">1</span>PDF読込</div>
         <div class="ac-step__sep"></div>
-        <div class="ac-step active" id="step2"><span class="ac-step__num">2</span>内容確認</div>
+        <div class="ac-step" id="step2"><span class="ac-step__num">2</span>内容確認</div>
         <div class="ac-step__sep"></div>
         <div class="ac-step" id="step3"><span class="ac-step__num">3</span>発注確定</div>
       </div>
@@ -455,6 +455,16 @@ select option{background:var(--bg);}
                 </div>
               </div>
             </div>
+            <!-- 要確認パネル -->
+            <div class="ac-sum" id="checkPanel">
+              <div class="ac-sum__head" style="display:flex;justify-content:space-between;align-items:center;">
+                <span>要確認</span>
+                <span id="checkCount" style="font-size:12px;color:var(--mute);">0件</span>
+              </div>
+              <div id="checkBody" style="padding:16px;font-size:13px;color:var(--red);text-align:center;font-weight:500;">
+                AI抽出と元PDFの差異はありません
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -469,7 +479,8 @@ select option{background:var(--bg);}
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           PDF出力
         </button>
-        <button class="ac-btn ac-btn--danger" onclick="deleteOrder()" style="margin-left:auto;">
+        <div style="flex:1;"></div>
+        <button class="ac-btn ac-btn--danger" onclick="deleteOrder()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
           クリア
         </button>
@@ -730,6 +741,7 @@ function showDashContent(order){
   renderWindowForm();
   renderPreview();
   renderSummary();
+  renderCheckPanel();
 }
 
 function markMod(el){el.classList.remove('ai');el.classList.add('mod');}
@@ -843,6 +855,35 @@ function renderSummary(){
     `).join('');
   }else{
     document.getElementById('sumTotal').style.display='none';
+  }
+
+  // 要確認チェック
+  renderCheckPanel();
+}
+
+function renderCheckPanel(){
+  if(!currentOrder){
+    document.getElementById('checkCount').textContent='0件';
+    document.getElementById('checkBody').innerHTML='<span style="color:var(--mute2);">案件を読み込むと確認事項が表示されます</span>';
+    return;
+  }
+  const issues=[];
+  currentOrder.windows.forEach((win,i)=>{
+    const label=win.label||`窓${i+1}`;
+    if(!win.fabricId) issues.push(`${label}: 品番が未選択`);
+    if(!win.finishW||!win.finishH) issues.push(`${label}: サイズが未入力`);
+    if(win.style==='フラット'&&win.hook==='Aフック') issues.push(`${label}: フラットスタイルはBフック推奨`);
+    const f=FM.find(x=>x.id===win.fabricId);
+    if(f&&f.note) issues.push(`${label}: ${f.note}`);
+  });
+  if(!currentOrder.customer.name) issues.push('顧客名が未入力');
+  document.getElementById('checkCount').textContent=issues.length+'件';
+  if(issues.length===0){
+    document.getElementById('checkBody').innerHTML='<span style="color:var(--ok);font-weight:600;">✓ AI抽出と元PDFの差異はありません</span>';
+  }else{
+    document.getElementById('checkBody').innerHTML=issues.map(i=>
+      `<div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--red);">⚠ ${i}</div>`
+    ).join('');
   }
 }
 
