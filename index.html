@@ -7,75 +7,57 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
 :root {
-  --bg:#f5f6fa; --surface:#fff; --surface2:#f0f1f5;
-  --border:#dde0ea; --border2:#c5c9d8;
-  --accent:#2563eb; --accent2:#6d28d9;
-  --green:#059669; --amber:#d97706; --red:#dc2626;
-  --text:#1e2030; --text2:#5a6080; --text3:#9aa0ba;
-  --nav:#1e2030; --nav-text:#fff; --nav-muted:rgba(255,255,255,0.5);
-  --mono:'DM Mono',monospace; --sans:'Noto Sans JP',sans-serif;
-  --nav-w:220px;
+  --bg:#f5f6fa;--surface:#fff;--surface2:#f0f1f5;
+  --border:#dde0ea;--border2:#c5c9d8;
+  --accent:#2563eb;--accent2:#6d28d9;
+  --green:#059669;--amber:#d97706;--red:#dc2626;
+  --text:#1e2030;--text2:#5a6080;--text3:#9aa0ba;
+  --nav:#1e2030;
+  --mono:'DM Mono',monospace;--sans:'Noto Sans JP',sans-serif;
+  --nav-w:200px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;font-size:13px;line-height:1.6;display:flex;flex-direction:column;}
 
-/* ===== ヘッダー ===== */
 .header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-shrink:0;}
 .header-logo{font-family:var(--mono);font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;}
 .logo-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:9px;padding:2px 7px;border-radius:3px;font-weight:500;letter-spacing:.1em;}
-.header-right{display:flex;align-items:center;gap:12px;}
 .api-status{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);font-family:var(--mono);}
 .status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* ===== メインレイアウト ===== */
 .app-body{display:flex;flex:1;height:calc(100vh - 52px);overflow:hidden;}
 
-/* ===== 左ナビ ===== */
 .nav{width:var(--nav-w);background:var(--nav);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
-.nav-section{padding:20px 12px 8px;font-size:9px;font-weight:500;letter-spacing:.12em;color:var(--nav-muted);text-transform:uppercase;font-family:var(--mono);}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 14px;margin:1px 8px;border-radius:6px;cursor:pointer;color:rgba(255,255,255,.75);font-size:12px;font-weight:500;transition:all .15s;border:none;background:transparent;width:calc(100% - 16px);text-align:left;}
+.nav-section{padding:16px 12px 6px;font-size:9px;font-weight:500;letter-spacing:.12em;color:rgba(255,255,255,.35);text-transform:uppercase;font-family:var(--mono);}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;margin:1px 8px;border-radius:6px;cursor:pointer;color:rgba(255,255,255,.65);font-size:12px;font-weight:500;transition:all .15s;border:none;background:transparent;width:calc(100% - 16px);text-align:left;}
 .nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
 .nav-item.active{background:rgba(255,255,255,.12);color:#fff;}
-.nav-item .nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
-.nav-item .nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:9px;padding:1px 6px;border-radius:10px;font-family:var(--mono);}
+.nav-item .nav-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
 .nav-divider{height:1px;background:rgba(255,255,255,.08);margin:8px 14px;}
 
-/* ===== コンテンツエリア ===== */
 .content{flex:1;display:flex;overflow:hidden;}
-
-/* ===== ページ共通 ===== */
 .page{display:none;flex:1;overflow-y:auto;}
-.page.active{display:flex;}
+.page.active{display:block;}
 
 /* ===== ダッシュボード ===== */
-.dashboard-layout{display:grid;grid-template-columns:1fr 340px;flex:1;overflow:hidden;}
-.order-list-panel{border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;}
-.panel-toolbar{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--surface);}
-.panel-title{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;font-family:var(--mono);}
-.upload-zone{margin:12px;border:1.5px dashed var(--border2);border-radius:8px;padding:20px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface);}
-.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(37,99,235,.04);}
-.upload-icon{font-size:22px;margin-bottom:8px;opacity:.4;}
-.upload-label{font-size:12px;color:var(--text2);margin-bottom:3px;}
+.dash{max-width:720px;margin:0 auto;padding:16px 20px 32px;}
+.upload-zone{border:1.5px dashed var(--border2);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface);margin-bottom:10px;}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(37,99,235,.03);}
+.upload-icon{font-size:22px;margin-bottom:6px;opacity:.4;}
+.upload-label{font-size:12px;color:var(--text2);}
 .upload-sub{font-size:10px;color:var(--text3);font-family:var(--mono);}
 #fileInput{display:none;}
-.order-items{flex:1;padding:8px;}
-.order-item{padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .15s;margin-bottom:6px;}
-.order-item:hover{border-color:var(--border2);}
-.order-item.active{border-color:var(--accent);background:rgba(37,99,235,.04);}
-.order-item-name{font-weight:600;font-size:12px;color:var(--text);margin-bottom:3px;}
-.order-item-meta{font-size:10px;color:var(--text2);font-family:var(--mono);display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-.badge{display:inline-block;font-size:9px;padding:1px 6px;border-radius:3px;font-family:var(--mono);font-weight:500;}
-.badge-pending{background:rgba(217,119,6,.1);color:var(--amber);border:1px solid rgba(217,119,6,.25);}
-.badge-done{background:rgba(5,150,105,.1);color:var(--green);border:1px solid rgba(5,150,105,.25);}
-.badge-ai{background:rgba(109,40,217,.1);color:var(--accent2);border:1px solid rgba(109,40,217,.25);}
-.order-meta-file{font-size:9px;color:var(--text3);margin-top:2px;font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-/* ===== 中央フォーム ===== */
-.form-panel{flex:1;overflow-y:auto;background:var(--bg);}
-.form-section{padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);margin-bottom:6px;}
-.section-title{font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;font-family:var(--mono);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px;}
+.card-title{font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;font-family:var(--mono);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.card-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+.staff-row{display:flex;align-items:center;gap:12px;}
+.staff-label{font-size:11px;color:var(--text2);white-space:nowrap;font-family:var(--mono);}
+.staff-select{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:7px 10px;font-size:12px;font-family:var(--sans);color:var(--text);}
+.staff-select:focus{outline:none;border-color:var(--accent);}
+
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;}
 .form-row.cols3{grid-template-columns:1fr 1fr 1fr;}
 .form-row.cols4{grid-template-columns:1fr 1fr 1fr 1fr;}
@@ -86,64 +68,61 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
 .form-input:focus,.form-select:focus{outline:none;border-color:var(--accent);}
 .form-input.ai-filled{border-color:rgba(109,40,217,.3);background:rgba(109,40,217,.03);}
 .form-input.modified{border-color:rgba(217,119,6,.35);background:rgba(217,119,6,.03);}
-.ai-tag{font-size:8px;padding:1px 5px;background:rgba(109,40,217,.1);color:var(--accent2);border-radius:3px;font-family:var(--mono);vertical-align:middle;margin-left:3px;}
-.window-tabs{display:flex;gap:3px;padding:10px 20px 0;border-bottom:1px solid var(--border);background:var(--surface);flex-wrap:wrap;}
-.window-tab{padding:5px 12px;border-radius:5px 5px 0 0;font-size:11px;cursor:pointer;color:var(--text2);border:1px solid transparent;border-bottom:none;transition:all .15s;font-family:var(--mono);}
-.window-tab.active{background:var(--bg);border-color:var(--border);color:var(--text);border-bottom-color:var(--bg);margin-bottom:-1px;}
-.window-tab:hover:not(.active){color:var(--text);}
-.add-win-btn{padding:5px 10px;border-radius:5px 5px 0 0;font-size:16px;cursor:pointer;color:var(--text3);border:1px dashed var(--border);border-bottom:none;background:transparent;transition:all .15s;line-height:1;}
+.ai-tag{font-size:8px;padding:1px 4px;background:rgba(109,40,217,.1);color:var(--accent2);border-radius:3px;font-family:var(--mono);vertical-align:middle;margin-left:3px;}
+
+.window-tabs{display:flex;gap:3px;margin-bottom:12px;flex-wrap:wrap;}
+.window-tab{padding:5px 12px;border-radius:5px;font-size:11px;cursor:pointer;color:var(--text2);border:1px solid var(--border);transition:all .15s;font-family:var(--mono);background:var(--bg);}
+.window-tab.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.window-tab:hover:not(.active){border-color:var(--accent);color:var(--accent);}
+.add-win-btn{padding:5px 10px;border-radius:5px;font-size:16px;cursor:pointer;color:var(--text3);border:1px dashed var(--border);background:transparent;transition:all .15s;line-height:1;}
 .add-win-btn:hover{color:var(--accent);border-color:var(--accent);}
-.fabric-info{background:rgba(5,150,105,.05);border:1px solid rgba(5,150,105,.2);border-radius:5px;padding:8px 12px;margin-top:8px;font-size:10px;color:var(--green);font-family:var(--mono);line-height:1.8;}
+
+.fabric-info{background:rgba(5,150,105,.05);border:1px solid rgba(5,150,105,.2);border-radius:5px;padding:8px 12px;margin-top:8px;font-size:10px;color:var(--green);font-family:var(--mono);line-height:1.9;}
 .warn-box{background:rgba(217,119,6,.06);border:1px solid rgba(217,119,6,.2);border-radius:5px;padding:8px 12px;margin-top:8px;font-size:11px;color:var(--amber);}
 .yousyaku-box{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px 14px;margin-top:8px;}
 .yousyaku-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);}
 .yousyaku-row:last-child{border-bottom:none;}
 .yousyaku-label{font-size:11px;color:var(--text2);font-family:var(--mono);}
 .yousyaku-val{font-size:13px;font-weight:600;color:var(--text);font-family:var(--mono);}
-.yousyaku-val.hl{color:var(--green);font-size:15px;}
+.yousyaku-val.hl{color:var(--green);font-size:16px;}
 .yousyaku-formula{font-size:9px;color:var(--text3);font-family:var(--mono);margin-top:6px;padding-top:6px;border-top:1px solid var(--border);line-height:1.9;}
 
-/* ===== 右プレビュー ===== */
-.preview-panel{width:340px;border-left:1px solid var(--border);display:flex;flex-direction:column;background:var(--surface);flex-shrink:0;}
-.preview-scroll{flex:1;overflow-y:auto;padding:12px;}
-.preview-sheet{background:#fff;border:1px solid var(--border);border-radius:4px;padding:14px;font-size:9.5px;cursor:pointer;transition:box-shadow .2s;position:relative;}
-.preview-sheet:hover{box-shadow:0 4px 16px rgba(0,0,0,.12);}
-.preview-sheet-title{text-align:center;font-size:12px;font-weight:700;letter-spacing:.2em;margin-bottom:10px;border-bottom:1.5px solid #000;padding-bottom:6px;}
-.preview-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;}
-.preview-info-box{border:1px solid #ccc;border-radius:3px;padding:5px 7px;}
-.preview-info-label{font-size:7.5px;color:#666;margin-bottom:2px;font-weight:600;}
-.preview-info-val{font-size:9px;color:#000;font-weight:500;}
+/* 発注書プレビュー */
+.preview-sheet{background:#fff;border:1px solid var(--border);border-radius:4px;padding:14px;font-size:9px;cursor:pointer;transition:box-shadow .2s;position:relative;color:#000;}
+.preview-sheet:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.preview-hint{font-size:10px;color:var(--accent);margin-bottom:8px;text-align:right;}
+.preview-sheet-title{text-align:center;font-size:12px;font-weight:700;letter-spacing:.2em;margin-bottom:8px;border-bottom:1.5px solid #000;padding-bottom:5px;}
+.preview-info-row{display:flex;gap:8px;margin-bottom:8px;}
+.preview-info-box{flex:1;border:1px solid #ccc;border-radius:3px;padding:5px 7px;font-size:8px;}
+.preview-info-box-label{color:#666;font-weight:600;margin-bottom:2px;}
 .preview-table{width:100%;border-collapse:collapse;font-size:7.5px;}
 .preview-table th{background:#e8e8e8;border:1px solid #aaa;padding:3px 2px;text-align:center;font-size:7px;}
 .preview-table td{border:1px solid #ccc;padding:3px 2px;text-align:center;vertical-align:middle;}
 .preview-table td.l{text-align:left;}
 .preview-table td.hl{font-weight:700;color:#059669;}
 .preview-summary{margin-top:8px;border:1px solid #ccc;border-radius:3px;padding:6px;}
-.preview-summary-title{font-size:7.5px;font-weight:700;margin-bottom:4px;color:#333;}
+.preview-summary-title{font-size:7.5px;font-weight:700;margin-bottom:4px;}
 .preview-summary-row{display:flex;justify-content:space-between;font-size:8px;padding:2px 0;border-bottom:1px solid #eee;}
-.preview-zoom-hint{position:absolute;top:8px;right:8px;background:rgba(37,99,235,.1);color:var(--accent);font-size:9px;padding:2px 7px;border-radius:3px;font-family:var(--mono);}
-.preview-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text3);font-size:12px;gap:8px;}
-.preview-empty-icon{font-size:32px;opacity:.25;}
-.action-bar{padding:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
+.preview-summary-row:last-child{border-bottom:none;}
 
-/* ===== モーダル（発注書拡大） ===== */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;align-items:center;justify-content:center;}
-.modal-overlay.show{display:flex;}
-.modal-box{background:#fff;border-radius:8px;padding:24px;max-width:90vw;max-height:90vh;overflow-y:auto;width:900px;}
-.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-.modal-title{font-size:14px;font-weight:700;}
-.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text2);padding:4px 8px;}
-.modal-close:hover{color:var(--text);}
+.action-bar{display:flex;gap:10px;margin-top:0;}
+.btn{padding:10px 16px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:var(--sans);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;flex:1;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
+.btn-primary:hover{opacity:.88;}
+.btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border2);}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
+.btn-danger{background:rgba(220,38,38,.06);color:var(--red);border:1px solid rgba(220,38,38,.2);flex:0;padding:10px 14px;}
+.btn-danger:hover{background:rgba(220,38,38,.12);}
 
-/* ===== 品番マスタページ ===== */
-.master-page{flex:1;flex-direction:column;padding:24px;}
-.page-header{margin-bottom:20px;}
-.page-header h2{font-size:18px;font-weight:700;margin-bottom:4px;}
+/* 品番マスタ */
+.master-page{padding:24px;flex:1;}
+.page-header{margin-bottom:16px;}
+.page-header h2{font-size:18px;font-weight:700;margin-bottom:3px;}
 .page-header p{font-size:12px;color:var(--text2);}
-.search-bar{display:flex;gap:8px;margin-bottom:16px;}
-.search-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;font-family:var(--sans);color:var(--text);}
+.search-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.search-input{flex:1;min-width:200px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;font-family:var(--sans);color:var(--text);}
 .search-input:focus{outline:none;border-color:var(--accent);}
-.filter-btn{padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:6px;font-size:11px;cursor:pointer;color:var(--text2);font-family:var(--sans);}
+.filter-btn{padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:6px;font-size:11px;cursor:pointer;color:var(--text2);font-family:var(--sans);transition:all .15s;}
 .filter-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(37,99,235,.05);}
 .master-table{width:100%;border-collapse:collapse;font-size:11px;background:var(--surface);border-radius:8px;overflow:hidden;border:1px solid var(--border);}
 .master-table th{background:var(--surface2);border-bottom:1px solid var(--border);padding:8px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--text2);font-family:var(--mono);letter-spacing:.05em;}
@@ -155,38 +134,44 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
 .type-race{background:rgba(5,150,105,.1);color:var(--green);}
 .type-lining{background:rgba(109,40,217,.1);color:var(--accent2);}
 
-/* ===== 顧客管理ページ ===== */
-.customer-page{flex:1;flex-direction:column;padding:24px;}
-.customer-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+/* 顧客管理 */
+.customer-page{padding:24px;flex:1;}
+.customer-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
 .customer-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;cursor:pointer;transition:all .15s;}
 .customer-card:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(37,99,235,.08);}
 .customer-card-name{font-size:14px;font-weight:700;margin-bottom:4px;}
-.customer-card-meta{font-size:11px;color:var(--text2);line-height:1.8;}
-.customer-card-orders{margin-top:8px;font-size:10px;color:var(--text3);font-family:var(--mono);}
+.customer-card-meta{font-size:11px;color:var(--text2);line-height:1.9;}
+.customer-card-badge{display:inline-block;font-size:9px;padding:1px 6px;border-radius:3px;font-family:var(--mono);margin-top:6px;}
 
-/* ===== 設定ページ ===== */
-.settings-page{flex:1;flex-direction:column;padding:24px;max-width:600px;}
+/* 設定 */
+.settings-page{padding:24px;max-width:600px;flex:1;}
 .settings-group{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px;}
-.settings-group-title{font-size:12px;font-weight:700;margin-bottom:14px;color:var(--text);}
+.settings-group-title{font-size:13px;font-weight:700;margin-bottom:14px;}
 .settings-row{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;}
-.settings-row:last-child{margin-bottom:0;}
+.settings-row:last-of-type{margin-bottom:0;}
 .settings-label{font-size:11px;color:var(--text2);font-family:var(--mono);}
 .settings-input{background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:8px 10px;font-size:12px;font-family:var(--sans);color:var(--text);width:100%;}
 .settings-input:focus{outline:none;border-color:var(--accent);}
-.settings-save{padding:8px 20px;background:var(--accent);color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer;font-family:var(--sans);margin-top:4px;}
+.settings-save{padding:8px 20px;background:var(--accent);color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer;font-family:var(--sans);margin-top:8px;}
+.staff-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
+.staff-item{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:5px;}
+.staff-item-name{flex:1;font-size:12px;}
+.staff-item-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:2px 6px;}
+.staff-item-del:hover{color:var(--red);}
+.staff-add-row{display:flex;gap:8px;}
+.staff-add-input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:7px 10px;font-size:12px;font-family:var(--sans);color:var(--text);}
+.staff-add-input:focus{outline:none;border-color:var(--accent);}
+.staff-add-btn{padding:7px 14px;background:var(--accent);color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer;font-family:var(--sans);white-space:nowrap;}
 
-/* ===== ボタン ===== */
-.btn{padding:9px 14px;border-radius:5px;font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:var(--sans);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
-.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
-.btn-primary:hover{opacity:.88;transform:translateY(-1px);}
-.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border2);}
-.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
-.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border);}
-.btn-ghost:hover{color:var(--text);border-color:var(--border2);}
-.btn-danger{background:rgba(220,38,38,.08);color:var(--red);border:1px solid rgba(220,38,38,.2);}
-.btn-danger:hover{background:rgba(220,38,38,.15);}
+/* モーダル */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:#fff;border-radius:8px;padding:24px;max-width:92vw;max-height:90vh;overflow-y:auto;width:860px;}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.modal-title{font-size:14px;font-weight:700;}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text2);padding:4px 8px;}
 
-/* ===== AI処理オーバーレイ ===== */
+/* AI overlay */
 .ai-overlay{display:none;position:fixed;inset:0;background:rgba(30,32,48,.7);z-index:200;align-items:center;justify-content:center;}
 .ai-overlay.show{display:flex;}
 .ai-box{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:32px 40px;text-align:center;max-width:320px;}
@@ -195,23 +180,22 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
 .ai-label{font-size:13px;color:var(--text);margin-bottom:6px;font-weight:500;}
 .ai-sub{font-size:11px;color:var(--text2);font-family:var(--mono);}
 
-/* ===== Toast ===== */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 16px;font-size:12px;color:var(--text);z-index:300;transform:translateY(60px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:8px;max-width:320px;box-shadow:0 4px 16px rgba(0,0,0,.1);}
 .toast.show{transform:translateY(0);opacity:1;}
 .toast.success{border-color:rgba(5,150,105,.35);}
 .toast.error{border-color:rgba(220,38,38,.35);}
-.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text3);font-size:12px;gap:8px;flex:1;}
-.empty-icon{font-size:32px;opacity:.25;}
 
-/* ===== 印刷 ===== */
+.empty-dash{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;color:var(--text3);font-size:13px;gap:8px;text-align:center;}
+.empty-dash-icon{font-size:36px;opacity:.25;margin-bottom:4px;}
+
 @media print{
   @page{size:A4 landscape;margin:10mm 12mm;}
-  body{background:#fff !important;color:#000 !important;}
+  body,html{background:#fff !important;}
   .header,.app-body,.toast,.ai-overlay,.modal-overlay{display:none !important;}
   #printArea{display:block !important;}
   .po-title{text-align:center;font-size:16pt;font-weight:bold;letter-spacing:.3em;margin-bottom:5mm;border-bottom:2px solid #000;padding-bottom:3mm;}
   .po-meta{font-size:8pt;display:flex;justify-content:space-between;margin-bottom:3mm;}
-  .po-section-title{font-size:8pt;font-weight:bold;border-left:3px solid #000;padding-left:4px;margin-bottom:2mm;}
+  .po-section-title{font-size:8pt;font-weight:bold;border-left:3px solid #000;padding-left:4px;margin-bottom:2mm;margin-top:3mm;}
   .po-info-table{width:100%;border-collapse:collapse;font-size:9pt;margin-bottom:3mm;}
   .po-info-table th{background:#f0f0f0;border:1px solid #aaa;padding:3px 6px;font-weight:bold;white-space:nowrap;width:70px;}
   .po-info-table td{border:1px solid #aaa;padding:3px 6px;}
@@ -222,9 +206,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
   .po-yousyaku{font-weight:bold;}
   .po-footer{margin-top:5mm;border-top:1px solid #ccc;padding-top:3mm;display:flex;justify-content:space-between;}
   .po-sign-box{border:1px solid #000;width:60mm;height:15mm;display:inline-block;}
-  .po-sender{font-size:8pt;text-align:right;line-height:1.8;}
+  .po-sender{font-size:8pt;text-align:right;line-height:1.9;}
 }
-
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
@@ -232,167 +215,140 @@ select option{background:var(--surface);}
 </style>
 </head>
 <body>
-
 <div class="header">
   <div class="header-logo">
     <span class="logo-badge">ACME</span>
     発注処理システム
   </div>
-  <div class="header-right">
-    <div class="api-status">
-      <div class="status-dot"></div>
-      Claude API
-    </div>
+  <div class="api-status">
+    <div class="status-dot"></div>
+    Claude API
   </div>
 </div>
-
 <div class="app-body">
-  <!-- ===== 左ナビ ===== -->
   <nav class="nav">
     <div class="nav-section">メイン</div>
-    <button class="nav-item active" onclick="showPage('dashboard')" id="nav-dashboard">
-      <span class="nav-icon">📋</span>
-      ダッシュボード
-      <span class="nav-badge" id="navBadge">0</span>
-    </button>
-    <button class="nav-item" onclick="showPage('master')" id="nav-master">
-      <span class="nav-icon">📦</span>
-      品番マスタ
-    </button>
-    <button class="nav-item" onclick="showPage('customers')" id="nav-customers">
-      <span class="nav-icon">👥</span>
-      顧客管理
-    </button>
+    <button class="nav-item active" onclick="showPage('dashboard')" id="nav-dashboard"><span class="nav-icon">📋</span>ダッシュボード</button>
+    <button class="nav-item" onclick="showPage('master')" id="nav-master"><span class="nav-icon">📦</span>品番マスタ</button>
+    <button class="nav-item" onclick="showPage('customers')" id="nav-customers"><span class="nav-icon">👥</span>顧客管理</button>
     <div class="nav-divider"></div>
     <div class="nav-section">システム</div>
-    <button class="nav-item" onclick="showPage('settings')" id="nav-settings">
-      <span class="nav-icon">⚙️</span>
-      設定
-    </button>
+    <button class="nav-item" onclick="showPage('settings')" id="nav-settings"><span class="nav-icon">⚙️</span>設定</button>
   </nav>
-
-  <!-- ===== コンテンツ ===== -->
   <div class="content">
 
-    <!-- ===== ダッシュボード ===== -->
+    <!-- ダッシュボード -->
     <div class="page active" id="page-dashboard">
-      <div class="dashboard-layout">
+      <div class="dash">
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+          <div class="upload-icon">⬆</div>
+          <div class="upload-label">PDFをドロップまたはクリック</div>
+          <div class="upload-sub">ACME発注書（複数可）</div>
+        </div>
+        <input type="file" id="fileInput" accept=".pdf,image/*" multiple onchange="handleFileSelect(event)">
 
-        <!-- 案件リスト -->
-        <div class="order-list-panel">
-          <div class="panel-toolbar">
-            <span class="panel-title">案件リスト</span>
-            <span id="orderCount" style="font-size:10px;color:var(--text3);font-family:var(--mono);">0件</span>
-          </div>
-          <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-            <div class="upload-icon">⬆</div>
-            <div class="upload-label">PDFをドロップまたはクリック</div>
-            <div class="upload-sub">ACME発注書（複数可）</div>
-          </div>
-          <input type="file" id="fileInput" accept=".pdf,image/*" multiple onchange="handleFileSelect(event)">
-          <div class="order-items" id="orderList"></div>
+        <div id="dashEmpty" class="empty-dash">
+          <div class="empty-dash-icon">📄</div>
+          <div>PDFをアップロードすると<br>ここに発注情報が表示されます</div>
         </div>
 
-        <!-- 中央フォーム -->
-        <div class="form-panel" id="formPanel">
-          <div class="empty-state" id="emptyState">
-            <div class="empty-icon">📋</div>
-            <div>案件を選択またはPDFをアップロード</div>
+        <div id="dashContent" style="display:none;">
+          <!-- 発注担当者 -->
+          <div class="card">
+            <div class="card-title">発注担当者</div>
+            <div class="staff-row">
+              <span class="staff-label">andC 担当者</span>
+              <select class="staff-select" id="staffSelect" onchange="renderPreview()">
+                <option value="">-- 選択してください --</option>
+              </select>
+            </div>
           </div>
-          <div id="formArea" style="display:none;">
-            <div class="form-section">
-              <div class="section-title">顧客情報</div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label">お客様名 <span class="ai-tag">AI</span></label>
-                  <input type="text" class="form-input ai-filled" id="f_name" oninput="markModified(this);updateCustomerFromForm();renderPreview()">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">フリガナ <span class="ai-tag">AI</span></label>
-                  <input type="text" class="form-input ai-filled" id="f_kana" oninput="markModified(this);updateCustomerFromForm();renderPreview()">
-                </div>
+
+          <!-- 顧客情報 -->
+          <div class="card">
+            <div class="card-title">顧客情報</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">お客様名 <span class="ai-tag">AI</span></label>
+                <input type="text" class="form-input ai-filled" id="f_name" oninput="markMod(this);syncCustomer();renderPreview()">
               </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label">電話番号 <span class="ai-tag">AI</span></label>
-                  <input type="text" class="form-input ai-filled" id="f_tel" oninput="markModified(this);updateCustomerFromForm();renderPreview()">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">郵便番号 <span class="ai-tag">AI</span></label>
-                  <input type="text" class="form-input ai-filled" id="f_zip" oninput="markModified(this);updateCustomerFromForm();renderPreview()">
-                </div>
-              </div>
-              <div class="form-row single">
-                <div class="form-group">
-                  <label class="form-label">住所 <span class="ai-tag">AI</span></label>
-                  <input type="text" class="form-input ai-filled" id="f_address" oninput="markModified(this);updateCustomerFromForm();renderPreview()">
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label">お買上店舗 <span class="ai-tag">AI</span></label>
-                  <input type="text" class="form-input ai-filled" id="f_store" oninput="markModified(this);updateCustomerFromForm();renderPreview()">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">担当者 <span class="ai-tag">AI</span></label>
-                  <input type="text" class="form-input ai-filled" id="f_staff" oninput="markModified(this);updateCustomerFromForm();renderPreview()">
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label">配送方法 <span class="ai-tag">AI</span></label>
-                  <select class="form-select" id="f_delivery" onchange="updateCustomerFromForm();renderPreview()">
-                    <option value="customer">お客様直送</option>
-                    <option value="store">店入れ</option>
-                    <option value="contractor">取付業者直送</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">配送希望日時 <span class="ai-tag">AI</span></label>
-                  <input type="text" class="form-input ai-filled" id="f_delivdate" oninput="markModified(this);updateCustomerFromForm();renderPreview()">
-                </div>
+              <div class="form-group">
+                <label class="form-label">フリガナ <span class="ai-tag">AI</span></label>
+                <input type="text" class="form-input ai-filled" id="f_kana" oninput="markMod(this);syncCustomer();renderPreview()">
               </div>
             </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">電話番号 <span class="ai-tag">AI</span></label>
+                <input type="text" class="form-input ai-filled" id="f_tel" oninput="markMod(this);syncCustomer();renderPreview()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">郵便番号 <span class="ai-tag">AI</span></label>
+                <input type="text" class="form-input ai-filled" id="f_zip" oninput="markMod(this);syncCustomer();renderPreview()">
+              </div>
+            </div>
+            <div class="form-row single">
+              <div class="form-group">
+                <label class="form-label">住所 <span class="ai-tag">AI</span></label>
+                <input type="text" class="form-input ai-filled" id="f_address" oninput="markMod(this);syncCustomer();renderPreview()">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">お買上店舗 <span class="ai-tag">AI</span></label>
+                <input type="text" class="form-input ai-filled" id="f_store" oninput="markMod(this);syncCustomer();renderPreview()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">担当者（店舗側） <span class="ai-tag">AI</span></label>
+                <input type="text" class="form-input ai-filled" id="f_staff" oninput="markMod(this);syncCustomer();renderPreview()">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">配送方法 <span class="ai-tag">AI</span></label>
+                <select class="form-select" id="f_delivery" onchange="syncCustomer();renderPreview()">
+                  <option value="customer">お客様直送</option>
+                  <option value="store">店入れ</option>
+                  <option value="contractor">取付業者直送</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">配送希望日時 <span class="ai-tag">AI</span></label>
+                <input type="text" class="form-input ai-filled" id="f_delivdate" oninput="markMod(this);syncCustomer();renderPreview()">
+              </div>
+            </div>
+          </div>
+
+          <!-- 窓情報 -->
+          <div class="card">
+            <div class="card-title">窓情報</div>
             <div class="window-tabs" id="windowTabs"></div>
-            <div id="windowForm" class="form-section"></div>
+            <div id="windowForm"></div>
           </div>
-        </div>
 
-        <!-- 右プレビュー -->
-        <div class="preview-panel">
-          <div class="panel-toolbar">
-            <span class="panel-title">発注書プレビュー</span>
-            <span style="font-size:10px;color:var(--text3);">クリックで拡大</span>
-          </div>
-          <div class="preview-scroll">
-            <div class="preview-empty" id="previewEmpty">
-              <div class="preview-empty-icon">📄</div>
-              <div>案件を選択すると表示</div>
-            </div>
-            <div id="previewSheet" style="display:none;" onclick="openModal()">
-              <div class="preview-sheet">
-                <div class="preview-zoom-hint">🔍 拡大</div>
-                <div id="previewContent"></div>
-              </div>
+          <!-- 発注書プレビュー -->
+          <div class="card">
+            <div class="card-title">発注書プレビュー</div>
+            <div class="preview-hint">🔍 クリックで拡大</div>
+            <div id="previewSheet" onclick="openModal()">
+              <div class="preview-sheet" id="previewContent"></div>
             </div>
           </div>
-          <div class="action-bar" id="actionBar" style="display:none;">
+
+          <!-- アクションボタン -->
+          <div class="action-bar">
             <button class="btn btn-primary" onclick="generateOrder()">📤 発注書を確定</button>
-            <button class="btn btn-secondary" onclick="exportPDF()">🖨 PDF出力（FAX用）</button>
-            <button class="btn btn-ghost" onclick="deleteOrder()">🗑 この案件を削除</button>
+            <button class="btn btn-secondary" onclick="exportPDF()">🖨 PDF出力</button>
+            <button class="btn btn-danger" onclick="deleteOrder()">🗑</button>
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- ===== 品番マスタ ===== -->
+    <!-- 品番マスタ -->
     <div class="page" id="page-master">
       <div class="master-page">
-        <div class="page-header">
-          <h2>品番マスタ</h2>
-          <p>ACME取扱生地の品番・要尺計算パラメータ一覧</p>
-        </div>
+        <div class="page-header"><h2>品番マスタ</h2><p>ACME取扱生地の品番・要尺計算パラメータ一覧（54品番）</p></div>
         <div class="search-bar">
           <input type="text" class="search-input" id="masterSearch" placeholder="品名・ACME名・品番で検索..." oninput="renderMasterTable()">
           <button class="filter-btn active" onclick="setMasterFilter('all',this)">全て</button>
@@ -401,62 +357,49 @@ select option{background:var(--surface);}
           <button class="filter-btn" onclick="setMasterFilter('遮光裏地',this)">裏地</button>
         </div>
         <table class="master-table">
-          <thead>
-            <tr>
-              <th>No.</th><th>種類</th><th>メーカー品名</th><th>ACME名</th>
-              <th>生地巾</th><th>リピート</th><th>横づかい</th>
-              <th>裾</th><th>上下縫い代</th><th>発注先</th><th>備考</th>
-            </tr>
-          </thead>
+          <thead><tr>
+            <th>No.</th><th>種類</th><th>メーカー品名</th><th>ACME名</th>
+            <th>生地巾</th><th>リピート</th><th>横づかい</th><th>裾</th><th>縫い代</th><th>発注先</th><th>備考</th>
+          </tr></thead>
           <tbody id="masterTableBody"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- ===== 顧客管理 ===== -->
+    <!-- 顧客管理 -->
     <div class="page" id="page-customers">
       <div class="customer-page">
-        <div class="page-header">
-          <h2>顧客管理</h2>
-          <p>処理済み案件の顧客一覧</p>
-        </div>
+        <div class="page-header"><h2>顧客管理</h2><p>確定済み案件の顧客一覧</p></div>
         <div class="customer-grid" id="customerGrid"></div>
       </div>
     </div>
 
-    <!-- ===== 設定 ===== -->
+    <!-- 設定 -->
     <div class="page" id="page-settings">
       <div class="settings-page">
-        <div class="page-header" style="margin-bottom:20px;">
-          <h2>設定</h2>
-          <p>システム設定・API接続</p>
-        </div>
+        <div class="page-header" style="margin-bottom:20px;"><h2>設定</h2><p>API・担当者・発注元情報の管理</p></div>
         <div class="settings-group">
-          <div class="settings-group-title">API設定</div>
+          <div class="settings-group-title">Claude API Key</div>
           <div class="settings-row">
-            <label class="settings-label">Claude API Key</label>
+            <label class="settings-label">API Key</label>
             <input type="password" class="settings-input" id="apiKeyInput" placeholder="sk-ant-...">
           </div>
           <button class="settings-save" onclick="saveApiKey()">保存</button>
         </div>
         <div class="settings-group">
+          <div class="settings-group-title">andC 担当者一覧</div>
+          <div class="staff-list" id="staffList"></div>
+          <div class="staff-add-row">
+            <input type="text" class="staff-add-input" id="staffAddInput" placeholder="担当者名を入力..." onkeydown="if(event.key==='Enter')addStaff()">
+            <button class="staff-add-btn" onclick="addStaff()">追加</button>
+          </div>
+        </div>
+        <div class="settings-group">
           <div class="settings-group-title">発注元情報</div>
-          <div class="settings-row">
-            <label class="settings-label">会社名</label>
-            <input type="text" class="settings-input" id="s_company" value="andC株式会社">
-          </div>
-          <div class="settings-row">
-            <label class="settings-label">郵便番号・住所</label>
-            <input type="text" class="settings-input" id="s_address" value="〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階">
-          </div>
-          <div class="settings-row">
-            <label class="settings-label">TEL</label>
-            <input type="text" class="settings-input" id="s_tel" value="03-6303-3706">
-          </div>
-          <div class="settings-row">
-            <label class="settings-label">FAX</label>
-            <input type="text" class="settings-input" id="s_fax" value="03-5726-8198">
-          </div>
+          <div class="settings-row"><label class="settings-label">会社名</label><input type="text" class="settings-input" id="s_company" value="andC株式会社"></div>
+          <div class="settings-row"><label class="settings-label">住所</label><input type="text" class="settings-input" id="s_address" value="〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階"></div>
+          <div class="settings-row"><label class="settings-label">TEL</label><input type="text" class="settings-input" id="s_tel" value="03-6303-3706"></div>
+          <div class="settings-row"><label class="settings-label">FAX</label><input type="text" class="settings-input" id="s_fax" value="03-5726-8198"></div>
           <button class="settings-save" onclick="saveSettings()">保存</button>
         </div>
       </div>
@@ -465,10 +408,8 @@ select option{background:var(--surface);}
   </div>
 </div>
 
-<!-- 印刷専用エリア -->
 <div id="printArea" style="display:none;"></div>
 
-<!-- 発注書拡大モーダル -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
   <div class="modal-box">
     <div class="modal-header">
@@ -479,7 +420,6 @@ select option{background:var(--surface);}
   </div>
 </div>
 
-<!-- AI処理中 -->
 <div class="ai-overlay" id="aiOverlay">
   <div class="ai-box">
     <div class="ai-spinner"></div>
@@ -488,65 +428,61 @@ select option{background:var(--surface);}
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ============================================================
-// 品番マスタ
-// ============================================================
 const FABRIC_MASTER = [
-  {id:13, type:'ドレープ',maker:'LONDAY 22-4600 キナリ',acme:'OLD TOWN',acmeCode:'013',repeat:0,width:110,yoko:false,supplier:'リック',hem:'3つ折',vAllowance:40,note:'防炎ラベル要'},
-  {id:14, type:'ドレープ',maker:'INOUEバリⅡ IV',acme:'TRAVELODGE',acmeCode:'014',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:'形態安定記載'},
-  {id:15, type:'ドレープ',maker:'INOUEバリⅡ BE',acme:'TRAVELODGE',acmeCode:'015',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
-  {id:16, type:'ドレープ',maker:'INOUEバリⅡ BR',acme:'TRAVELODGE',acmeCode:'016',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
-  {id:17, type:'ドレープ',maker:'INOUEバリⅡ DBR',acme:'TRAVELODGE',acmeCode:'017',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
-  {id:18, type:'ドレープ',maker:'INOUEバリⅡ GN',acme:'TRAVELODGE',acmeCode:'018',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
-  {id:20, type:'ドレープ',maker:'INOUEバリⅡ NB',acme:'TRAVELODGE',acmeCode:'020',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
-  {id:21, type:'ドレープ',maker:'INOUEバリⅡ GRY',acme:'TRAVELODGE',acmeCode:'021',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
-  {id:22, type:'レース',maker:'GOYO INTEXフィエロ SL29201',acme:'NEWDAY',acmeCode:'022',repeat:0,width:297,yoko:true,supplier:'五洋',hem:'WL',vAllowance:null,note:null},
-  {id:23, type:'レース',maker:'GOYO INTEXフィエロ SL29202',acme:'NEWDAY',acmeCode:'023',repeat:0,width:297,yoko:true,supplier:'五洋',hem:'WL',vAllowance:null,note:null},
-  {id:24, type:'レース',maker:'SUMINOE U-5397',acme:'ROADWAY',acmeCode:'024',repeat:0,width:300,yoko:true,supplier:'スミノエ',hem:'WL',vAllowance:null,note:'形態安定記載'},
-  {id:34, type:'レース',maker:'LIF/LIN LL3001w',acme:'ALPINE',acmeCode:'034',repeat:0,width:147,yoko:false,supplier:'LL TRADE',hem:'3つ折',vAllowance:40,note:null},
-  {id:35, type:'レース',maker:'LIF/LIN LL3002w',acme:'RAMONA',acmeCode:'035',repeat:0,width:147,yoko:false,supplier:'LL TRADE',hem:'3つ折',vAllowance:40,note:null},
-  {id:36, type:'レース',maker:'LIF/LIN LL3003w',acme:'SOLANA',acmeCode:'036',repeat:0,width:147,yoko:false,supplier:'LL TRADE',hem:'3つ折',vAllowance:40,note:null},
-  {id:37, type:'ドレープ',maker:'LIF/LIN LL2115w',acme:'TRAD CHECK',acmeCode:'037',repeat:17.2,width:147,yoko:false,supplier:'LL TRADE',hem:'3つ折',vAllowance:40,note:null},
-  {id:38, type:'ドレープ',maker:'LIF/LIN LL2153w',acme:'TRAD STRIPE',acmeCode:'038',repeat:0,width:147,yoko:false,supplier:'LL TRADE',hem:'3つ折',vAllowance:40,note:null},
-  {id:39, type:'遮光裏地',maker:'N7562ブラックアウト裏地 N7562G',acme:'BLACK OUT LINING A',acmeCode:'039',repeat:0,width:145,yoko:false,supplier:'サンコロナ',hem:'3つ折',vAllowance:40,note:null},
-  {id:40, type:'遮光裏地',maker:'N7562ブラックアウト裏地 N7562W',acme:'BLACK OUT LINING A',acmeCode:'040',repeat:0,width:145,yoko:false,supplier:'サンコロナ',hem:'3つ折',vAllowance:40,note:null},
-  {id:42, type:'遮光裏地',maker:'Royal 裏地 02',acme:'BLACK OUT LINING B',acmeCode:'042',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
-  {id:43, type:'遮光裏地',maker:'Royal 裏地 03',acme:'BLACK OUT LINING B',acmeCode:'043',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
-  {id:45, type:'遮光裏地',maker:'Royal 裏地 29',acme:'BLACK OUT LINING B',acmeCode:'045',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
-  {id:51, type:'ドレープ',maker:'MAYA PAPAYAS 450281',acme:'PAPAYA',acmeCode:'051',repeat:17.1,width:137,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
-  {id:53, type:'ドレープ',maker:'URBAN CATERPILLAR 450202',acme:'BLOOM',acmeCode:'053',repeat:22.9,width:137,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
-  {id:54, type:'ドレープ',maker:'URBAN CATERPILLAR 450200',acme:'BLOOM',acmeCode:'054',repeat:22.9,width:137,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
-  {id:57, type:'ドレープ',maker:'OVERSHOT NV/OR',acme:'OVER SHOT',acmeCode:'057',repeat:38,width:150,yoko:false,supplier:null,hem:'10cm2ッ折',vAllowance:30,note:'縫製代のみ'},
-  {id:58, type:'ドレープ',maker:'OVERSHOT NAVY',acme:'OVER SHOT',acmeCode:'058',repeat:38,width:150,yoko:false,supplier:null,hem:'10cm2ッ折',vAllowance:30,note:null},
-  {id:59, type:'ドレープ',maker:'OVERSHOT BEIGE',acme:'OVER SHOT',acmeCode:'059',repeat:38,width:150,yoko:false,supplier:null,hem:'10cm2ッ折',vAllowance:30,note:null},
-  {id:71, type:'レース',maker:'2419 A534',acme:'McCarthy',acmeCode:'071',repeat:0,width:300,yoko:true,supplier:null,hem:'WL',vAllowance:null,note:null},
-  {id:72, type:'ドレープ',maker:'GLASSELL IVORY',acme:'GLASSELL',acmeCode:'072',repeat:56.7,width:140,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
-  {id:73, type:'ドレープ',maker:'GLASSELL BROWN',acme:'GLASSELL',acmeCode:'073',repeat:56.7,width:140,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
-  {id:74, type:'ドレープ',maker:'LUCIO IVORY',acme:'STANTON',acmeCode:'074',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
-  {id:75, type:'ドレープ',maker:'LUCIO MUSTARD',acme:'STANTON',acmeCode:'075',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
-  {id:76, type:'ドレープ',maker:'LUCIO COGNAC',acme:'STANTON',acmeCode:'076',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
-  {id:77, type:'ドレープ',maker:'LUCIO STONE',acme:'STANTON',acmeCode:'077',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
-  {id:78, type:'ドレープ',maker:'LUCIO NOUGAT',acme:'STANTON',acmeCode:'078',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
-  {id:79, type:'ドレープ',maker:'LUCIO PEACOCK',acme:'STANTON',acmeCode:'079',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
-  {id:80, type:'ドレープ',maker:'LUCIO FERN',acme:'STANTON',acmeCode:'080',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
-  {id:81, type:'ドレープ',maker:'LUCIO SMOKE',acme:'STANTON',acmeCode:'081',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
-  {id:82, type:'ドレープ',maker:'ボールバイオ 54659 YELLOW #1',acme:'CHINO',acmeCode:'082',repeat:6.4,width:149,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:'縫製代のみ'},
-  {id:83, type:'ドレープ',maker:'ボールバイオ 54659 GREY #2',acme:'CHINO',acmeCode:'083',repeat:6.4,width:149,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
-  {id:84, type:'ドレープ',maker:'WRANGLER BONSAI',acme:'LENNOX',acmeCode:'084',repeat:0,width:137,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
-  {id:85, type:'ドレープ',maker:'WRANGLER SNOW',acme:'LENNOX',acmeCode:'085',repeat:0,width:137,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
-  {id:88, type:'ドレープ',maker:'WHISP SLATE',acme:'MONTCLAIR',acmeCode:'088',repeat:0,width:300,yoko:true,supplier:null,hem:null,vAllowance:null,note:null},
-  {id:89, type:'ドレープ',maker:'WHISP RHINO',acme:'MONTCLAIR',acmeCode:'089',repeat:0,width:300,yoko:true,supplier:null,hem:null,vAllowance:null,note:null},
-  {id:93, type:'ドレープ',maker:'ALAMITOS カーキ',acme:'ALAMITOS',acmeCode:'093',repeat:0,width:150,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
-  {id:94, type:'ドレープ',maker:'ALAMITOS ベージュ',acme:'ALAMITOS',acmeCode:'094',repeat:0,width:150,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
-  {id:95, type:'レース',maker:'12-TA2023-1',acme:'NOZAY',acmeCode:'095',repeat:0,width:148,yoko:false,supplier:null,hem:'WL',vAllowance:null,note:'JSF-8タグ'},
-  {id:96, type:'レース',maker:'12-TA2024-1',acme:'VICHY',acmeCode:'096',repeat:0,width:146,yoko:false,supplier:null,hem:'WL',vAllowance:null,note:'JSF-8タグ'},
-  {id:97, type:'レース',maker:'GP20210/6-3 ベージュ',acme:'VERNEUIL',acmeCode:'097',repeat:0,width:300,yoko:true,supplier:null,hem:'WL',vAllowance:null,note:'JSF-8タグ'},
-  {id:98, type:'レース',maker:'GP20210/6-2 ホワイト',acme:'VERNEUIL',acmeCode:'098',repeat:0,width:300,yoko:true,supplier:null,hem:'WL',vAllowance:null,note:'JSF-8タグ'},
-  {id:99, type:'ドレープ',maker:'TBO SAN JUAN ALOE',acme:'TBO SAN JUAN',acmeCode:'099',repeat:22.9,width:138,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
+  {id:13,type:'ドレープ',maker:'LONDAY 22-4600 キナリ',acme:'OLD TOWN',acmeCode:'013',repeat:0,width:110,yoko:false,supplier:'リック',hem:'3つ折',vAllowance:40,note:'防炎ラベル要'},
+  {id:14,type:'ドレープ',maker:'INOUEバリⅡ IV',acme:'TRAVELODGE',acmeCode:'014',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:'形態安定記載'},
+  {id:15,type:'ドレープ',maker:'INOUEバリⅡ BE',acme:'TRAVELODGE',acmeCode:'015',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
+  {id:16,type:'ドレープ',maker:'INOUEバリⅡ BR',acme:'TRAVELODGE',acmeCode:'016',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
+  {id:17,type:'ドレープ',maker:'INOUEバリⅡ DBR',acme:'TRAVELODGE',acmeCode:'017',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
+  {id:18,type:'ドレープ',maker:'INOUEバリⅡ GN',acme:'TRAVELODGE',acmeCode:'018',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
+  {id:20,type:'ドレープ',maker:'INOUEバリⅡ NB',acme:'TRAVELODGE',acmeCode:'020',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
+  {id:21,type:'ドレープ',maker:'INOUEバリⅡ GRY',acme:'TRAVELODGE',acmeCode:'021',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
+  {id:22,type:'レース',maker:'GOYO INTEXフィエロ SL29201',acme:'NEWDAY',acmeCode:'022',repeat:0,width:297,yoko:true,supplier:'五洋',hem:'WL',vAllowance:null,note:null},
+  {id:23,type:'レース',maker:'GOYO INTEXフィエロ SL29202',acme:'NEWDAY',acmeCode:'023',repeat:0,width:297,yoko:true,supplier:'五洋',hem:'WL',vAllowance:null,note:null},
+  {id:24,type:'レース',maker:'SUMINOE U-5397',acme:'ROADWAY',acmeCode:'024',repeat:0,width:300,yoko:true,supplier:'スミノエ',hem:'WL',vAllowance:null,note:'形態安定記載'},
+  {id:34,type:'レース',maker:'LIF/LIN LL3001w',acme:'ALPINE',acmeCode:'034',repeat:0,width:147,yoko:false,supplier:'LL TRADE',hem:'3つ折',vAllowance:40,note:null},
+  {id:35,type:'レース',maker:'LIF/LIN LL3002w',acme:'RAMONA',acmeCode:'035',repeat:0,width:147,yoko:false,supplier:'LL TRADE',hem:'3つ折',vAllowance:40,note:null},
+  {id:36,type:'レース',maker:'LIF/LIN LL3003w',acme:'SOLANA',acmeCode:'036',repeat:0,width:147,yoko:false,supplier:'LL TRADE',hem:'3つ折',vAllowance:40,note:null},
+  {id:37,type:'ドレープ',maker:'LIF/LIN LL2115w',acme:'TRAD CHECK',acmeCode:'037',repeat:17.2,width:147,yoko:false,supplier:'LL TRADE',hem:'3つ折',vAllowance:40,note:null},
+  {id:38,type:'ドレープ',maker:'LIF/LIN LL2153w',acme:'TRAD STRIPE',acmeCode:'038',repeat:0,width:147,yoko:false,supplier:'LL TRADE',hem:'3つ折',vAllowance:40,note:null},
+  {id:39,type:'遮光裏地',maker:'N7562ブラックアウト裏地 N7562G',acme:'BLACK OUT LINING A',acmeCode:'039',repeat:0,width:145,yoko:false,supplier:'サンコロナ',hem:'3つ折',vAllowance:40,note:null},
+  {id:40,type:'遮光裏地',maker:'N7562ブラックアウト裏地 N7562W',acme:'BLACK OUT LINING A',acmeCode:'040',repeat:0,width:145,yoko:false,supplier:'サンコロナ',hem:'3つ折',vAllowance:40,note:null},
+  {id:42,type:'遮光裏地',maker:'Royal 裏地 02',acme:'BLACK OUT LINING B',acmeCode:'042',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
+  {id:43,type:'遮光裏地',maker:'Royal 裏地 03',acme:'BLACK OUT LINING B',acmeCode:'043',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
+  {id:45,type:'遮光裏地',maker:'Royal 裏地 29',acme:'BLACK OUT LINING B',acmeCode:'045',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vAllowance:40,note:null},
+  {id:51,type:'ドレープ',maker:'MAYA PAPAYAS 450281',acme:'PAPAYA',acmeCode:'051',repeat:17.1,width:137,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
+  {id:53,type:'ドレープ',maker:'URBAN CATERPILLAR 450202',acme:'BLOOM',acmeCode:'053',repeat:22.9,width:137,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
+  {id:54,type:'ドレープ',maker:'URBAN CATERPILLAR 450200',acme:'BLOOM',acmeCode:'054',repeat:22.9,width:137,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
+  {id:57,type:'ドレープ',maker:'OVERSHOT NV/OR',acme:'OVER SHOT',acmeCode:'057',repeat:38,width:150,yoko:false,supplier:null,hem:'10cm2ッ折',vAllowance:30,note:'縫製代のみ'},
+  {id:58,type:'ドレープ',maker:'OVERSHOT NAVY',acme:'OVER SHOT',acmeCode:'058',repeat:38,width:150,yoko:false,supplier:null,hem:'10cm2ッ折',vAllowance:30,note:null},
+  {id:59,type:'ドレープ',maker:'OVERSHOT BEIGE',acme:'OVER SHOT',acmeCode:'059',repeat:38,width:150,yoko:false,supplier:null,hem:'10cm2ッ折',vAllowance:30,note:null},
+  {id:71,type:'レース',maker:'2419 A534',acme:'McCarthy',acmeCode:'071',repeat:0,width:300,yoko:true,supplier:null,hem:'WL',vAllowance:null,note:null},
+  {id:72,type:'ドレープ',maker:'GLASSELL IVORY',acme:'GLASSELL',acmeCode:'072',repeat:56.7,width:140,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
+  {id:73,type:'ドレープ',maker:'GLASSELL BROWN',acme:'GLASSELL',acmeCode:'073',repeat:56.7,width:140,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
+  {id:74,type:'ドレープ',maker:'LUCIO IVORY',acme:'STANTON',acmeCode:'074',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
+  {id:75,type:'ドレープ',maker:'LUCIO MUSTARD',acme:'STANTON',acmeCode:'075',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
+  {id:76,type:'ドレープ',maker:'LUCIO COGNAC',acme:'STANTON',acmeCode:'076',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
+  {id:77,type:'ドレープ',maker:'LUCIO STONE',acme:'STANTON',acmeCode:'077',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
+  {id:78,type:'ドレープ',maker:'LUCIO NOUGAT',acme:'STANTON',acmeCode:'078',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
+  {id:79,type:'ドレープ',maker:'LUCIO PEACOCK',acme:'STANTON',acmeCode:'079',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
+  {id:80,type:'ドレープ',maker:'LUCIO FERN',acme:'STANTON',acmeCode:'080',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
+  {id:81,type:'ドレープ',maker:'LUCIO SMOKE',acme:'STANTON',acmeCode:'081',repeat:0,width:145,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
+  {id:82,type:'ドレープ',maker:'ボールバイオ 54659 YELLOW #1',acme:'CHINO',acmeCode:'082',repeat:6.4,width:149,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:'縫製代のみ'},
+  {id:83,type:'ドレープ',maker:'ボールバイオ 54659 GREY #2',acme:'CHINO',acmeCode:'083',repeat:6.4,width:149,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
+  {id:84,type:'ドレープ',maker:'WRANGLER BONSAI',acme:'LENNOX',acmeCode:'084',repeat:0,width:137,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
+  {id:85,type:'ドレープ',maker:'WRANGLER SNOW',acme:'LENNOX',acmeCode:'085',repeat:0,width:137,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
+  {id:88,type:'ドレープ',maker:'WHISP SLATE',acme:'MONTCLAIR',acmeCode:'088',repeat:0,width:300,yoko:true,supplier:null,hem:null,vAllowance:null,note:null},
+  {id:89,type:'ドレープ',maker:'WHISP RHINO',acme:'MONTCLAIR',acmeCode:'089',repeat:0,width:300,yoko:true,supplier:null,hem:null,vAllowance:null,note:null},
+  {id:93,type:'ドレープ',maker:'ALAMITOS カーキ',acme:'ALAMITOS',acmeCode:'093',repeat:0,width:150,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
+  {id:94,type:'ドレープ',maker:'ALAMITOS ベージュ',acme:'ALAMITOS',acmeCode:'094',repeat:0,width:150,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
+  {id:95,type:'レース',maker:'12-TA2023-1',acme:'NOZAY',acmeCode:'095',repeat:0,width:148,yoko:false,supplier:null,hem:'WL',vAllowance:null,note:'JSF-8タグ'},
+  {id:96,type:'レース',maker:'12-TA2024-1',acme:'VICHY',acmeCode:'096',repeat:0,width:146,yoko:false,supplier:null,hem:'WL',vAllowance:null,note:'JSF-8タグ'},
+  {id:97,type:'レース',maker:'GP20210/6-3 ベージュ',acme:'VERNEUIL',acmeCode:'097',repeat:0,width:300,yoko:true,supplier:null,hem:'WL',vAllowance:null,note:'JSF-8タグ'},
+  {id:98,type:'レース',maker:'GP20210/6-2 ホワイト',acme:'VERNEUIL',acmeCode:'098',repeat:0,width:300,yoko:true,supplier:null,hem:'WL',vAllowance:null,note:'JSF-8タグ'},
+  {id:99,type:'ドレープ',maker:'TBO SAN JUAN ALOE',acme:'TBO SAN JUAN',acmeCode:'099',repeat:22.9,width:138,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
   {id:100,type:'ドレープ',maker:'PALMAVRDE SANDSTONE',acme:'PALMAVRDE',acmeCode:'100',repeat:68.6,width:138,yoko:false,supplier:null,hem:'3つ折',vAllowance:40,note:null},
   {id:101,type:'レース',maker:'SUMINOE U-5394 ホワイト',acme:'VACAY',acmeCode:'101',repeat:0,width:150,yoko:false,supplier:'スミノエ',hem:'3つ折',vAllowance:null,note:null},
   {id:102,type:'レース',maker:'SUMINOE U-5395 ベージュ',acme:'VACAY',acmeCode:'102',repeat:0,width:150,yoko:false,supplier:'スミノエ',hem:'3つ折',vAllowance:null,note:null},
@@ -554,340 +490,173 @@ const FABRIC_MASTER = [
   {id:104,type:'ドレープ',maker:'FLEX1 KHAKI',acme:'LEAF GREEN',acmeCode:'104',repeat:62,width:136,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vAllowance:30,note:null},
 ];
 
-// 品番マッチング（ACME品番・名称・番号の複数パターン対応）
-function findFabric(name, code) {
-  if (!name && !code) return null;
-  const n = (name||'').toLowerCase().trim();
-  const c = (code||'').replace(/[^0-9]/g,'');
-  // 数字コードで完全一致
-  if (c) {
-    const byId = FABRIC_MASTER.find(f => f.id === +c || f.acmeCode === c.padStart(3,'0'));
-    if (byId) return byId;
+function findFabric(name,code){
+  if(!name&&!code)return null;
+  const n=(name||'').toLowerCase().trim();
+  const c=(code||'').replace(/[^0-9]/g,'');
+  if(c){const f=FABRIC_MASTER.find(f=>f.id===+c||f.acmeCode===c.padStart(3,'0'));if(f)return f;}
+  const byAcme=FABRIC_MASTER.find(f=>f.acme.toLowerCase()===n);if(byAcme)return byAcme;
+  return FABRIC_MASTER.find(f=>f.acme.toLowerCase().includes(n)||n.includes(f.acme.toLowerCase())||f.maker.toLowerCase().includes(n))||null;
+}
+
+function roundUp1(v){return Math.ceil(Math.round(v*1000)/100)/10;}
+function getHida(s){if(!s)return 1.5;if(s.includes('2倍')||s.includes('2.0倍'))return 2;if(s.includes('フラット')||s.includes('flat'))return 1;return 1.5;}
+
+function calcYousyaku(w,h,style,opening,fabric,hasTassel){
+  if(!fabric||!w||!h)return null;
+  const hida=getHida(style);
+  const hSide=(opening==='片開き')?15:30;
+  const vAllow=fabric.vAllowance||40;
+  const tasselAdd=hasTassel?0.2:0;
+  if(fabric.yoko&&fabric.width>=290){
+    const raw=(w*hida+hSide)/100;
+    return{type:'③横づかい',nubaki:null,cutLen:null,yousyaku:roundUp1(raw+tasselAdd),formula:`(${w}×${hida}+${hSide})÷100=${roundUp1(raw)}m${tasselAdd>0?` +タッセル${tasselAdd}m`:''}`};
   }
-  // ACME名完全一致
-  const byAcme = FABRIC_MASTER.find(f => f.acme.toLowerCase() === n);
-  if (byAcme) return byAcme;
-  // 部分一致
-  const byPartial = FABRIC_MASTER.find(f =>
-    f.acme.toLowerCase().includes(n) || n.includes(f.acme.toLowerCase()) ||
-    f.maker.toLowerCase().includes(n)
-  );
-  return byPartial || null;
-}
-
-// ============================================================
-// 要尺計算エンジン
-// ============================================================
-function roundUp1(val) {
-  return Math.ceil(Math.round(val * 1000) / 100) / 10;
-}
-
-function getHida(style) {
-  if (!style) return 1.5;
-  if (style.includes('2倍') || style.includes('2.0倍')) return 2;
-  if (style.includes('フラット') || style.includes('flat')) return 1;
-  return 1.5;
-}
-
-function calcYousyaku(w, h, style, opening, fabric, hasTagssel) {
-  if (!fabric || !w || !h) return null;
-  const hida = getHida(style);
-  const hSide = (opening === '片開き') ? 15 : 30;
-  const vAllow = fabric.vAllowance || 40;
-  const tasselAdd = hasTagssel ? 0.2 : 0;
-
-  // ③横づかい
-  if (fabric.yoko && fabric.width >= 290) {
-    const raw = (w * hida + hSide) / 100;
-    return {
-      type:'③横づかい', nubaki:null, cutLen:null,
-      yousyaku: roundUp1(raw + tasselAdd),
-      formula:`(${w}×${hida}+${hSide})÷100=${roundUp1(raw)}m${tasselAdd>0?` +タッセル${tasselAdd}m`:''}`
-    };
+  if(fabric.repeat>0){
+    const nubaki=Math.ceil((w*hida+hSide)/fabric.width);
+    const repeatCount=Math.ceil((h+vAllow)/fabric.repeat);
+    const cutLen=repeatCount*fabric.repeat;
+    const raw=cutLen*nubaki/100;
+    return{type:'②リピート有り',nubaki,cutLen,yousyaku:roundUp1(raw+tasselAdd),formula:`継ぎ巾=${nubaki}枚 × 裁ち切り=${cutLen}cm ÷100=${roundUp1(raw)}m${tasselAdd>0?` +タッセル${tasselAdd}m`:''}`};
   }
-  // ②リピート有り
-  if (fabric.repeat > 0) {
-    const nubaki = Math.ceil((w * hida + hSide) / fabric.width);
-    const repeatCount = Math.ceil((h + vAllow) / fabric.repeat);
-    const cutLen = repeatCount * fabric.repeat;
-    const raw = cutLen * nubaki / 100;
-    return {
-      type:'②リピート有り', nubaki, cutLen,
-      yousyaku: roundUp1(raw + tasselAdd),
-      formula:`継ぎ巾=${nubaki}枚 × 裁ち切り=${cutLen}cm ÷100=${roundUp1(raw)}m${tasselAdd>0?` +タッセル${tasselAdd}m`:''}`
-    };
-  }
-  // ①リピート無し
-  const nubaki = Math.ceil((w * hida + hSide) / fabric.width);
-  const cutLen = h + vAllow;
-  const raw = cutLen * nubaki / 100;
-  return {
-    type:'①リピート無し', nubaki, cutLen,
-    yousyaku: roundUp1(raw + tasselAdd),
-    formula:`継ぎ巾=ROUNDUP((${w}×${hida}+${hSide})÷${fabric.width},0)=${nubaki}枚 × 裁ち切り=${cutLen}cm ÷100=${roundUp1(raw)}m${tasselAdd>0?` +タッセル${tasselAdd}m`:''}`
-  };
+  const nubaki=Math.ceil((w*hida+hSide)/fabric.width);
+  const cutLen=h+vAllow;
+  const raw=cutLen*nubaki/100;
+  return{type:'①リピート無し',nubaki,cutLen,yousyaku:roundUp1(raw+tasselAdd),formula:`継ぎ巾=ROUNDUP((${w}×${hida}+${hSide})÷${fabric.width},0)=${nubaki}枚 × 裁ち切り=${cutLen}cm ÷100=${roundUp1(raw)}m${tasselAdd>0?` +タッセル${tasselAdd}m`:''}`};
 }
 
-// ============================================================
-// アプリ状態
-// ============================================================
-let orders = [];
-let currentOrderId = null;
-let currentWindowIdx = 0;
-let masterFilter = 'all';
-let apiKey = localStorage.getItem('acme_api_key') || '';
-let settings = JSON.parse(localStorage.getItem('acme_settings') || '{}');
+let currentOrder=null;
+let currentWinIdx=0;
+let staffList=JSON.parse(localStorage.getItem('acme_staff')||'[]');
+let settings=JSON.parse(localStorage.getItem('acme_settings')||'{}');
+let customers=JSON.parse(localStorage.getItem('acme_customers')||'[]');
+let apiKey=localStorage.getItem('acme_api_key')||'';
 
-if (apiKey) document.getElementById('apiKeyInput').value = apiKey;
+if(apiKey)document.getElementById('apiKeyInput').value=apiKey;
 
-// ============================================================
-// ページナビ
-// ============================================================
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   document.getElementById('nav-'+name).classList.add('active');
-  if (name === 'master') renderMasterTable();
-  if (name === 'customers') renderCustomers();
+  if(name==='master')renderMasterTable();
+  if(name==='customers')renderCustomers();
+  if(name==='settings')renderStaffSettings();
 }
 
-// ============================================================
-// 案件リスト
-// ============================================================
-function renderOrderList() {
-  const list = document.getElementById('orderList');
-  document.getElementById('orderCount').textContent = `${orders.length}件`;
-  document.getElementById('navBadge').textContent = orders.filter(o=>o.status!=='done').length || orders.length;
-  if (orders.length === 0) {
-    list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text3);font-size:11px;">案件がありません</div>';
-    return;
-  }
-  list.innerHTML = orders.map(o => `
-    <div class="order-item ${o.id===currentOrderId?'active':''}" onclick="selectOrder('${o.id}')">
-      <div class="order-item-name">${o.customer.name||'（名前未取得）'} 様</div>
-      <div class="order-item-meta">
-        <span>${o.customer.store||'—'}</span>
-        <span>${o.windows.length}窓</span>
-        <span class="badge ${o.status==='ai_done'?'badge-ai':o.status==='done'?'badge-done':'badge-pending'}">
-          ${o.status==='ai_done'?'AI済':o.status==='done'?'確定':'未処理'}
-        </span>
-      </div>
-      <div class="order-meta-file">${o.filename}</div>
-    </div>
-  `).join('');
+function renderStaffSelect(){
+  const sel=document.getElementById('staffSelect');
+  if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">-- 選択してください --</option>'+
+    staffList.map(s=>`<option value="${s}" ${cur===s?'selected':''}>${s}</option>`).join('');
 }
 
-function selectOrder(id) {
-  currentOrderId = id;
-  currentWindowIdx = 0;
-  renderOrderList();
-  renderForm();
+function renderDashContent(order){
+  if(!order){document.getElementById('dashEmpty').style.display='flex';document.getElementById('dashContent').style.display='none';return;}
+  document.getElementById('dashEmpty').style.display='none';
+  document.getElementById('dashContent').style.display='block';
+  renderStaffSelect();
+  const c=order.customer;
+  document.getElementById('f_name').value=c.name||'';
+  document.getElementById('f_kana').value=c.kana||'';
+  document.getElementById('f_tel').value=c.tel||'';
+  document.getElementById('f_zip').value=c.zip||'';
+  document.getElementById('f_address').value=c.address||'';
+  document.getElementById('f_store').value=c.store||'';
+  document.getElementById('f_staff').value=c.staff||'';
+  document.getElementById('f_delivery').value=c.delivery||'customer';
+  document.getElementById('f_delivdate').value=c.delivdate||'';
   renderWindowTabs();
   renderWindowForm();
   renderPreview();
 }
 
-// ============================================================
-// フォーム
-// ============================================================
-function renderForm() {
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-  document.getElementById('emptyState').style.display = 'none';
-  document.getElementById('formArea').style.display = 'block';
-  document.getElementById('actionBar').style.display = 'flex';
-  const c = order.customer;
-  document.getElementById('f_name').value = c.name||'';
-  document.getElementById('f_kana').value = c.kana||'';
-  document.getElementById('f_tel').value = c.tel||'';
-  document.getElementById('f_zip').value = c.zip||'';
-  document.getElementById('f_address').value = c.address||'';
-  document.getElementById('f_store').value = c.store||'';
-  document.getElementById('f_staff').value = c.staff||'';
-  document.getElementById('f_delivery').value = c.delivery||'customer';
-  document.getElementById('f_delivdate').value = c.delivdate||'';
-}
-
-function updateCustomerFromForm() {
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-  order.customer = {
-    ...order.customer,
-    name: document.getElementById('f_name').value,
-    kana: document.getElementById('f_kana').value,
-    tel: document.getElementById('f_tel').value,
-    zip: document.getElementById('f_zip').value,
-    address: document.getElementById('f_address').value,
-    store: document.getElementById('f_store').value,
-    staff: document.getElementById('f_staff').value,
-    delivery: document.getElementById('f_delivery').value,
-    delivdate: document.getElementById('f_delivdate').value,
+function markMod(el){el.classList.remove('ai-filled');el.classList.add('modified');}
+function syncCustomer(){
+  if(!currentOrder)return;
+  currentOrder.customer={
+    ...currentOrder.customer,
+    name:document.getElementById('f_name').value,
+    kana:document.getElementById('f_kana').value,
+    tel:document.getElementById('f_tel').value,
+    zip:document.getElementById('f_zip').value,
+    address:document.getElementById('f_address').value,
+    store:document.getElementById('f_store').value,
+    staff:document.getElementById('f_staff').value,
+    delivery:document.getElementById('f_delivery').value,
+    delivdate:document.getElementById('f_delivdate').value,
   };
 }
 
-function markModified(el) {
-  el.classList.remove('ai-filled');
-  el.classList.add('modified');
+function renderWindowTabs(){
+  if(!currentOrder)return;
+  document.getElementById('windowTabs').innerHTML=
+    currentOrder.windows.map((w,i)=>
+      `<div class="window-tab ${i===currentWinIdx?'active':''}" onclick="selectWin(${i})">${w.label||`窓${i+1}`}</div>`
+    ).join('')+`<button class="add-win-btn" onclick="addWin()">+</button>`;
 }
 
-// ============================================================
-// 窓フォーム
-// ============================================================
-function renderWindowTabs() {
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-  document.getElementById('windowTabs').innerHTML =
-    order.windows.map((w,i) =>
-      `<div class="window-tab ${i===currentWindowIdx?'active':''}" onclick="selectWindow(${i})">${w.label||`窓${i+1}`}</div>`
-    ).join('') + `<button class="add-win-btn" onclick="addWindow()">+</button>`;
+function selectWin(i){currentWinIdx=i;renderWindowTabs();renderWindowForm();renderPreview();}
+function addWin(){
+  currentOrder.windows.push({label:`窓${currentOrder.windows.length+1}`,type:'ドレープ',style:'1.5倍ヒダ',fabricId:null,finishW:null,finishH:null,opening:'両開き',hook:'Aフック',windows:1,tassel:0,lining:'なし'});
+  currentWinIdx=currentOrder.windows.length-1;
+  renderWindowTabs();renderWindowForm();
 }
 
-function selectWindow(i) {
-  currentWindowIdx = i;
-  renderWindowTabs();
-  renderWindowForm();
-  renderPreview();
-}
-
-function addWindow() {
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-  order.windows.push({label:`窓${order.windows.length+1}`,type:'ドレープ',style:'1.5倍ヒダ',fabricId:null,finishW:null,finishH:null,opening:'両開き',hook:'Aフック',windows:1,tassel:0,lining:'なし'});
-  currentWindowIdx = order.windows.length - 1;
-  renderWindowTabs();
-  renderWindowForm();
-}
-
-function renderWindowForm() {
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-  const win = order.windows[currentWindowIdx];
-  if (!win) return;
-  const fabric = FABRIC_MASTER.find(f => f.id === win.fabricId);
-  const calc = (win.finishW && win.finishH && fabric) ?
-    calcYousyaku(win.finishW, win.finishH, win.style, win.opening, fabric, win.tassel > 0) : null;
-
-  const fabricOpts = FABRIC_MASTER.map(f =>
-    `<option value="${f.id}" ${win.fabricId===f.id?'selected':''}>${f.id.toString().padStart(3,'0')}. ${f.maker}（${f.acme}）</option>`
-  ).join('');
-
-  document.getElementById('windowForm').innerHTML = `
-    <div class="section-title">窓情報</div>
+function renderWindowForm(){
+  if(!currentOrder)return;
+  const win=currentOrder.windows[currentWinIdx];
+  if(!win)return;
+  const fabric=FABRIC_MASTER.find(f=>f.id===win.fabricId);
+  const calc=(win.finishW&&win.finishH&&fabric)?calcYousyaku(win.finishW,win.finishH,win.style,win.opening,fabric,win.tassel>0):null;
+  const fabricOpts=FABRIC_MASTER.map(f=>`<option value="${f.id}" ${win.fabricId===f.id?'selected':''}>${f.id.toString().padStart(3,'0')}. ${f.maker}（${f.acme}）</option>`).join('');
+  document.getElementById('windowForm').innerHTML=`
     <div class="form-row cols4">
-      <div class="form-group">
-        <label class="form-label">場所ラベル</label>
-        <input type="text" class="form-input" value="${win.label||''}" oninput="updateWin('label',this.value);renderWindowTabs()">
-      </div>
-      <div class="form-group">
-        <label class="form-label">種類 <span class="ai-tag">AI</span></label>
-        <select class="form-select" onchange="updateWin('type',this.value)">
-          <option ${win.type==='ドレープ'?'selected':''}>ドレープ</option>
-          <option ${win.type==='レース'?'selected':''}>レース</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">スタイル <span class="ai-tag">AI</span></label>
-        <select class="form-select" onchange="updateWin('style',this.value);recalc()">
-          <option ${win.style==='1.5倍ヒダ'?'selected':''}>1.5倍ヒダ</option>
-          <option ${win.style==='2倍ヒダ'?'selected':''}>2倍ヒダ</option>
-          <option ${win.style==='フラット'?'selected':''}>フラット</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">開き方 <span class="ai-tag">AI</span></label>
-        <select class="form-select" onchange="updateWin('opening',this.value);recalc()">
-          <option ${win.opening==='両開き'?'selected':''}>両開き</option>
-          <option ${win.opening==='片開き'?'selected':''}>片開き</option>
-        </select>
-      </div>
+      <div class="form-group"><label class="form-label">場所ラベル</label><input type="text" class="form-input" value="${win.label||''}" oninput="updWin('label',this.value);renderWindowTabs()"></div>
+      <div class="form-group"><label class="form-label">種類 <span class="ai-tag">AI</span></label><select class="form-select" onchange="updWin('type',this.value)"><option ${win.type==='ドレープ'?'selected':''}>ドレープ</option><option ${win.type==='レース'?'selected':''}>レース</option></select></div>
+      <div class="form-group"><label class="form-label">スタイル <span class="ai-tag">AI</span></label><select class="form-select" onchange="updWin('style',this.value);renderWindowForm();renderPreview()"><option ${win.style==='1.5倍ヒダ'?'selected':''}>1.5倍ヒダ</option><option ${win.style==='2倍ヒダ'?'selected':''}>2倍ヒダ</option><option ${win.style==='フラット'?'selected':''}>フラット</option></select></div>
+      <div class="form-group"><label class="form-label">開き方 <span class="ai-tag">AI</span></label><select class="form-select" onchange="updWin('opening',this.value);renderWindowForm();renderPreview()"><option ${win.opening==='両開き'?'selected':''}>両開き</option><option ${win.opening==='片開き'?'selected':''}>片開き</option></select></div>
     </div>
     <div class="form-row cols4">
-      <div class="form-group">
-        <label class="form-label">仕上がり幅 cm <span class="ai-tag">AI</span></label>
-        <input type="number" class="form-input ai-filled" value="${win.finishW||''}" oninput="updateWin('finishW',+this.value);recalc()">
-      </div>
-      <div class="form-group">
-        <label class="form-label">仕上がり丈 cm <span class="ai-tag">AI</span></label>
-        <input type="number" class="form-input ai-filled" value="${win.finishH||''}" oninput="updateWin('finishH',+this.value);recalc()">
-      </div>
-      <div class="form-group">
-        <label class="form-label">フック <span class="ai-tag">AI</span></label>
-        <select class="form-select" onchange="updateWin('hook',this.value)">
-          <option ${win.hook==='Aフック'?'selected':''}>Aフック</option>
-          <option ${win.hook==='Bフック'?'selected':''}>Bフック</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">窓数</label>
-        <input type="number" class="form-input" value="${win.windows||1}" min="1" oninput="updateWin('windows',+this.value)">
-      </div>
+      <div class="form-group"><label class="form-label">仕上がり幅 cm <span class="ai-tag">AI</span></label><input type="number" class="form-input ai-filled" value="${win.finishW||''}" oninput="updWin('finishW',+this.value);renderWindowForm();renderPreview()"></div>
+      <div class="form-group"><label class="form-label">仕上がり丈 cm <span class="ai-tag">AI</span></label><input type="number" class="form-input ai-filled" value="${win.finishH||''}" oninput="updWin('finishH',+this.value);renderWindowForm();renderPreview()"></div>
+      <div class="form-group"><label class="form-label">フック <span class="ai-tag">AI</span></label><select class="form-select" onchange="updWin('hook',this.value)"><option ${win.hook==='Aフック'?'selected':''}>Aフック</option><option ${win.hook==='Bフック'?'selected':''}>Bフック</option></select></div>
+      <div class="form-group"><label class="form-label">窓数</label><input type="number" class="form-input" value="${win.windows||1}" min="1" oninput="updWin('windows',+this.value)"></div>
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">タッセル本数 <span class="ai-tag">AI</span></label>
-        <input type="number" class="form-input" value="${win.tassel||0}" min="0" oninput="updateWin('tassel',+this.value);recalc()">
-      </div>
-      <div class="form-group">
-        <label class="form-label">裏地</label>
-        <select class="form-select" onchange="updateWin('lining',this.value)">
-          <option ${win.lining==='なし'?'selected':''}>なし</option>
-          <option ${win.lining==='遮光裏地A'?'selected':''}>遮光裏地A</option>
-          <option ${win.lining==='遮光裏地B'?'selected':''}>遮光裏地B</option>
-        </select>
-      </div>
+      <div class="form-group"><label class="form-label">タッセル本数 <span class="ai-tag">AI</span></label><input type="number" class="form-input" value="${win.tassel||0}" min="0" oninput="updWin('tassel',+this.value);renderWindowForm();renderPreview()"></div>
+      <div class="form-group"><label class="form-label">裏地</label><select class="form-select" onchange="updWin('lining',this.value)"><option ${win.lining==='なし'?'selected':''}>なし</option><option ${win.lining==='遮光裏地A'?'selected':''}>遮光裏地A</option><option ${win.lining==='遮光裏地B'?'selected':''}>遮光裏地B</option></select></div>
     </div>
-    <div class="section-title" style="margin-top:14px;">品番マスタ連動</div>
-    <div class="form-row single">
-      <div class="form-group">
-        <label class="form-label">生地品番 <span class="ai-tag">AI</span></label>
-        <select class="form-select" onchange="updateWin('fabricId',+this.value);recalc()">
-          <option value="">-- 選択 --</option>
-          ${fabricOpts}
-        </select>
-      </div>
+    <div class="form-row single" style="margin-top:4px;">
+      <div class="form-group"><label class="form-label">生地品番 <span class="ai-tag">AI</span></label><select class="form-select" onchange="updWin('fabricId',+this.value);renderWindowForm();renderPreview()"><option value="">-- 選択 --</option>${fabricOpts}</select></div>
     </div>
-    ${fabric ? `<div class="fabric-info">巾: ${fabric.width}cm ／ リピート: ${fabric.repeat>0?fabric.repeat+'cm':'無し'} ／ 裾: ${fabric.hem||'—'} ／ 上下縫い代: ${fabric.vAllowance||'—'}cm ／ 発注先: ${fabric.supplier||'要確認'}${fabric.note?' ／ ⚠ '+fabric.note:''}</div>` : ''}
+    ${fabric?`<div class="fabric-info">巾: ${fabric.width}cm ／ リピート: ${fabric.repeat>0?fabric.repeat+'cm':'無し'} ／ 裾: ${fabric.hem||'—'} ／ 上下縫い代: ${fabric.vAllowance!=null?fabric.vAllowance+'cm':'—'} ／ 発注先: ${fabric.supplier||'要確認'}${fabric.note?' ／ ⚠ '+fabric.note:''}</div>`:''}
     ${win.style==='フラット'?`<div class="warn-box">⚠ フラットスタイルはBフック推奨。倍率1倍で計算されます。</div>`:''}
-    <div class="section-title" style="margin-top:14px;">要尺計算結果</div>
-    ${calc ? `
+    ${calc?`
     <div class="yousyaku-box">
       <div class="yousyaku-row"><span class="yousyaku-label">計算方式</span><span class="yousyaku-val">${calc.type}</span></div>
       ${calc.nubaki!=null?`<div class="yousyaku-row"><span class="yousyaku-label">継ぎ巾数</span><span class="yousyaku-val">${calc.nubaki} 枚</span></div>`:''}
       ${calc.cutLen!=null?`<div class="yousyaku-row"><span class="yousyaku-label">裁ち切り</span><span class="yousyaku-val">${calc.cutLen} cm</span></div>`:''}
       <div class="yousyaku-row"><span class="yousyaku-label">要尺</span><span class="yousyaku-val hl">${calc.yousyaku} m</span></div>
       <div class="yousyaku-formula">${calc.formula}</div>
-    </div>` : `<div class="warn-box">品番と仕上がりサイズを入力すると自動計算されます</div>`}
+    </div>`:`<div class="warn-box" style="margin-top:8px;">品番と仕上がりサイズを入力すると自動計算されます</div>`}
   `;
 }
+function updWin(k,v){if(currentOrder)currentOrder.windows[currentWinIdx][k]=v;}
 
-function updateWin(key, val) {
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-  order.windows[currentWindowIdx][key] = val;
-}
-
-function recalc() {
-  renderWindowForm();
-  renderPreview();
-}
-
-// ============================================================
-// プレビュー（発注書実物レイアウト）
-// ============================================================
-function buildPreviewHTML(order, compact) {
-  if (!order) return '';
-  const c = order.customer;
-  const today = new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'});
-  const delivLabel = {customer:'お客様直送',store:'店入れ',contractor:'取付業者直送'}[c.delivery]||'お客様直送';
-  const s = settings;
-
-  const rows = order.windows.map((win,i) => {
-    const fabric = FABRIC_MASTER.find(f => f.id === win.fabricId);
-    const calc = (win.finishW && win.finishH && fabric) ?
-      calcYousyaku(win.finishW, win.finishH, win.style, win.opening, fabric, win.tassel > 0) : null;
-    const fs = compact ? 7 : 9;
-    return `<tr>
+function buildPreviewHTML(order,compact){
+  if(!order)return'';
+  const c=order.customer;
+  const s=settings;
+  const today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'});
+  const delivLabel={customer:'お客様直送',store:'店入れ',contractor:'取付業者直送'}[c.delivery]||'お客様直送';
+  const staffName=document.getElementById('staffSelect')?.value||'';
+  const fs=compact?7.5:9.5;
+  const rows=order.windows.map((win,i)=>{
+    const fabric=FABRIC_MASTER.find(f=>f.id===win.fabricId);
+    const calc=(win.finishW&&win.finishH&&fabric)?calcYousyaku(win.finishW,win.finishH,win.style,win.opening,fabric,win.tassel>0):null;
+    return`<tr>
       <td class="l" style="font-size:${fs}px;">${win.label||`窓${i+1}`}</td>
       <td style="font-size:${fs}px;">${win.type}</td>
       <td style="font-size:${fs}px;">${win.style}</td>
@@ -904,54 +673,37 @@ function buildPreviewHTML(order, compact) {
       <td class="hl" style="font-size:${compact?8:10}px;font-weight:700;">${calc?calc.yousyaku+'m':'—'}</td>
     </tr>`;
   }).join('');
-
-  // 品番別集計
-  const summary = {};
-  order.windows.forEach(win => {
-    const fabric = FABRIC_MASTER.find(f => f.id === win.fabricId);
-    if (!fabric) return;
-    const calc = (win.finishW && win.finishH) ?
-      calcYousyaku(win.finishW, win.finishH, win.style, win.opening, fabric, win.tassel > 0) : null;
-    if (!calc) return;
-    const key = fabric.maker;
-    summary[key] = (summary[key]||0) + calc.yousyaku;
+  const summary={};
+  order.windows.forEach(win=>{
+    const fabric=FABRIC_MASTER.find(f=>f.id===win.fabricId);
+    if(!fabric)return;
+    const calc=(win.finishW&&win.finishH)?calcYousyaku(win.finishW,win.finishH,win.style,win.opening,fabric,win.tassel>0):null;
+    if(!calc)return;
+    summary[fabric.maker]=(summary[fabric.maker]||0)+calc.yousyaku;
   });
-  const summaryRows = Object.entries(summary).map(([k,v]) =>
-    `<div class="preview-summary-row"><span>${k}</span><span style="font-weight:700;">${roundUp1(v)}m</span></div>`
-  ).join('');
-
-  const fs = compact ? 7.5 : 9.5;
-  return `
-    <div class="preview-sheet-title" style="font-size:${compact?10:13}px;">A C M E 専 用 発 注 書</div>
-    <div style="font-size:${compact?7:8.5}px;color:#555;display:flex;justify-content:space-between;margin-bottom:${compact?4:6}px;">
-      <span>進弘産業株式会社 御中　FAX: 05-8669-1384</span>
-      <span>発行: ${today}　納期: 午前〆7日後出荷</span>
+  const sumRows=Object.entries(summary).map(([k,v])=>`<div class="preview-summary-row"><span>${k}</span><span style="font-weight:700;">${roundUp1(v)}m</span></div>`).join('');
+  return`
+    <div class="preview-sheet-title" style="font-size:${compact?10:14}px;">A C M E 専 用 発 注 書</div>
+    <div style="font-size:${compact?7:8.5}px;color:#555;display:flex;justify-content:space-between;margin-bottom:${compact?5:7}px;">
+      <span>進弘産業株式会社 御中　FAX: 05-8669-1384</span><span>発行: ${today}　納期: 午前〆7日後出荷</span>
     </div>
-    <div style="display:flex;gap:${compact?4:8}px;margin-bottom:${compact?4:6}px;">
-      <div style="flex:1;">
-        <div style="font-size:${compact?7:8}px;font-weight:700;border-left:2px solid #000;padding-left:3px;margin-bottom:3px;">お客様情報</div>
-        <table style="width:100%;border-collapse:collapse;font-size:${compact?7:9}px;">
-          <tr><td style="border:1px solid #ccc;padding:2px 4px;background:#f5f5f5;font-weight:600;white-space:nowrap;font-size:${compact?6:8}px;">お客様名</td><td style="border:1px solid #ccc;padding:2px 4px;font-weight:700;">${c.name||'—'} 様</td></tr>
-          <tr><td style="border:1px solid #ccc;padding:2px 4px;background:#f5f5f5;font-weight:600;font-size:${compact?6:8}px;">住所</td><td style="border:1px solid #ccc;padding:2px 4px;">〒${c.zip||''} ${c.address||''}</td></tr>
-          <tr><td style="border:1px solid #ccc;padding:2px 4px;background:#f5f5f5;font-weight:600;font-size:${compact?6:8}px;">TEL</td><td style="border:1px solid #ccc;padding:2px 4px;">${c.tel||'—'}</td></tr>
-        </table>
+    <div class="preview-info-row">
+      <div class="preview-info-box">
+        <div class="preview-info-box-label">お客様情報</div>
+        <div style="font-weight:700;font-size:${compact?8:10}px;">${c.name||'—'} 様</div>
+        <div style="color:#555;font-size:${compact?7:8.5}px;">〒${c.zip||''} ${c.address||''}</div>
+        <div style="font-size:${compact?7:8.5}px;">TEL: ${c.tel||'—'}</div>
       </div>
-      <div style="flex:1;">
-        <div style="font-size:${compact?7:8}px;font-weight:700;border-left:2px solid #000;padding-left:3px;margin-bottom:3px;">配送・担当</div>
-        <table style="width:100%;border-collapse:collapse;font-size:${compact?7:9}px;">
-          <tr><td style="border:1px solid #ccc;padding:2px 4px;background:#f5f5f5;font-weight:600;white-space:nowrap;font-size:${compact?6:8}px;">店舗</td><td style="border:1px solid #ccc;padding:2px 4px;">${c.store||'—'}</td></tr>
-          <tr><td style="border:1px solid #ccc;padding:2px 4px;background:#f5f5f5;font-weight:600;font-size:${compact?6:8}px;">担当</td><td style="border:1px solid #ccc;padding:2px 4px;">${c.staff||'—'} 様</td></tr>
-          <tr><td style="border:1px solid #ccc;padding:2px 4px;background:#f5f5f5;font-weight:600;font-size:${compact?6:8}px;">配送</td><td style="border:1px solid #ccc;padding:2px 4px;">${delivLabel}${c.delivdate?' '+c.delivdate:''}</td></tr>
-        </table>
+      <div class="preview-info-box">
+        <div class="preview-info-box-label">配送・担当</div>
+        <div style="font-size:${compact?7:8.5}px;">${c.store||'—'} / ${c.staff||'—'} 様</div>
+        <div style="font-size:${compact?7:8.5}px;">${delivLabel}${c.delivdate?' '+c.delivdate:''}</div>
+        ${staffName?`<div style="font-size:${compact?7:8.5}px;margin-top:2px;border-top:1px solid #eee;padding-top:2px;">発注担当: <strong>${staffName}</strong></div>`:''}
       </div>
-      <div style="flex:0 0 auto;text-align:right;font-size:${compact?6:8}px;line-height:1.7;color:#555;">
-        ${s.company||'andC株式会社'}<br>
-        ${s.address||'〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階'}<br>
-        TEL: ${s.tel||'03-6303-3706'} / FAX: ${s.fax||'03-5726-8198'}<br>
-        発注担当: ___________
+      <div style="flex:0 0 auto;text-align:right;font-size:${compact?6.5:8}px;line-height:1.8;color:#555;">
+        ${s.company||'andC株式会社'}<br>${s.address||'〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階'}<br>TEL: ${s.tel||'03-6303-3706'} / FAX: ${s.fax||'03-5726-8198'}
       </div>
     </div>
-    <div style="font-size:${compact?7:8}px;font-weight:700;border-left:2px solid #000;padding-left:3px;margin-bottom:3px;">発注明細</div>
     <table class="preview-table">
       <thead><tr>
         <th>取付場所</th><th>種類</th><th>スタイル</th><th>メーカー生地名</th>
@@ -961,363 +713,220 @@ function buildPreviewHTML(order, compact) {
       </tr></thead>
       <tbody>${rows}</tbody>
     </table>
-    ${Object.keys(summary).length > 0 ? `
-    <div style="margin-top:${compact?4:8}px;">
-      <div style="font-size:${compact?7:8}px;font-weight:700;border-left:2px solid #000;padding-left:3px;margin-bottom:3px;">品番別合計m数</div>
-      <div class="preview-summary">${summaryRows}</div>
-    </div>` : ''}
-    <div style="margin-top:${compact?6:10}px;border-top:1px solid #ccc;padding-top:${compact?4:6}px;display:flex;justify-content:space-between;align-items:flex-end;">
+    ${Object.keys(summary).length>0?`<div class="preview-summary"><div class="preview-summary-title">品番別合計m数</div>${sumRows}</div>`:''}
+    <div style="margin-top:${compact?5:8}px;border-top:1px solid #ccc;padding-top:${compact?4:6}px;display:flex;justify-content:space-between;align-items:flex-end;">
       <div style="font-size:${compact?7:9}px;">内容ご確認・ご署名<div style="border:1px solid #000;width:${compact?40:60}px;height:${compact?10:16}px;margin-top:3px;"></div></div>
-    </div>
-  `;
+    </div>`;
 }
 
-function renderPreview() {
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-  document.getElementById('previewEmpty').style.display = 'none';
-  document.getElementById('previewSheet').style.display = 'block';
-  document.getElementById('previewContent').innerHTML = buildPreviewHTML(order, true);
+function renderPreview(){
+  if(!currentOrder)return;
+  document.getElementById('previewContent').innerHTML=buildPreviewHTML(currentOrder,true);
 }
 
-// ===== モーダル =====
-function openModal() {
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-  document.getElementById('modalContent').innerHTML =
-    `<div style="background:#fff;padding:20px;border:1px solid #ddd;border-radius:4px;">${buildPreviewHTML(order, false)}</div>`;
+function openModal(){
+  if(!currentOrder)return;
+  document.getElementById('modalContent').innerHTML=`<div style="background:#fff;padding:20px;border:1px solid #ddd;border-radius:4px;">${buildPreviewHTML(currentOrder,false)}</div>`;
   document.getElementById('modal').classList.add('show');
 }
-function closeModal(e) {
-  if (!e || e.target === document.getElementById('modal')) {
-    document.getElementById('modal').classList.remove('show');
-  }
-}
+function closeModal(e){if(!e||e.target===document.getElementById('modal'))document.getElementById('modal').classList.remove('show');}
 
-// ============================================================
-// PDF出力（印刷）
-// ============================================================
-function exportPDF() {
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-  updateCustomerFromForm();
-  const c = order.customer;
-  const today = new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'});
-  const delivLabel = {customer:'お客様直送',store:'店入れ',contractor:'取付業者直送'}[c.delivery]||'お客様直送';
-  const s = settings;
-
-  const rows = order.windows.map((win,i) => {
-    const fabric = FABRIC_MASTER.find(f => f.id === win.fabricId);
-    const calc = (win.finishW && win.finishH && fabric) ?
-      calcYousyaku(win.finishW, win.finishH, win.style, win.opening, fabric, win.tassel > 0) : null;
-    return `<tr>
-      <td class="left">${win.label||`窓${i+1}`}</td>
-      <td>${win.type}</td><td>${win.style}</td>
-      <td class="left">${fabric?fabric.maker:(win.fabricName||'—')}</td>
-      <td>${win.finishW||'—'}</td><td>${win.finishH||'—'}</td>
-      <td>${win.opening}</td><td>${win.hook}</td>
-      <td>${win.windows||1}</td><td>${win.tassel||0}</td>
-      <td>${win.lining||'なし'}</td>
-      <td>${fabric?(fabric.hem||'—'):'—'}</td>
-      <td>${calc?(calc.nubaki!=null?calc.nubaki+'枚×'+calc.cutLen+'cm':'—'):'—'}</td>
-      <td class="po-yousyaku">${calc?calc.yousyaku+'m':'—'}</td>
-    </tr>`;
+function exportPDF(){
+  if(!currentOrder)return;
+  syncCustomer();
+  const c=currentOrder.customer;
+  const s=settings;
+  const today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'});
+  const delivLabel={customer:'お客様直送',store:'店入れ',contractor:'取付業者直送'}[c.delivery]||'お客様直送';
+  const staffName=document.getElementById('staffSelect')?.value||'';
+  const rows=currentOrder.windows.map((win,i)=>{
+    const fabric=FABRIC_MASTER.find(f=>f.id===win.fabricId);
+    const calc=(win.finishW&&win.finishH&&fabric)?calcYousyaku(win.finishW,win.finishH,win.style,win.opening,fabric,win.tassel>0):null;
+    return`<tr><td class="left">${win.label||`窓${i+1}`}</td><td>${win.type}</td><td>${win.style}</td><td class="left">${fabric?fabric.maker:(win.fabricName||'—')}</td><td>${win.finishW||'—'}</td><td>${win.finishH||'—'}</td><td>${win.opening}</td><td>${win.hook}</td><td>${win.windows||1}</td><td>${win.tassel||0}</td><td>${win.lining||'なし'}</td><td>${fabric?(fabric.hem||'—'):'—'}</td><td>${calc?(calc.nubaki!=null?calc.nubaki+'枚×'+calc.cutLen+'cm':'—'):'—'}</td><td class="po-yousyaku">${calc?calc.yousyaku+'m':'—'}</td></tr>`;
   }).join('');
-
-  const summary = {};
-  order.windows.forEach(win => {
-    const fabric = FABRIC_MASTER.find(f => f.id === win.fabricId);
-    if (!fabric) return;
-    const calc = (win.finishW && win.finishH) ?
-      calcYousyaku(win.finishW, win.finishH, win.style, win.opening, fabric, win.tassel > 0) : null;
-    if (!calc) return;
-    summary[fabric.maker] = (summary[fabric.maker]||0) + calc.yousyaku;
+  const summary={};
+  currentOrder.windows.forEach(win=>{
+    const fabric=FABRIC_MASTER.find(f=>f.id===win.fabricId);
+    if(!fabric)return;
+    const calc=(win.finishW&&win.finishH)?calcYousyaku(win.finishW,win.finishH,win.style,win.opening,fabric,win.tassel>0):null;
+    if(!calc)return;
+    summary[fabric.maker]=(summary[fabric.maker]||0)+calc.yousyaku;
   });
-  const sumRows = Object.entries(summary).map(([k,v]) =>
-    `<tr><td class="left">${k}</td><td class="po-yousyaku">${roundUp1(v)}m</td></tr>`
-  ).join('');
-
-  document.getElementById('printArea').innerHTML = `
+  const sumRows=Object.entries(summary).map(([k,v])=>`<tr><td class="left">${k}</td><td class="po-yousyaku">${roundUp1(v)}m</td></tr>`).join('');
+  document.getElementById('printArea').innerHTML=`
     <div class="po-title">A C M E 専 用 発 注 書</div>
     <div class="po-meta"><div>進弘産業株式会社 御中　FAX: 05-8669-1384</div><div>発行日: ${today}　納期: 午前〆 7日後出荷</div></div>
     <div style="display:flex;gap:8mm;margin-bottom:4mm;">
-      <div style="flex:1;">
-        <div class="po-section-title">お客様情報</div>
+      <div style="flex:1;"><div class="po-section-title">お客様情報</div>
         <table class="po-info-table">
           <tr><th>お客様名</th><td><strong>${c.name||'—'} 様</strong>（${c.kana||''}）</td></tr>
           <tr><th>住所</th><td>〒${c.zip||''} ${c.address||''}</td></tr>
           <tr><th>TEL</th><td>${c.tel||''}</td></tr>
         </table>
       </div>
-      <div style="flex:1;">
-        <div class="po-section-title">配送情報</div>
+      <div style="flex:1;"><div class="po-section-title">配送情報</div>
         <table class="po-info-table">
           <tr><th>店舗</th><td>${c.store||''}</td></tr>
           <tr><th>担当者</th><td>${c.staff||''} 様</td></tr>
           <tr><th>配送</th><td>${delivLabel}${c.delivdate?' '+c.delivdate:''}</td></tr>
         </table>
       </div>
-      <div style="flex:0 0 52mm;text-align:right;">
-        <div class="po-section-title">発注元</div>
-        <div class="po-sender">
-          ${s.company||'andC株式会社'}<br>
-          ${s.address||'〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階'}<br>
-          TEL: ${s.tel||'03-6303-3706'}<br>FAX: ${s.fax||'03-5726-8198'}<br>
-          発注担当: <span style="display:inline-block;border-bottom:1px solid #000;min-width:28mm;">&nbsp;</span>
-        </div>
+      <div style="flex:0 0 54mm;text-align:right;"><div class="po-section-title">発注元</div>
+        <div class="po-sender">${s.company||'andC株式会社'}<br>${s.address||'〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階'}<br>TEL: ${s.tel||'03-6303-3706'}<br>FAX: ${s.fax||'03-5726-8198'}<br>発注担当: <strong>${staffName||'___________'}</strong></div>
       </div>
     </div>
     <div class="po-section-title">発注明細</div>
-    <table class="po-main-table">
-      <thead><tr>
-        <th>取付場所</th><th>種類</th><th>スタイル</th><th>メーカー生地名</th>
-        <th>仕上がり幅(cm)</th><th>仕上がり丈(cm)</th><th>開き方</th><th>フック</th>
-        <th>窓数</th><th>タッセル(本)</th><th>裏地</th><th>裾</th>
-        <th>継ぎ巾×裁ち切り</th><th>要尺(m)</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    ${Object.keys(summary).length>0?`
-    <div style="margin-top:4mm;">
-      <div class="po-section-title">品番別合計m数</div>
-      <table class="po-main-table" style="width:auto;">
-        <thead><tr><th style="min-width:120px;">生地名</th><th style="min-width:60px;">合計要尺</th></tr></thead>
-        <tbody>${sumRows}</tbody>
-      </table>
-    </div>`:''}
-    <div class="po-footer">
-      <div>内容ご確認・ご署名<div class="po-sign-box"></div></div>
-    </div>
-  `;
+    <table class="po-main-table"><thead><tr><th>取付場所</th><th>種類</th><th>スタイル</th><th>メーカー生地名</th><th>幅cm</th><th>丈cm</th><th>開き方</th><th>フック</th><th>窓数</th><th>タッセル</th><th>裏地</th><th>裾</th><th>継ぎ巾×裁ち切り</th><th>要尺(m)</th></tr></thead><tbody>${rows}</tbody></table>
+    ${Object.keys(summary).length>0?`<div class="po-section-title">品番別合計m数</div><table class="po-main-table" style="width:auto;"><thead><tr><th style="min-width:120px;">生地名</th><th style="min-width:60px;">合計要尺</th></tr></thead><tbody>${sumRows}</tbody></table>`:''}
+    <div class="po-footer"><div>内容ご確認・ご署名<div class="po-sign-box"></div></div></div>`;
   window.print();
 }
 
-function generateOrder() {
-  updateCustomerFromForm();
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-  order.status = 'done';
-  renderOrderList();
-  showToast('発注書を確定しました', 'success');
+function generateOrder(){
+  syncCustomer();
+  if(!currentOrder)return;
+  currentOrder.status='done';
+  const exists=customers.findIndex(c=>c.id===currentOrder.id);
+  if(exists>=0)customers[exists]=currentOrder;
+  else customers.unshift(currentOrder);
+  localStorage.setItem('acme_customers',JSON.stringify(customers));
+  showToast('発注書を確定しました。顧客管理に保存されました。','success');
 }
 
-function deleteOrder() {
-  if (!confirm('この案件を削除しますか？')) return;
-  orders = orders.filter(o => o.id !== currentOrderId);
-  currentOrderId = null;
-  document.getElementById('emptyState').style.display = 'flex';
-  document.getElementById('formArea').style.display = 'none';
-  document.getElementById('actionBar').style.display = 'none';
-  document.getElementById('previewEmpty').style.display = 'flex';
-  document.getElementById('previewSheet').style.display = 'none';
-  document.getElementById('windowTabs').innerHTML = '';
-  document.getElementById('windowForm').innerHTML = '';
-  renderOrderList();
-  showToast('削除しました', 'success');
+function deleteOrder(){
+  if(!confirm('この案件をクリアしますか？'))return;
+  currentOrder=null;
+  currentWinIdx=0;
+  renderDashContent(null);
+  showToast('クリアしました','success');
 }
 
-// ============================================================
-// 品番マスタ表示
-// ============================================================
-let masterFilterVal = 'all';
-function setMasterFilter(val, btn) {
-  masterFilterVal = val;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderMasterTable();
-}
-function renderMasterTable() {
-  const q = (document.getElementById('masterSearch').value||'').toLowerCase();
-  const data = FABRIC_MASTER.filter(f => {
-    if (masterFilterVal !== 'all' && f.type !== masterFilterVal) return false;
-    if (!q) return true;
-    return f.maker.toLowerCase().includes(q) || f.acme.toLowerCase().includes(q) ||
-           f.id.toString().includes(q) || (f.acmeCode||'').includes(q);
-  });
-  const typeClass = {ドレープ:'type-drape',レース:'type-race',遮光裏地:'type-lining'};
-  document.getElementById('masterTableBody').innerHTML = data.map(f => `
-    <tr>
-      <td style="font-family:var(--mono);">${f.id.toString().padStart(3,'0')}</td>
-      <td><span class="type-badge ${typeClass[f.type]||''}">${f.type}</span></td>
-      <td style="font-weight:500;">${f.maker}</td>
-      <td>${f.acme}</td>
-      <td style="font-family:var(--mono);">${f.width}cm</td>
-      <td style="font-family:var(--mono);">${f.repeat>0?f.repeat+'cm':'—'}</td>
-      <td>${f.yoko?'○':'—'}</td>
-      <td>${f.hem||'—'}</td>
-      <td style="font-family:var(--mono);">${f.vAllowance!=null?f.vAllowance+'cm':'—'}</td>
-      <td>${f.supplier||'—'}</td>
-      <td style="color:var(--amber);font-size:10px;">${f.note||''}</td>
-    </tr>
-  `).join('');
-}
+const uz=document.getElementById('uploadZone');
+uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag');});
+uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
+uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag');[...e.dataTransfer.files].forEach(f=>processFile(f));});
+function handleFileSelect(e){[...e.target.files].forEach(f=>processFile(f));e.target.value='';}
 
-// ============================================================
-// 顧客管理
-// ============================================================
-function renderCustomers() {
-  const done = orders.filter(o => o.status === 'done' || o.status === 'ai_done');
-  const grid = document.getElementById('customerGrid');
-  if (done.length === 0) {
-    grid.innerHTML = '<div style="color:var(--text3);font-size:12px;">確定済みの案件がありません</div>';
-    return;
-  }
-  grid.innerHTML = done.map(o => `
-    <div class="customer-card" onclick="showPage('dashboard');selectOrder('${o.id}')">
-      <div class="customer-card-name">${o.customer.name||'—'} 様</div>
-      <div class="customer-card-meta">
-        ${o.customer.tel||''}<br>
-        ${o.customer.address||''}<br>
-        店舗: ${o.customer.store||'—'} / ${o.customer.staff||'—'}
-      </div>
-      <div class="customer-card-orders">${o.windows.length}窓 ／ ${o.filename}</div>
-    </div>
-  `).join('');
-}
+async function processFile(file){
+  showAI('PDF解析中...',`${file.name} を Claude が読み取っています`);
+  try{
+    const base64=await fileToBase64(file);
+    const mediaType=file.type||'application/pdf';
+    const isPDF=mediaType==='application/pdf';
+    const resp=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-opus-4-5',
+        max_tokens:2000,
+        messages:[{role:'user',content:[
+          {type:isPDF?'document':'image',source:{type:'base64',media_type:mediaType,data:base64}},
+          {type:'text',text:`このACMEカーテン発注書からJSON形式で情報を抽出してください。JSON以外は出力しないでください。
 
-// ============================================================
-// 設定
-// ============================================================
-function saveApiKey() {
-  apiKey = document.getElementById('apiKeyInput').value.trim();
-  localStorage.setItem('acme_api_key', apiKey);
-  showToast('APIキーを保存しました', 'success');
-}
-function saveSettings() {
-  settings = {
-    company: document.getElementById('s_company').value,
-    address: document.getElementById('s_address').value,
-    tel: document.getElementById('s_tel').value,
-    fax: document.getElementById('s_fax').value,
-  };
-  localStorage.setItem('acme_settings', JSON.stringify(settings));
-  showToast('設定を保存しました', 'success');
-}
+品名はSTANTON/LUCIO/GLASSELL/LEAF/OVERSHOT/CHINO/BLOOMなどのACMEブランド名か、3桁品番数字で記載されることが多いです。
+スタイルは「1.5倍ヒダ」「2倍ヒダ」「フラット」のいずれか。仕上がりサイズは「仕上がり」欄の幅×丈を使ってください。
 
-// ============================================================
-// ファイルアップロード & Claude API
-// ============================================================
-function handleFileSelect(e) {
-  [...e.target.files].forEach(f => processFile(f));
-  e.target.value = '';
-}
-const uz = document.getElementById('uploadZone');
-uz.addEventListener('dragover', e => { e.preventDefault(); uz.classList.add('drag'); });
-uz.addEventListener('dragleave', () => uz.classList.remove('drag'));
-uz.addEventListener('drop', e => {
-  e.preventDefault(); uz.classList.remove('drag');
-  [...e.dataTransfer.files].forEach(f => processFile(f));
-});
-
-async function processFile(file) {
-  showAI('PDF解析中...', `${file.name} を Claude が読み取っています`);
-  try {
-    const base64 = await fileToBase64(file);
-    const mediaType = file.type || 'application/pdf';
-    const isPDF = mediaType === 'application/pdf';
-    const resp = await fetch('/api/chat', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model: 'claude-opus-4-5',
-        max_tokens: 2000,
-        messages: [{
-          role: 'user',
-          content: [
-            { type: isPDF?'document':'image', source: {type:'base64',media_type:mediaType,data:base64} },
-            { type: 'text', text: `このACMEカーテン発注書からJSON形式で情報を抽出してください。JSON以外は出力しないでください。
-
-品名は STANTON/LUCIO/GLASSELL/LEAF/OVERSHOT/CHINO/BLOOM などのACMEブランド名か、品番（3桁数字）で記載されることが多いです。
-スタイルは「1.5倍ヒダ」「2倍ヒダ」「フラット」のいずれかです。
-仕上がりサイズは「レール幅」ではなく「仕上がり」欄または手書きで記載された幅×丈を使ってください。
-
-{
-  "customer": {
-    "name": "お客様名（漢字）",
-    "kana": "フリガナ",
-    "tel": "電話番号",
-    "zip": "郵便番号",
-    "address": "住所",
-    "store": "お買上店舗名",
-    "staff": "担当者名",
-    "delivery": "customer/store/contractor",
-    "delivdate": "配送希望日時"
-  },
-  "windows": [
-    {
-      "label": "①掃き出し窓など",
-      "type": "ドレープ or レース",
-      "style": "1.5倍ヒダ/2倍ヒダ/フラット",
-      "fabricName": "品名（STANTON等）",
-      "fabricCode": "品番数字のみ",
-      "finishW": 仕上がり幅cm数値,
-      "finishH": 仕上がり丈cm数値,
-      "opening": "両開き or 片開き",
-      "hook": "Aフック or Bフック",
-      "windows": 窓数数値,
-      "tassel": タッセル本数数値,
-      "lining": "なし/裏地種別"
-    }
-  ]
-}` }
-          ]
-        }]
+{"customer":{"name":"","kana":"","tel":"","zip":"","address":"","store":"","staff":"","delivery":"customer/store/contractor","delivdate":""},"windows":[{"label":"①掃き出し窓など","type":"ドレープ or レース","style":"1.5倍ヒダ/2倍ヒダ/フラット","fabricName":"品名","fabricCode":"品番数字のみ","finishW":幅数値,"finishH":丈数値,"opening":"両開き or 片開き","hook":"Aフック or Bフック","windows":窓数,"tassel":タッセル本数,"lining":"なし/裏地種別"}]}`}
+        ]}]
       })
     });
-    const data = await resp.json();
+    const data=await resp.json();
     hideAI();
-    if (data.error) throw new Error(data.error.message||JSON.stringify(data.error));
-    const text = data.content.find(c => c.type==='text')?.text||'';
-    const parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
-
-    // 品番マッチング
-    parsed.windows.forEach(win => {
-      const f = findFabric(win.fabricName, win.fabricCode);
-      if (f) win.fabricId = f.id;
-    });
-
-    const newOrder = {
-      id: 'order_'+Date.now(),
-      filename: file.name,
-      status: 'ai_done',
-      customer: parsed.customer,
-      windows: parsed.windows
-    };
-    orders.unshift(newOrder);
-    currentOrderId = newOrder.id;
-    currentWindowIdx = 0;
-    renderOrderList();
-    renderForm();
-    renderWindowTabs();
-    renderWindowForm();
-    renderPreview();
-    showToast('PDF解析完了！内容を確認してください', 'success');
-  } catch(err) {
+    if(data.error)throw new Error(data.error.message||JSON.stringify(data.error));
+    const text=data.content.find(c=>c.type==='text')?.text||'';
+    const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
+    parsed.windows.forEach(win=>{const f=findFabric(win.fabricName,win.fabricCode);if(f)win.fabricId=f.id;});
+    currentOrder={id:'order_'+Date.now(),filename:file.name,status:'ai_done',customer:parsed.customer,windows:parsed.windows};
+    currentWinIdx=0;
+    renderDashContent(currentOrder);
+    showToast('PDF解析完了！内容を確認してください','success');
+  }catch(err){
     hideAI();
-    showToast('エラー: '+err.message, 'error');
+    showToast('エラー: '+err.message,'error');
     console.error(err);
   }
 }
+function fileToBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>rej(new Error('読み込み失敗'));r.readAsDataURL(file);});}
 
-function fileToBase64(file) {
-  return new Promise((res,rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result.split(',')[1]);
-    r.onerror = () => rej(new Error('ファイル読み込み失敗'));
-    r.readAsDataURL(file);
+let masterFilterVal='all';
+function setMasterFilter(val,btn){masterFilterVal=val;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMasterTable();}
+function renderMasterTable(){
+  const q=(document.getElementById('masterSearch')?.value||'').toLowerCase();
+  const tc={ドレープ:'type-drape',レース:'type-race',遮光裏地:'type-lining'};
+  const data=FABRIC_MASTER.filter(f=>{
+    if(masterFilterVal!=='all'&&f.type!==masterFilterVal)return false;
+    if(!q)return true;
+    return f.maker.toLowerCase().includes(q)||f.acme.toLowerCase().includes(q)||f.id.toString().includes(q)||(f.acmeCode||'').includes(q);
   });
+  document.getElementById('masterTableBody').innerHTML=data.map(f=>`<tr>
+    <td style="font-family:var(--mono);">${f.id.toString().padStart(3,'0')}</td>
+    <td><span class="type-badge ${tc[f.type]||''}">${f.type}</span></td>
+    <td style="font-weight:500;">${f.maker}</td><td>${f.acme}</td>
+    <td style="font-family:var(--mono);">${f.width}cm</td>
+    <td style="font-family:var(--mono);">${f.repeat>0?f.repeat+'cm':'—'}</td>
+    <td>${f.yoko?'○':'—'}</td><td>${f.hem||'—'}</td>
+    <td style="font-family:var(--mono);">${f.vAllowance!=null?f.vAllowance+'cm':'—'}</td>
+    <td>${f.supplier||'—'}</td>
+    <td style="color:var(--amber);font-size:10px;">${f.note||''}</td>
+  </tr>`).join('');
 }
 
-// ============================================================
-// UI helpers
-// ============================================================
-function showAI(label,sub){
-  document.getElementById('aiLabel').textContent=label;
-  document.getElementById('aiSub').textContent=sub;
-  document.getElementById('aiOverlay').classList.add('show');
+function renderCustomers(){
+  const grid=document.getElementById('customerGrid');
+  if(customers.length===0){grid.innerHTML='<div style="color:var(--text3);font-size:12px;">確定済みの案件がありません</div>';return;}
+  const statusLabel={ai_done:'AI済',done:'確定',pending:'未処理'};
+  const statusClass={ai_done:'badge-ai',done:'badge-done',pending:'badge-pending'};
+  grid.innerHTML=customers.map(o=>`
+    <div class="customer-card" onclick="loadCustomer('${o.id}')">
+      <div class="customer-card-name">${o.customer.name||'—'} 様</div>
+      <div class="customer-card-meta">${o.customer.tel||''}<br>${o.customer.address||''}<br>店舗: ${o.customer.store||'—'} / ${o.customer.staff||'—'}</div>
+      <div style="margin-top:6px;font-size:10px;color:var(--text3);font-family:var(--mono);">${o.windows.length}窓 ／ ${o.filename}</div>
+      <span class="customer-card-badge badge ${statusClass[o.status]||'badge-pending'}">${statusLabel[o.status]||'未処理'}</span>
+    </div>`).join('');
 }
+
+function loadCustomer(id){
+  const order=customers.find(o=>o.id===id);
+  if(!order)return;
+  currentOrder=JSON.parse(JSON.stringify(order));
+  currentWinIdx=0;
+  showPage('dashboard');
+  renderDashContent(currentOrder);
+  showToast(`${currentOrder.customer.name}様の案件を読み込みました`,'success');
+}
+
+function renderStaffSettings(){
+  const list=document.getElementById('staffList');
+  if(!list)return;
+  list.innerHTML=staffList.length===0?'<div style="font-size:11px;color:var(--text3);padding:4px 0;">担当者が登録されていません</div>':
+    staffList.map((s,i)=>`<div class="staff-item"><span class="staff-item-name">${s}</span><button class="staff-item-del" onclick="deleteStaff(${i})">×</button></div>`).join('');
+}
+function addStaff(){
+  const inp=document.getElementById('staffAddInput');
+  const name=inp.value.trim();
+  if(!name)return;
+  staffList.push(name);
+  localStorage.setItem('acme_staff',JSON.stringify(staffList));
+  inp.value='';
+  renderStaffSettings();
+  renderStaffSelect();
+  showToast(`${name}を追加しました`,'success');
+}
+function deleteStaff(i){
+  staffList.splice(i,1);
+  localStorage.setItem('acme_staff',JSON.stringify(staffList));
+  renderStaffSettings();
+  renderStaffSelect();
+}
+function saveApiKey(){apiKey=document.getElementById('apiKeyInput').value.trim();localStorage.setItem('acme_api_key',apiKey);showToast('APIキーを保存しました','success');}
+function saveSettings(){
+  settings={company:document.getElementById('s_company').value,address:document.getElementById('s_address').value,tel:document.getElementById('s_tel').value,fax:document.getElementById('s_fax').value};
+  localStorage.setItem('acme_settings',JSON.stringify(settings));
+  showToast('設定を保存しました','success');
+}
+
+function showAI(l,s){document.getElementById('aiLabel').textContent=l;document.getElementById('aiSub').textContent=s;document.getElementById('aiOverlay').classList.add('show');}
 function hideAI(){document.getElementById('aiOverlay').classList.remove('show');}
-
 let toastTimer;
 function showToast(msg,type=''){
   const t=document.getElementById('toast');
@@ -1328,8 +937,6 @@ function showToast(msg,type=''){
   toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
 }
 
-// 初期化
-renderOrderList();
 renderMasterTable();
 </script>
 </body>
