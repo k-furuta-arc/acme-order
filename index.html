@@ -6,256 +6,257 @@
 <title>ACME 発注処理システム</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-:root {
-  --bg:#FFFFFF; --paper:#FAFAF8; --paper2:#F4F4F1;
-  --line:#E5E5E3; --line-s:#CFCFCB;
-  --ink:#1A1A1A; --ink2:#3A3A3A; --mute:#767672; --mute2:#9A9A96;
-  --accent:#5B7A94; --accent-ink:#3E5B74; --accent-weak:#EEF2F6; --accent-line:#C9D4DE;
-  --ok:#5B9474; --warn:#9A7A4A; --red:#B23A3A;
-  --ai:#7A6B94; --ai-weak:#F1EEF6;
-  --r:4px; --r-lg:6px;
-  --sans:'Noto Sans JP',sans-serif; --mono:'JetBrains Mono','DM Mono',monospace;
-  --nav-w:220px;
+:root{
+  --bg:#FFFFFF;--paper:#FAFAF8;--paper2:#F4F4F1;
+  --line:#E5E5E3;--line-s:#CFCFCB;
+  --ink:#1A1A1A;--ink2:#3A3A3A;--mute:#767672;--mute2:#9A9A96;
+  --accent:#5B7A94;--ai:#3E5B74;--ai-weak:#EEF2F6;--ai-line:#C9D4DE;
+  --ok:#5B9474;--warn:#9A7A4A;--red:#B23A3A;
+  --ai-badge:#7A6B94;--ai-badge-bg:#F1EEF6;
+  --r:4px;--r-lg:6px;
+  --sans:'Noto Sans JP',sans-serif;--mono:'JetBrains Mono',monospace;
+  --nav:220px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh;font-size:14px;line-height:1.65;display:flex;flex-direction:column;}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);height:100vh;font-size:14px;line-height:1.65;display:flex;flex-direction:column;overflow:hidden;}
 
-/* ===== ヘッダー ===== */
-.ac-header{background:var(--bg);border-bottom:1px solid var(--line);height:56px;display:flex;align-items:center;padding:0 20px 0 0;position:sticky;top:0;z-index:100;flex-shrink:0;}
-
-/* ===== サイドバー ===== */
-.ac-side{width:var(--nav-w);background:var(--accent-ink);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;min-height:100%;}
-.ac-side__brand{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.12);}
-.ac-side__logo{background:rgba(255,255,255,.15);color:#fff;font-size:11px;font-weight:700;letter-spacing:.15em;padding:4px 10px;border-radius:4px;display:inline-block;margin-bottom:8px;font-family:var(--mono);}
-.ac-side__title{font-size:13px;color:rgba(255,255,255,.85);font-weight:500;line-height:1.3;}
-.ac-side__group{padding:20px 18px 6px;font-size:10px;font-weight:600;letter-spacing:.12em;color:rgba(255,255,255,.35);text-transform:uppercase;font-family:var(--mono);}
-.ac-side__nav{display:flex;flex-direction:column;gap:2px;padding:0 10px;}
-.ac-side__nav a{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:var(--r);color:rgba(255,255,255,.65);font-size:13px;font-weight:500;text-decoration:none;transition:all .15s;cursor:pointer;}
-.ac-side__nav a:hover{background:rgba(255,255,255,.08);color:#fff;}
-.ac-side__nav a.is-active{background:rgba(255,255,255,.16);color:#fff;}
-.ac-side__nav svg{flex-shrink:0;opacity:.8;}
-
-/* ===== トップバー ===== */
-.ac-top{flex:1;display:flex;align-items:center;padding:0 24px;gap:16px;border-left:1px solid var(--line);}
-.ac-top__crumbs{font-size:12px;color:var(--mute);flex:1;}
-.ac-top__crumbs b{color:var(--ink);font-weight:600;}
-.ac-top__right{display:flex;align-items:center;gap:12px;}
-.ac-top__label{font-size:12px;color:var(--mute);white-space:nowrap;}
-.ac-top__select{background:var(--paper);border:1px solid var(--line-s);border-radius:var(--r);padding:7px 12px;font-size:13px;font-family:var(--sans);color:var(--ink);min-width:180px;cursor:pointer;}
-.ac-top__select:focus{outline:none;border-color:var(--accent);}
-.ac-api{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mute);font-family:var(--mono);padding:6px 12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);}
-.ac-api__dot{width:7px;height:7px;border-radius:50%;background:var(--ok);animation:pulse 2s infinite;}
+/* ヘッダー */
+.hdr{height:56px;display:flex;flex-shrink:0;background:var(--ai);position:relative;z-index:100;}
+.hdr-brand{width:var(--nav);flex-shrink:0;display:flex;align-items:center;gap:10px;padding:0 18px;border-right:1px solid rgba(255,255,255,.12);}
+.hdr-logo{background:rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:700;letter-spacing:.15em;padding:4px 10px;border-radius:var(--r);font-family:var(--mono);}
+.hdr-title{font-size:13px;color:rgba(255,255,255,.9);font-weight:500;}
+.hdr-bar{flex:1;display:flex;align-items:center;padding:0 20px;gap:16px;background:var(--bg);border-bottom:1px solid var(--line);}
+.hdr-crumb{font-size:12px;color:var(--mute);flex:1;}
+.hdr-crumb b{color:var(--ink);font-weight:600;}
+.hdr-right{display:flex;align-items:center;gap:12px;}
+.hdr-staff-label{font-size:12px;color:var(--mute);white-space:nowrap;}
+.hdr-staff-sel{background:var(--paper);border:1px solid var(--line-s);border-radius:var(--r);padding:7px 12px;font-size:13px;font-family:var(--sans);color:var(--ink);min-width:180px;cursor:pointer;}
+.hdr-staff-sel:focus{outline:none;border-color:var(--accent);}
+.hdr-api{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mute);font-family:var(--mono);padding:6px 12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);}
+.hdr-dot{width:7px;height:7px;border-radius:50%;background:var(--ok);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* ===== ステップバー ===== */
-.ac-steps{display:flex;align-items:center;padding:12px 24px;background:var(--bg);border-bottom:1px solid var(--line);gap:0;}
-.ac-step{display:flex;align-items:center;gap:8px;font-size:13px;}
-.ac-step__num{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-family:var(--mono);font-weight:600;border:1.5px solid var(--line-s);color:var(--mute);background:var(--bg);}
-.ac-step.done .ac-step__num{background:var(--accent-weak);border-color:var(--accent);color:var(--accent-ink);}
-.ac-step.active .ac-step__num{background:var(--accent);border-color:var(--accent);color:#fff;}
-.ac-step.active{color:var(--accent-ink);font-weight:600;}
-.ac-step.done{color:var(--ink2);}
-.ac-step:not(.active):not(.done){color:var(--mute);}
-.ac-step__sep{width:40px;height:1px;background:var(--line);margin:0 12px;flex-shrink:0;}
+/* レイアウト */
+.body{display:flex;flex:1;overflow:hidden;}
+.nav{width:var(--nav);background:var(--ai);flex-shrink:0;display:flex;flex-direction:column;overflow-y:auto;}
+.nav-grp{padding:20px 14px 8px;font-size:10px;font-weight:600;letter-spacing:.12em;color:rgba(255,255,255,.35);text-transform:uppercase;font-family:var(--mono);}
+.nav-items{display:flex;flex-direction:column;gap:2px;padding:0 10px;}
+.nav-a{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:var(--r);color:rgba(255,255,255,.65);font-size:13px;font-weight:500;text-decoration:none;transition:all .15s;cursor:pointer;border:none;background:transparent;width:100%;text-align:left;}
+.nav-a:hover{background:rgba(255,255,255,.08);color:#fff;}
+.nav-a.on{background:rgba(255,255,255,.18);color:#fff;}
+.nav-div{height:1px;background:rgba(255,255,255,.1);margin:10px 14px;}
 
-/* ===== レイアウト ===== */
-.app-body{display:flex;flex:1;height:calc(100vh - 56px);overflow:hidden;}
-.content{flex:1;display:flex;overflow:hidden;}
-.page{display:none;flex:1;overflow:hidden;}
-.page.active{display:flex;flex-direction:column;}
+/* ページ */
+.main{flex:1;display:flex;overflow:hidden;}
+.page{display:none;flex:1;flex-direction:column;overflow:hidden;}
+.page.on{display:flex;}
 
-/* ===== ダッシュボード ===== */
+/* ステップバー */
+.steps{display:flex;align-items:center;padding:12px 24px;background:var(--bg);border-bottom:1px solid var(--line);flex-shrink:0;gap:0;}
+.step{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mute);}
+.step.done{color:var(--ink2);}
+.step.active{color:var(--ai);font-weight:600;}
+.step-n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-family:var(--mono);font-weight:600;border:1.5px solid var(--line-s);color:var(--mute);background:var(--bg);}
+.step.done .step-n{background:var(--ai-weak);border-color:var(--accent);color:var(--ai);}
+.step.active .step-n{background:var(--accent);border-color:var(--accent);color:#fff;}
+.step-sep{width:40px;height:1px;background:var(--line);margin:0 12px;flex-shrink:0;}
+.steps-right{margin-left:auto;font-size:11px;color:var(--mute2);}
+
+/* ダッシュボード本体 */
 .dash-body{flex:1;overflow-y:auto;background:var(--paper);}
-.dash-inner{display:grid;grid-template-columns:1fr 280px;gap:20px;padding:20px 24px 40px;max-width:1400px;margin:0 auto;align-items:start;}
-.dash-main{display:flex;flex-direction:column;gap:16px;}
+.dash-wrap{display:grid;grid-template-columns:1fr 288px;gap:0;height:100%;}
+.dash-main{overflow-y:auto;padding:20px 20px 40px;display:flex;flex-direction:column;gap:16px;}
+.dash-aside{border-left:1px solid var(--line);overflow-y:auto;background:var(--bg);}
 
 /* ドロップゾーン */
-.ac-drop{border:2px dashed var(--line-s);border-radius:var(--r-lg);padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);}
-.ac-drop:hover,.ac-drop.drag{border-color:var(--accent);background:var(--accent-weak);}
-.ac-drop__icon{color:var(--mute2);margin-bottom:10px;}
-.ac-drop__title{font-size:15px;font-weight:500;color:var(--mute);margin-bottom:4px;}
-.ac-drop__sub{font-size:12px;color:var(--mute2);font-family:var(--mono);}
+.drop{border:2px dashed var(--line-s);border-radius:var(--r-lg);padding:24px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);}
+.drop:hover,.drop.drag{border-color:var(--accent);background:var(--ai-weak);}
+.drop-icon{color:var(--mute2);margin-bottom:10px;}
+.drop-title{font-size:15px;font-weight:500;color:var(--mute);margin-bottom:4px;}
+.drop-sub{font-size:12px;color:var(--mute2);font-family:var(--mono);}
 
-/* 読込済みファイルバー */
-.ac-file{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);padding:12px 18px;display:flex;align-items:center;gap:14px;}
-.ac-file__icon{color:var(--accent);}
-.ac-file__name{font-size:14px;font-weight:600;color:var(--ink);}
-.ac-file__meta{font-size:11px;color:var(--mute);font-family:var(--mono);}
-.ac-file__btns{margin-left:auto;display:flex;gap:8px;}
+/* ファイルバー */
+.file-bar{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);padding:12px 18px;display:flex;align-items:center;gap:14px;}
+.file-icon{color:var(--accent);}
+.file-name{font-size:14px;font-weight:600;}
+.file-meta{font-size:11px;color:var(--mute);font-family:var(--mono);}
+.file-btns{margin-left:auto;display:flex;gap:8px;}
 
 /* パネル */
-.ac-panel{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;}
-.ac-panel__head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;background:var(--bg);}
-.ac-panel__title{font-size:13px;font-weight:700;color:var(--ink2);letter-spacing:.02em;}
-.ac-panel__head-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
-.ac-panel__body{padding:18px;}
+.panel{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;}
+.panel-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;}
+.panel-title{font-size:13px;font-weight:700;color:var(--ink2);}
+.panel-head-r{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.panel-body{padding:18px;}
+
+/* PDF表示 */
+.pdf-view{background:var(--paper2);border-radius:var(--r);overflow:hidden;}
+.pdf-frame{width:100%;height:320px;border:none;display:block;}
+.pdf-placeholder{height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--mute2);font-size:13px;gap:8px;}
 
 /* フィールド */
-.ac-field{display:flex;flex-direction:column;gap:5px;}
-.ac-field__label{font-size:11px;font-weight:600;color:var(--mute);font-family:var(--mono);letter-spacing:.04em;display:flex;align-items:center;gap:5px;}
-.ac-field__input,.ac-field__select{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:9px 12px;font-size:14px;font-family:var(--sans);color:var(--ink);width:100%;transition:border-color .15s;-webkit-appearance:none;}
-.ac-field__input:focus,.ac-field__select:focus{outline:none;border-color:var(--accent);background:var(--bg);}
-.ac-field__input.ai,.ac-field__select.ai{border-color:var(--accent-line);background:var(--accent-weak);}
-.ac-field__input.mod{border-color:#C9A84A;background:#FFFDF0;}
-.ac-field--unit{position:relative;}
-.ac-field__unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--mute);font-family:var(--mono);pointer-events:none;}
-.ac-field--unit .ac-field__input{padding-right:32px;}
-
-/* グリッド */
-.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.grid-1{display:grid;grid-template-columns:1fr;gap:12px;}
-
-/* AI バッジ */
-.ac-ai{font-size:9px;padding:1px 5px;background:var(--ai-weak);color:var(--ai);border-radius:3px;font-family:var(--mono);font-weight:600;letter-spacing:.05em;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field-label{font-size:11px;font-weight:600;color:var(--mute);font-family:var(--mono);letter-spacing:.04em;display:flex;align-items:center;gap:5px;}
+.field-input,.field-sel{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:9px 12px;font-size:14px;font-family:var(--sans);color:var(--ink);width:100%;transition:border-color .15s;-webkit-appearance:none;}
+.field-input:focus,.field-sel:focus{outline:none;border-color:var(--accent);background:var(--bg);}
+.field-input.ai,.field-sel.ai{border-color:var(--ai-line);background:var(--ai-weak);}
+.field-input.mod{border-color:#C9A84A;background:#FFFDF0;}
+.field-unit{position:relative;}
+.field-unit-label{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--mute);font-family:var(--mono);pointer-events:none;}
+.field-unit .field-input{padding-right:32px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;}
+.g1{display:grid;grid-template-columns:1fr;gap:12px;}
+.ai-tag{font-size:9px;padding:1px 5px;background:var(--ai-badge-bg);color:var(--ai-badge);border-radius:3px;font-family:var(--mono);font-weight:600;}
 
 /* チップ */
-.ac-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
-.ac-chip{font-size:11px;padding:3px 10px;background:var(--paper2);border:1px solid var(--line);border-radius:12px;color:var(--ink2);font-family:var(--mono);}
-.ac-chip b{color:var(--accent-ink);}
-.ac-chip--ok{background:rgba(91,148,116,.08);border-color:rgba(91,148,116,.25);color:var(--ok);}
-.ac-chip--warn{background:rgba(154,122,74,.08);border-color:rgba(154,122,74,.25);color:var(--warn);}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.chip{font-size:11px;padding:3px 10px;background:var(--paper2);border:1px solid var(--line);border-radius:12px;color:var(--ink2);font-family:var(--mono);}
+.chip b{color:var(--ai);}
+.chip-warn{background:rgba(154,122,74,.08);border-color:rgba(154,122,74,.25);color:var(--warn);}
 
 /* タブ */
-.ac-tabs{display:flex;gap:4px;padding:12px 18px 0;background:var(--paper);}
-.ac-tab{padding:8px 16px;border-radius:var(--r) var(--r) 0 0;font-size:13px;font-weight:500;cursor:pointer;color:var(--mute);border:1px solid var(--line);border-bottom:none;background:var(--paper2);transition:all .15s;font-family:var(--mono);}
-.ac-tab.is-active{background:var(--bg);color:var(--accent-ink);border-color:var(--line);border-bottom-color:var(--bg);font-weight:600;margin-bottom:-1px;}
-.ac-tab:hover:not(.is-active){color:var(--ink);}
-.ac-tab__add{padding:8px 10px;border-radius:var(--r) var(--r) 0 0;font-size:18px;cursor:pointer;color:var(--mute2);border:1px dashed var(--line);border-bottom:none;background:transparent;transition:all .15s;line-height:1;}
-.ac-tab__add:hover{color:var(--accent);border-color:var(--accent);}
+.tabs{display:flex;gap:4px;padding:12px 18px 0;background:var(--paper);}
+.tab{padding:8px 16px;border-radius:var(--r) var(--r) 0 0;font-size:13px;font-weight:500;cursor:pointer;color:var(--mute);border:1px solid var(--line);border-bottom:none;background:var(--paper2);transition:all .15s;font-family:var(--mono);}
+.tab.on{background:var(--bg);color:var(--ai);border-color:var(--line);border-bottom-color:var(--bg);font-weight:600;margin-bottom:-1px;}
+.tab-add{padding:8px 10px;border-radius:var(--r) var(--r) 0 0;font-size:18px;cursor:pointer;color:var(--mute2);border:1px dashed var(--line);border-bottom:none;background:transparent;transition:all .15s;line-height:1;}
+.tab-add:hover{color:var(--accent);border-color:var(--accent);}
 
-/* 計算サマリー（右サイド固定） */
-.dash-aside{position:sticky;top:20px;display:flex;flex-direction:column;gap:16px;}
-.ac-sum{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;}
-.ac-sum__head{padding:12px 16px;border-bottom:1px solid var(--line);font-size:12px;font-weight:700;color:var(--ink2);letter-spacing:.04em;}
-.ac-sum__win{padding:14px 16px;border-bottom:1px solid var(--line);background:var(--bg);}
-.ac-sum__win-label{font-size:11px;color:var(--mute);margin-bottom:8px;font-family:var(--mono);}
-.ac-sum__win-row{display:flex;justify-content:space-between;align-items:baseline;}
-.ac-sum__val{font-size:24px;font-weight:700;color:var(--ok);font-family:var(--mono);}
-.ac-sum__val-unit{font-size:14px;font-weight:500;}
-.ac-sum__sub{font-size:11px;color:var(--mute);margin-top:4px;font-family:var(--mono);}
-.ac-sum__total{padding:16px;background:var(--paper2);}
-.ac-sum__total-label{font-size:11px;color:var(--mute);margin-bottom:8px;}
-.ac-sum__total-row{display:flex;justify-content:space-between;align-items:baseline;}
-.ac-sum__total-name{font-size:13px;color:var(--ink2);font-weight:500;}
-.ac-sum__total-val{font-size:32px;font-weight:700;color:var(--ok);font-family:var(--mono);}
-.ac-sum__formula{font-size:10px;color:var(--mute2);font-family:var(--mono);line-height:1.9;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);}
+/* 右サイド */
+.aside-sec{border-bottom:1px solid var(--line);}
+.aside-head{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;background:var(--bg);}
+.aside-head-title{font-size:12px;font-weight:700;color:var(--ink2);letter-spacing:.04em;}
+.aside-count{font-size:11px;color:var(--mute);}
+.sum-win{padding:14px 16px;border-bottom:1px solid var(--line);}
+.sum-win-label{font-size:11px;color:var(--mute);margin-bottom:8px;font-family:var(--mono);}
+.sum-win-row{display:flex;justify-content:space-between;align-items:baseline;}
+.sum-val{font-size:24px;font-weight:700;color:var(--ok);font-family:var(--mono);}
+.sum-val-u{font-size:14px;font-weight:500;}
+.sum-sub{font-size:11px;color:var(--mute);margin-top:4px;font-family:var(--mono);}
+.sum-total{padding:16px;background:var(--paper2);}
+.sum-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.sum-total-name{font-size:13px;color:var(--ink2);font-weight:500;}
+.sum-total-val{font-size:30px;font-weight:700;color:var(--ok);font-family:var(--mono);}
+.check-body{padding:14px 16px;}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--red);}
+.check-item:last-child{border-bottom:none;}
+.check-ok{font-size:13px;color:var(--ok);font-weight:600;text-align:center;padding:12px 0;}
+
+/* 発注書プレビュー */
+.preview-wrap{background:var(--paper2);padding:16px;}
+.preview-sheet{background:#fff;border:1px solid var(--line-s);border-radius:var(--r);padding:20px;color:#000;cursor:pointer;transition:box-shadow .2s;}
+.preview-sheet:hover{box-shadow:0 4px 20px rgba(0,0,0,.1);}
+.preview-title{text-align:center;font-size:15px;font-weight:700;letter-spacing:.25em;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:12px;}
+.preview-inforow{display:flex;gap:10px;margin-bottom:12px;}
+.preview-ibox{flex:1;border:1px solid #ddd;border-radius:3px;padding:8px 10px;}
+.preview-ibox-label{font-size:9px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+.preview-table{width:100%;border-collapse:collapse;font-size:10px;}
+.preview-table th{background:#f0f0f0;border:1px solid #bbb;padding:5px 4px;text-align:center;font-size:9px;font-weight:700;}
+.preview-table td{border:1px solid #ddd;padding:5px 4px;text-align:center;vertical-align:middle;}
+.preview-table td.l{text-align:left;}
+.preview-table td.hl{font-weight:700;color:#5B9474;font-size:11px;}
+.preview-summary{margin-top:10px;border:1px solid #ddd;border-radius:3px;padding:8px 10px;}
+.preview-summary-title{font-size:9px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.preview-summary-row{display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid #eee;}
+.preview-summary-row:last-child{border-bottom:none;}
+.preview-sign{margin-top:12px;padding-top:10px;border-top:1px solid #ccc;font-size:11px;line-height:1.9;}
+.preview-sign-box{border:1px solid #000;width:120px;height:26px;margin-top:8px;}
 
 /* アクションバー */
-.ac-action{background:var(--bg);border-top:1px solid var(--line);padding:14px 24px;display:flex;gap:10px;flex-shrink:0;}
-.ac-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:var(--sans);transition:all .15s;}
-.ac-btn--primary{background:var(--accent);color:#fff;}
-.ac-btn--primary:hover{background:var(--accent-ink);}
-.ac-btn--secondary{background:var(--bg);border:1px solid var(--line-s);color:var(--ink2);}
-.ac-btn--secondary:hover{border-color:var(--accent);color:var(--accent);}
-.ac-btn--ghost{background:transparent;border:1px solid var(--line);color:var(--mute);font-size:12px;padding:7px 14px;}
-.ac-btn--ghost:hover{border-color:var(--accent);color:var(--accent);}
-.ac-btn--danger{background:rgba(178,58,58,.06);border:1px solid rgba(178,58,58,.2);color:var(--red);}
-.ac-btn--danger:hover{background:rgba(178,58,58,.12);}
+.action{background:var(--bg);border-top:1px solid var(--line);padding:14px 24px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
 
-/* 発注書プレビューパネル */
-.ac-preview{background:var(--paper2);padding:16px;}
-.ac-preview-sheet{background:#fff;border:1px solid var(--line-s);border-radius:var(--r);padding:20px;color:#000;cursor:pointer;transition:box-shadow .2s;}
-.ac-preview-sheet:hover{box-shadow:0 4px 20px rgba(0,0,0,.1);}
-.ac-preview-title{text-align:center;font-size:15px;font-weight:700;letter-spacing:.25em;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:12px;}
-.ac-preview-inforow{display:flex;gap:10px;margin-bottom:12px;}
-.ac-preview-infobox{flex:1;border:1px solid #ddd;border-radius:3px;padding:8px 10px;font-size:11px;}
-.ac-preview-infobox-label{font-size:9px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
-.ac-preview-table{width:100%;border-collapse:collapse;font-size:10px;}
-.ac-preview-table th{background:#f0f0f0;border:1px solid #bbb;padding:5px 4px;text-align:center;font-size:9px;font-weight:700;}
-.ac-preview-table td{border:1px solid #ddd;padding:5px 4px;text-align:center;vertical-align:middle;}
-.ac-preview-table td.l{text-align:left;}
-.ac-preview-table td.hl{font-weight:700;color:#5B9474;font-size:11px;}
-.ac-preview-summary{margin-top:10px;border:1px solid #ddd;border-radius:3px;padding:8px 10px;}
-.ac-preview-summary-title{font-size:9px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
-.ac-preview-summary-row{display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid #eee;}
-.ac-preview-summary-row:last-child{border-bottom:none;}
-.ac-preview-sign{margin-top:12px;padding-top:10px;border-top:1px solid #ccc;font-size:11px;line-height:1.8;}
-.ac-preview-sign-box{border:1px solid #000;width:120px;height:28px;margin-top:8px;}
+/* ボタン */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:var(--sans);transition:all .15s;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:var(--ai);}
+.btn-secondary{background:var(--bg);border:1px solid var(--line-s);color:var(--ink2);}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--mute);font-size:12px;padding:7px 14px;}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-danger{background:rgba(178,58,58,.06);border:1px solid rgba(178,58,58,.2);color:var(--red);}
+.btn-danger:hover{background:rgba(178,58,58,.12);}
 
 /* 品番マスタ */
-.master-page{flex:1;overflow-y:auto;padding:24px;}
+.page-inner{flex:1;overflow-y:auto;padding:24px;}
 .page-h2{font-size:20px;font-weight:700;margin-bottom:4px;}
 .page-sub{font-size:13px;color:var(--mute);margin-bottom:20px;}
-.search-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
-.search-input{flex:1;min-width:200px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:9px 14px;font-size:13px;font-family:var(--sans);color:var(--ink);}
-.search-input:focus{outline:none;border-color:var(--accent);}
-.filter-btn{padding:9px 16px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);font-size:12px;cursor:pointer;color:var(--mute);font-family:var(--sans);transition:all .15s;}
-.filter-btn.active{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-weak);font-weight:600;}
-.master-table{width:100%;border-collapse:collapse;font-size:12px;background:var(--bg);border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--line);}
-.master-table th{background:var(--paper2);border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:var(--mute);font-family:var(--mono);letter-spacing:.05em;}
-.master-table td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--ink);vertical-align:middle;}
-.master-table tr:last-child td{border-bottom:none;}
-.master-table tr:hover td{background:var(--accent-weak);}
-.type-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-family:var(--mono);font-weight:600;}
-.type-drape{background:var(--accent-weak);color:var(--accent-ink);}
-.type-race{background:rgba(91,148,116,.1);color:var(--ok);}
-.type-lining{background:var(--ai-weak);color:var(--ai);}
+.sbar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.sinput{flex:1;min-width:200px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:9px 14px;font-size:13px;font-family:var(--sans);color:var(--ink);}
+.sinput:focus{outline:none;border-color:var(--accent);}
+.fbtn{padding:9px 16px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);font-size:12px;cursor:pointer;color:var(--mute);font-family:var(--sans);transition:all .15s;}
+.fbtn.on{border-color:var(--accent);color:var(--ai);background:var(--ai-weak);font-weight:600;}
+.mtable{width:100%;border-collapse:collapse;font-size:12px;background:var(--bg);border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--line);}
+.mtable th{background:var(--paper2);border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:var(--mute);font-family:var(--mono);}
+.mtable td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--ink);vertical-align:middle;}
+.mtable tr:last-child td{border-bottom:none;}
+.mtable tr:hover td{background:var(--ai-weak);}
+.tbadge{font-size:10px;padding:2px 8px;border-radius:10px;font-family:var(--mono);font-weight:600;}
+.t-d{background:var(--ai-weak);color:var(--ai);}
+.t-r{background:rgba(91,148,116,.1);color:var(--ok);}
+.t-l{background:var(--ai-badge-bg);color:var(--ai-badge);}
 
 /* 顧客管理 */
-.customer-page{flex:1;overflow-y:auto;padding:24px;}
-.customer-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
-.customer-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;cursor:pointer;transition:all .15s;}
-.customer-card:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(91,122,148,.1);}
-.customer-card__name{font-size:15px;font-weight:700;margin-bottom:6px;}
-.customer-card__meta{font-size:12px;color:var(--mute);line-height:1.9;}
-.customer-card__foot{margin-top:10px;display:flex;align-items:center;gap:8px;font-size:11px;color:var(--mute2);font-family:var(--mono);}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.ccard{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;cursor:pointer;transition:all .15s;}
+.ccard:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(91,122,148,.1);}
+.ccard-name{font-size:15px;font-weight:700;margin-bottom:6px;}
+.ccard-meta{font-size:12px;color:var(--mute);line-height:1.9;}
+.ccard-foot{margin-top:10px;font-size:11px;color:var(--mute2);font-family:var(--mono);}
 
 /* 設定 */
-.settings-page{flex:1;overflow-y:auto;padding:24px;max-width:640px;}
-.settings-group{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px;margin-bottom:16px;}
-.settings-group-title{font-size:14px;font-weight:700;margin-bottom:16px;color:var(--ink);}
-.settings-row{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
-.settings-row:last-of-type{margin-bottom:0;}
-.settings-label{font-size:11px;color:var(--mute);font-family:var(--mono);font-weight:600;letter-spacing:.04em;}
-.settings-input{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:9px 12px;font-size:14px;font-family:var(--sans);color:var(--ink);width:100%;}
-.settings-input:focus{outline:none;border-color:var(--accent);}
-.settings-save{padding:9px 22px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sans);margin-top:10px;}
-.settings-save:hover{background:var(--accent-ink);}
+.sgrp{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px;margin-bottom:16px;}
+.sgrp-title{font-size:14px;font-weight:700;margin-bottom:16px;}
+.srow{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.srow:last-of-type{margin-bottom:0;}
+.slabel{font-size:11px;color:var(--mute);font-family:var(--mono);font-weight:600;letter-spacing:.04em;}
+.sinp{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:9px 12px;font-size:14px;font-family:var(--sans);color:var(--ink);width:100%;}
+.sinp:focus{outline:none;border-color:var(--accent);}
+.ssave{padding:9px 22px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sans);margin-top:10px;}
+.ssave:hover{background:var(--ai);}
 .staff-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
 .staff-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);}
-.staff-item__name{flex:1;font-size:13px;}
-.staff-item__del{background:none;border:none;color:var(--mute2);cursor:pointer;font-size:16px;padding:2px 6px;transition:color .15s;}
-.staff-item__del:hover{color:var(--red);}
+.staff-item-name{flex:1;font-size:13px;}
+.staff-del{background:none;border:none;color:var(--mute2);cursor:pointer;font-size:16px;padding:2px 6px;transition:color .15s;}
+.staff-del:hover{color:var(--red);}
 .staff-add-row{display:flex;gap:8px;}
-.staff-add-input{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:9px 12px;font-size:13px;font-family:var(--sans);color:var(--ink);}
-.staff-add-input:focus{outline:none;border-color:var(--accent);}
-.staff-add-btn{padding:9px 18px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sans);white-space:nowrap;}
+.staff-add-inp{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:9px 12px;font-size:13px;font-family:var(--sans);color:var(--ink);}
+.staff-add-inp:focus{outline:none;border-color:var(--accent);}
+.staff-add-btn{padding:9px 18px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
 
 /* モーダル */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center;}
-.modal-overlay.show{display:flex;}
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center;}
+.modal-ov.on{display:flex;}
 .modal-box{background:#fff;border-radius:var(--r-lg);padding:28px;max-width:92vw;max-height:90vh;overflow-y:auto;width:900px;box-shadow:0 20px 60px rgba(0,0,0,.2);}
-.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
 .modal-title{font-size:15px;font-weight:700;}
 .modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--mute);padding:4px 8px;border-radius:var(--r);}
 .modal-close:hover{background:var(--paper);color:var(--ink);}
 
-/* AI オーバーレイ */
-.ai-overlay{display:none;position:fixed;inset:0;background:rgba(26,26,26,.6);z-index:200;align-items:center;justify-content:center;}
-.ai-overlay.show{display:flex;}
+/* AI overlay */
+.ai-ov{display:none;position:fixed;inset:0;background:rgba(26,26,26,.6);z-index:200;align-items:center;justify-content:center;}
+.ai-ov.on{display:flex;}
 .ai-box{background:var(--bg);border:1px solid var(--line-s);border-radius:var(--r-lg);padding:36px 44px;text-align:center;max-width:340px;box-shadow:0 20px 60px rgba(0,0,0,.15);}
-.ai-spinner{width:40px;height:40px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 18px;}
+.ai-spin{width:40px;height:40px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 18px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ai-label{font-size:14px;color:var(--ink);margin-bottom:6px;font-weight:600;}
 .ai-sub{font-size:12px;color:var(--mute);font-family:var(--mono);}
 
-/* 空状態 */
-.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;color:var(--mute2);font-size:14px;gap:10px;text-align:center;}
-.empty-state__icon{font-size:40px;opacity:.2;margin-bottom:6px;}
-
 /* Toast */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--ink);border-radius:var(--r-lg);padding:12px 18px;font-size:13px;color:#fff;z-index:300;transform:translateY(60px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:10px;max-width:340px;box-shadow:0 8px 30px rgba(0,0,0,.2);}
-.toast.show{transform:translateY(0);opacity:1;}
-.toast.success .toast-icon{color:#6ee7b7;}
-.toast.error .toast-icon{color:#fca5a5;}
+.toast.on{transform:translateY(0);opacity:1;}
+.toast-ok .toast-ic{color:#6ee7b7;}
+.toast-err .toast-ic{color:#fca5a5;}
+
+/* 空状態 */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;color:var(--mute2);font-size:14px;gap:10px;text-align:center;}
+.empty-icon{font-size:40px;opacity:.2;margin-bottom:6px;}
 
 /* 印刷 */
 @media print{
   @page{size:A4 landscape;margin:10mm 12mm;}
   body,html{background:#fff !important;}
-  .ac-header,.app-body,.toast,.ai-overlay,.modal-overlay{display:none !important;}
+  .hdr,.body,.toast,.ai-ov,.modal-ov{display:none !important;}
   #printArea{display:block !important;}
   .po-title{text-align:center;font-size:16pt;font-weight:bold;letter-spacing:.3em;margin-bottom:5mm;border-bottom:2px solid #000;padding-bottom:3mm;}
   .po-meta{font-size:8pt;display:flex;justify-content:space-between;margin-bottom:3mm;}
@@ -281,188 +282,183 @@ select option{background:var(--bg);}
 </head>
 <body>
 
-<!-- ヘッダー -->
-<div class="ac-header">
-  <div style="width:var(--nav-w);flex-shrink:0;display:flex;align-items:center;gap:10px;padding:0 18px;background:var(--accent-ink);">
-    <div class="ac-side__logo" style="margin:0;">ACME</div>
-    <div style="font-size:13px;color:rgba(255,255,255,.85);font-weight:500;">発注処理システム</div>
+<!-- ヘッダー（1行） -->
+<div class="hdr">
+  <div class="hdr-brand">
+    <div class="hdr-logo">ACME</div>
+    <div class="hdr-title">発注処理システム</div>
   </div>
-  <div class="ac-top">
-    <div class="ac-top__crumbs" id="headerCrumb">メイン / <b>ダッシュボード</b></div>
-    <div class="ac-top__right">
-      <span class="ac-top__label">発注担当者</span>
-      <select class="ac-top__select" id="staffSelect" onchange="renderPreview()">
+  <div class="hdr-bar">
+    <div class="hdr-crumb" id="crumb">メイン / <b>ダッシュボード</b></div>
+    <div class="hdr-right">
+      <span class="hdr-staff-label">発注担当者</span>
+      <select class="hdr-staff-sel" id="staffSel" onchange="renderPreview()">
         <option value="">— 選択してください —</option>
       </select>
-      <div class="ac-api"><div class="ac-api__dot"></div>Claude API</div>
+      <div class="hdr-api"><div class="hdr-dot"></div>Claude API</div>
     </div>
   </div>
 </div>
 
-<div class="app-body">
-  <!-- サイドバー -->
-  <aside class="ac-side">
-    <div class="ac-side__brand">
-      <div class="ac-side__logo">ACME</div>
-      <div class="ac-side__title">発注処理システム</div>
-    </div>
-    <div class="ac-side__group">メイン</div>
-    <nav class="ac-side__nav">
-      <a onclick="showPage('dashboard')" id="nav-dashboard" class="is-active">
+<div class="body">
+  <!-- サイドナビ（ヘッダーと別体） -->
+  <nav class="nav">
+    <div class="nav-grp">メイン</div>
+    <div class="nav-items">
+      <button class="nav-a on" id="nav-dashboard" onclick="goPage('dashboard')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
         ダッシュボード
-      </a>
-      <a onclick="showPage('master')" id="nav-master">
+      </button>
+      <button class="nav-a" id="nav-master" onclick="goPage('master')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg>
         品番マスタ
-      </a>
-      <a onclick="showPage('customers')" id="nav-customers">
+      </button>
+      <button class="nav-a" id="nav-customers" onclick="goPage('customers')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         顧客管理
-      </a>
-    </nav>
-    <div class="ac-side__group">システム</div>
-    <nav class="ac-side__nav">
-      <a onclick="showPage('settings')" id="nav-settings">
+      </button>
+    </div>
+    <div class="nav-div"></div>
+    <div class="nav-grp">システム</div>
+    <div class="nav-items">
+      <button class="nav-a" id="nav-settings" onclick="goPage('settings')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         設定
-      </a>
-    </nav>
-  </aside>
+      </button>
+    </div>
+  </nav>
 
-  <div class="content">
+  <div class="main">
 
     <!-- ダッシュボード -->
-    <div class="page active" id="page-dashboard">
+    <div class="page on" id="page-dashboard">
       <!-- ステップバー -->
-      <div class="ac-steps" id="stepBar">
-        <div class="ac-step active" id="step1"><span class="ac-step__num">1</span>PDF読込</div>
-        <div class="ac-step__sep"></div>
-        <div class="ac-step" id="step2"><span class="ac-step__num">2</span>内容確認</div>
-        <div class="ac-step__sep"></div>
-        <div class="ac-step" id="step3"><span class="ac-step__num">3</span>発注確定</div>
+      <div class="steps">
+        <div class="step active" id="step1"><span class="step-n" id="sn1">1</span>PDF読込</div>
+        <div class="step-sep"></div>
+        <div class="step" id="step2"><span class="step-n" id="sn2">2</span>内容確認</div>
+        <div class="step-sep"></div>
+        <div class="step" id="step3"><span class="step-n" id="sn3">3</span>発注確定</div>
+        <div class="steps-right" id="stepsRight"></div>
       </div>
 
-      <!-- ボディ -->
       <div class="dash-body">
-        <!-- ドロップゾーン（常時表示） -->
-        <div style="padding:16px 24px 0;">
-          <div class="ac-drop" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-            <div class="ac-drop__icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <div class="dash-wrap">
+          <!-- 左メイン -->
+          <div class="dash-main">
+            <!-- ドロップゾーン -->
+            <div class="drop" id="dropZone" onclick="document.getElementById('fileIn').click()">
+              <div class="drop-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <div class="drop-title">PDFをドロップまたはクリック</div>
+              <div class="drop-sub">ACME発注書（複数可）</div>
             </div>
-            <div class="ac-drop__title">PDFをドロップまたはクリック</div>
-            <div class="ac-drop__sub">ACME発注書（複数可）</div>
-          </div>
-          <input type="file" id="fileInput" accept=".pdf,image/*" multiple onchange="handleFileSelect(event)" style="display:none;">
-        </div>
+            <input type="file" id="fileIn" accept=".pdf,image/*" multiple onchange="handleFiles(event)" style="display:none;">
 
-        <!-- 空状態 -->
-        <div class="empty-state" id="dashEmpty">
-          <div class="empty-state__icon">📄</div>
-          <div>PDFをアップロードすると<br>ここに発注情報が表示されます</div>
-        </div>
-
-        <!-- コンテンツ -->
-        <div id="dashContent" style="display:none;">
-          <!-- ファイルバー -->
-          <div style="padding:12px 24px 0;">
-            <div class="ac-file" id="fileBar">
-              <div class="ac-file__icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              </div>
-              <div>
-                <div class="ac-file__name" id="fileName">—</div>
-                <div class="ac-file__meta" id="fileMeta">—</div>
-              </div>
-              <div class="ac-file__btns">
-                <button class="ac-btn ac-btn--ghost" onclick="document.getElementById('fileInput').click()">別PDFに差替</button>
-              </div>
+            <div class="empty" id="emptyState">
+              <div class="empty-icon">📄</div>
+              <div>PDFをアップロードすると<br>ここに発注情報が表示されます</div>
             </div>
-          </div>
 
-          <div class="dash-inner">
-            <div class="dash-main">
+            <div id="dashContent" style="display:none;flex-direction:column;gap:16px;">
+              <!-- ファイルバー -->
+              <div class="file-bar">
+                <div class="file-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                <div>
+                  <div class="file-name" id="fileName">—</div>
+                  <div class="file-meta" id="fileMeta">—</div>
+                </div>
+                <div class="file-btns">
+                  <button class="btn btn-ghost" onclick="togglePdfView()">元PDFを開く</button>
+                  <button class="btn btn-ghost" onclick="document.getElementById('fileIn').click()">別PDFに差替</button>
+                </div>
+              </div>
+
+              <!-- PDFビューア（折りたたみ） -->
+              <div class="panel" id="pdfViewPanel" style="display:none;">
+                <div class="panel-head">
+                  <div class="panel-title">元PDF</div>
+                  <div class="panel-head-r"><button class="btn btn-ghost" onclick="togglePdfView()">閉じる</button></div>
+                </div>
+                <div class="pdf-view">
+                  <iframe id="pdfFrame" class="pdf-frame" src=""></iframe>
+                </div>
+              </div>
+
               <!-- 顧客情報 -->
-              <div class="ac-panel">
-                <div class="ac-panel__head"><div class="ac-panel__title">顧客情報</div></div>
-                <div class="ac-panel__body">
-                  <div class="grid-2" style="margin-bottom:12px;">
-                    <div class="ac-field"><label class="ac-field__label">お客様名 <span class="ac-ai">AI</span></label><input type="text" class="ac-field__input ai" id="f_name" oninput="markMod(this);syncCustomer();renderPreview()"></div>
-                    <div class="ac-field"><label class="ac-field__label">フリガナ <span class="ac-ai">AI</span></label><input type="text" class="ac-field__input ai" id="f_kana" oninput="markMod(this);syncCustomer();renderPreview()"></div>
+              <div class="panel">
+                <div class="panel-head"><div class="panel-title">顧客情報</div></div>
+                <div class="panel-body">
+                  <div class="g2" style="margin-bottom:12px;">
+                    <div class="field"><label class="field-label">お客様名 <span class="ai-tag">AI</span></label><input type="text" class="field-input ai" id="fn" oninput="mod(this);syncC();renderPreview()"></div>
+                    <div class="field"><label class="field-label">フリガナ <span class="ai-tag">AI</span></label><input type="text" class="field-input ai" id="fk" oninput="mod(this);syncC();renderPreview()"></div>
                   </div>
-                  <div class="grid-2" style="margin-bottom:12px;">
-                    <div class="ac-field"><label class="ac-field__label">電話番号 <span class="ac-ai">AI</span></label><input type="text" class="ac-field__input ai" id="f_tel" oninput="markMod(this);syncCustomer();renderPreview()"></div>
-                    <div class="ac-field"><label class="ac-field__label">郵便番号 <span class="ac-ai">AI</span></label><input type="text" class="ac-field__input ai" id="f_zip" oninput="markMod(this);syncCustomer();renderPreview()"></div>
+                  <div class="g2" style="margin-bottom:12px;">
+                    <div class="field"><label class="field-label">電話番号 <span class="ai-tag">AI</span></label><input type="text" class="field-input ai" id="ft" oninput="mod(this);syncC();renderPreview()"></div>
+                    <div class="field"><label class="field-label">郵便番号 <span class="ai-tag">AI</span></label><input type="text" class="field-input ai" id="fz" oninput="mod(this);syncC();renderPreview()"></div>
                   </div>
-                  <div class="grid-1" style="margin-bottom:12px;">
-                    <div class="ac-field"><label class="ac-field__label">住所 <span class="ac-ai">AI</span></label><input type="text" class="ac-field__input ai" id="f_address" oninput="markMod(this);syncCustomer();renderPreview()"></div>
+                  <div class="g1" style="margin-bottom:12px;">
+                    <div class="field"><label class="field-label">住所 <span class="ai-tag">AI</span></label><input type="text" class="field-input ai" id="fa" oninput="mod(this);syncC();renderPreview()"></div>
                   </div>
-                  <div class="grid-2" style="margin-bottom:12px;">
-                    <div class="ac-field"><label class="ac-field__label">お買上店舗 <span class="ac-ai">AI</span></label><input type="text" class="ac-field__input ai" id="f_store" oninput="markMod(this);syncCustomer();renderPreview()"></div>
-                    <div class="ac-field"><label class="ac-field__label">担当者（店舗側） <span class="ac-ai">AI</span></label><input type="text" class="ac-field__input ai" id="f_staff" oninput="markMod(this);syncCustomer();renderPreview()"></div>
+                  <div class="g2" style="margin-bottom:12px;">
+                    <div class="field"><label class="field-label">お買上店舗 <span class="ai-tag">AI</span></label><input type="text" class="field-input ai" id="fs" oninput="mod(this);syncC();renderPreview()"></div>
+                    <div class="field"><label class="field-label">担当者（店舗側） <span class="ai-tag">AI</span></label><input type="text" class="field-input ai" id="fst" oninput="mod(this);syncC();renderPreview()"></div>
                   </div>
-                  <div class="grid-2">
-                    <div class="ac-field"><label class="ac-field__label">配送方法 <span class="ac-ai">AI</span></label>
-                      <select class="ac-field__select ai" id="f_delivery" onchange="syncCustomer();renderPreview()">
+                  <div class="g2">
+                    <div class="field"><label class="field-label">配送方法 <span class="ai-tag">AI</span></label>
+                      <select class="field-sel ai" id="fdel" onchange="syncC();renderPreview()">
                         <option value="customer">お客様直送</option>
                         <option value="store">店入れ</option>
                         <option value="contractor">取付業者直送</option>
                       </select>
                     </div>
-                    <div class="ac-field"><label class="ac-field__label">配送希望日時 <span class="ac-ai">AI</span></label><input type="text" class="ac-field__input ai" id="f_delivdate" oninput="markMod(this);syncCustomer();renderPreview()"></div>
+                    <div class="field"><label class="field-label">配送希望日時 <span class="ai-tag">AI</span></label><input type="text" class="field-input ai" id="fdd" oninput="mod(this);syncC();renderPreview()"></div>
                   </div>
                 </div>
               </div>
 
               <!-- 窓情報 -->
-              <div class="ac-panel">
-                <div class="ac-panel__head">
-                  <div class="ac-panel__title">窓情報</div>
-                  <div class="ac-panel__head-right">
-                    <span id="winCount" style="font-size:12px;color:var(--mute);"></span>
-                  </div>
+              <div class="panel">
+                <div class="panel-head">
+                  <div class="panel-title">窓情報</div>
+                  <div class="panel-head-r"><span id="winCnt" style="font-size:12px;color:var(--mute);"></span></div>
                 </div>
-                <div class="ac-tabs" id="windowTabs"></div>
-                <div class="ac-panel__body" id="windowForm"></div>
+                <div class="tabs" id="winTabs"></div>
+                <div class="panel-body" id="winForm"></div>
               </div>
 
               <!-- 発注書プレビュー -->
-              <div class="ac-panel">
-                <div class="ac-panel__head">
-                  <div class="ac-panel__title">発注書プレビュー</div>
-                  <div class="ac-panel__head-right">
-                    <button class="ac-btn ac-btn--ghost" onclick="openModal()">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-                      拡大
-                    </button>
-                  </div>
+              <div class="panel">
+                <div class="panel-head">
+                  <div class="panel-title">発注書プレビュー</div>
+                  <div class="panel-head-r"><button class="btn btn-ghost" onclick="openModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg> 拡大</button></div>
                 </div>
-                <div class="ac-preview">
-                  <div class="ac-preview-sheet" id="previewContent" onclick="openModal()"></div>
-                </div>
+                <div class="preview-wrap"><div class="preview-sheet" id="previewContent" onclick="openModal()"></div></div>
               </div>
             </div>
+          </div>
 
-            <!-- 右サイド: 計算サマリー（sticky） -->
-            <div class="dash-aside">
-              <div class="ac-sum">
-                <div class="ac-sum__head">計算サマリー</div>
-                <div id="sumWins"></div>
-                <div id="sumTotal" class="ac-sum__total" style="display:none;">
-                  <div class="ac-sum__total-label">合計</div>
-                  <div id="sumTotalRows"></div>
-                </div>
+          <!-- 右サイド（sticky計算サマリー） -->
+          <div class="dash-aside" id="dashAside">
+            <!-- 計算サマリー -->
+            <div class="aside-sec">
+              <div class="aside-head">
+                <div class="aside-head-title">計算サマリー</div>
               </div>
+              <div id="sumWins">
+                <div style="padding:20px 16px;font-size:13px;color:var(--mute2);text-align:center;">案件を読み込むと<br>ここに表示されます</div>
+              </div>
+              <div id="sumTotal" style="display:none;" class="sum-total"></div>
             </div>
-            <!-- 要確認パネル -->
-            <div class="ac-sum" id="checkPanel">
-              <div class="ac-sum__head" style="display:flex;justify-content:space-between;align-items:center;">
-                <span>要確認</span>
-                <span id="checkCount" style="font-size:12px;color:var(--mute);">0件</span>
+            <!-- 要確認 -->
+            <div class="aside-sec">
+              <div class="aside-head">
+                <div class="aside-head-title">要確認</div>
+                <div class="aside-count" id="checkCnt">0件</div>
               </div>
-              <div id="checkBody" style="padding:16px;font-size:13px;color:var(--red);text-align:center;font-weight:500;">
-                AI抽出と元PDFの差異はありません
+              <div class="check-body" id="checkBody">
+                <div class="check-ok">AI抽出と元PDFの差異はありません</div>
               </div>
             </div>
           </div>
@@ -470,17 +466,17 @@ select option{background:var(--bg);}
       </div>
 
       <!-- アクションバー -->
-      <div class="ac-action" id="actionBar" style="display:none;">
-        <button class="ac-btn ac-btn--primary" onclick="generateOrder()">
+      <div class="action" id="actionBar" style="display:none;">
+        <button class="btn btn-primary" onclick="confirmOrder()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/></svg>
           発注書を確定
         </button>
-        <button class="ac-btn ac-btn--secondary" onclick="exportPDF()">
+        <button class="btn btn-secondary" onclick="exportPDF()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           PDF出力
         </button>
         <div style="flex:1;"></div>
-        <button class="ac-btn ac-btn--danger" onclick="deleteOrder()">
+        <button class="btn btn-danger" onclick="clearOrder()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
           クリア
         </button>
@@ -489,57 +485,57 @@ select option{background:var(--bg);}
 
     <!-- 品番マスタ -->
     <div class="page" id="page-master">
-      <div class="master-page">
+      <div class="page-inner">
         <div class="page-h2">品番マスタ</div>
-        <div class="page-sub">ACME取扱生地の品番・要尺計算パラメータ一覧（54品番）</div>
-        <div class="search-bar">
-          <input type="text" class="search-input" id="masterSearch" placeholder="品名・ACME名・品番で検索..." oninput="renderMasterTable()">
-          <button class="filter-btn active" onclick="setMasterFilter('all',this)">全て</button>
-          <button class="filter-btn" onclick="setMasterFilter('ドレープ',this)">ドレープ</button>
-          <button class="filter-btn" onclick="setMasterFilter('レース',this)">レース</button>
-          <button class="filter-btn" onclick="setMasterFilter('遮光裏地',this)">裏地</button>
+        <div class="page-sub">ACME取扱生地 54品番</div>
+        <div class="sbar">
+          <input type="text" class="sinput" id="msearch" placeholder="品名・ACME名・品番で検索..." oninput="renderMaster()">
+          <button class="fbtn on" onclick="setMF('all',this)">全て</button>
+          <button class="fbtn" onclick="setMF('ドレープ',this)">ドレープ</button>
+          <button class="fbtn" onclick="setMF('レース',this)">レース</button>
+          <button class="fbtn" onclick="setMF('遮光裏地',this)">裏地</button>
         </div>
-        <table class="master-table">
+        <table class="mtable">
           <thead><tr><th>No.</th><th>種類</th><th>メーカー品名</th><th>ACME名</th><th>生地巾</th><th>リピート</th><th>横づかい</th><th>裾</th><th>縫い代</th><th>発注先</th><th>備考</th></tr></thead>
-          <tbody id="masterTableBody"></tbody>
+          <tbody id="masterBody"></tbody>
         </table>
       </div>
     </div>
 
     <!-- 顧客管理 -->
     <div class="page" id="page-customers">
-      <div class="customer-page">
+      <div class="page-inner">
         <div class="page-h2">顧客管理</div>
         <div class="page-sub">確定済み案件の顧客一覧</div>
-        <div class="customer-grid" id="customerGrid"></div>
+        <div class="cgrid" id="cgrid"></div>
       </div>
     </div>
 
     <!-- 設定 -->
     <div class="page" id="page-settings">
-      <div class="settings-page">
+      <div class="page-inner" style="max-width:640px;">
         <div class="page-h2" style="margin-bottom:4px;">設定</div>
         <div class="page-sub">API・担当者・発注元情報の管理</div>
-        <div class="settings-group">
-          <div class="settings-group-title">Claude API Key</div>
-          <div class="settings-row"><label class="settings-label">API KEY</label><input type="password" class="settings-input" id="apiKeyInput" placeholder="sk-ant-..."></div>
-          <button class="settings-save" onclick="saveApiKey()">保存</button>
+        <div class="sgrp">
+          <div class="sgrp-title">Claude API Key</div>
+          <div class="srow"><label class="slabel">API KEY</label><input type="password" class="sinp" id="apiKey" placeholder="sk-ant-..."></div>
+          <button class="ssave" onclick="saveKey()">保存</button>
         </div>
-        <div class="settings-group">
-          <div class="settings-group-title">andC 担当者一覧</div>
+        <div class="sgrp">
+          <div class="sgrp-title">andC 担当者一覧</div>
           <div class="staff-list" id="staffList"></div>
           <div class="staff-add-row">
-            <input type="text" class="staff-add-input" id="staffAddInput" placeholder="担当者名を入力..." onkeydown="if(event.key==='Enter')addStaff()">
+            <input type="text" class="staff-add-inp" id="staffInp" placeholder="担当者名を入力..." onkeydown="if(event.key==='Enter')addStaff()">
             <button class="staff-add-btn" onclick="addStaff()">追加</button>
           </div>
         </div>
-        <div class="settings-group">
-          <div class="settings-group-title">発注元情報</div>
-          <div class="settings-row"><label class="settings-label">会社名</label><input type="text" class="settings-input" id="s_company" value="andC株式会社"></div>
-          <div class="settings-row"><label class="settings-label">住所</label><input type="text" class="settings-input" id="s_address" value="〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階"></div>
-          <div class="settings-row"><label class="settings-label">TEL</label><input type="text" class="settings-input" id="s_tel" value="03-6303-3706"></div>
-          <div class="settings-row"><label class="settings-label">FAX</label><input type="text" class="settings-input" id="s_fax" value="03-5726-8198"></div>
-          <button class="settings-save" onclick="saveSettings()">保存</button>
+        <div class="sgrp">
+          <div class="sgrp-title">発注元情報</div>
+          <div class="srow"><label class="slabel">会社名</label><input type="text" class="sinp" id="sc" value="andC株式会社"></div>
+          <div class="srow"><label class="slabel">住所</label><input type="text" class="sinp" id="sa" value="〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階"></div>
+          <div class="srow"><label class="slabel">TEL</label><input type="text" class="sinp" id="st" value="03-6303-3706"></div>
+          <div class="srow"><label class="slabel">FAX</label><input type="text" class="sinp" id="sf" value="03-5726-8198"></div>
+          <button class="ssave" onclick="saveSettings()">保存</button>
         </div>
       </div>
     </div>
@@ -549,31 +545,28 @@ select option{background:var(--bg);}
 
 <div id="printArea" style="display:none;"></div>
 
-<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+<div class="modal-ov" id="modal" onclick="closeModal(event)">
   <div class="modal-box">
-    <div class="modal-header">
-      <span class="modal-title">発注書プレビュー（拡大）</span>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
+    <div class="modal-head"><span class="modal-title">発注書プレビュー（拡大）</span><button class="modal-close" onclick="closeModal()">✕</button></div>
     <div id="modalContent"></div>
   </div>
 </div>
 
-<div class="ai-overlay" id="aiOverlay">
+<div class="ai-ov" id="aiOv">
   <div class="ai-box">
-    <div class="ai-spinner"></div>
+    <div class="ai-spin"></div>
     <div class="ai-label" id="aiLabel">PDF解析中...</div>
     <div class="ai-sub" id="aiSub">Claude APIが発注書を読み取っています</div>
   </div>
 </div>
 
-<div class="toast" id="toast"><span class="toast-icon" id="toastIcon"></span><span id="toastMsg"></span></div>
+<div class="toast" id="toast"><span class="toast-ic" id="toastIc"></span><span id="toastMsg"></span></div>
 
 <script>
 // ============================================================
 // 品番マスタ
 // ============================================================
-const FM = [
+const FM=[
   {id:13,type:'ドレープ',maker:'LONDAY 22-4600 キナリ',acme:'OLD TOWN',repeat:0,width:110,yoko:false,supplier:'リック',hem:'3つ折',vA:40,note:'防炎ラベル要'},
   {id:14,type:'ドレープ',maker:'INOUEバリⅡ IV',acme:'TRAVELODGE',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vA:40,note:'形態安定記載'},
   {id:15,type:'ドレープ',maker:'INOUEバリⅡ BE',acme:'TRAVELODGE',repeat:0,width:150,yoko:false,supplier:'アイムス',hem:'3つ折',vA:40,note:null},
@@ -632,445 +625,307 @@ const FM = [
   {id:104,type:'ドレープ',maker:'FLEX1 KHAKI',acme:'LEAF GREEN',repeat:62,width:136,yoko:false,supplier:null,hem:'すくい縫い10cm2つ折',vA:30,note:null},
 ];
 
-function findFabric(name,code){
-  if(!name&&!code)return null;
+function findF(name,code){
   const n=(name||'').toLowerCase().trim();
   const c=(code||'').replace(/[^0-9]/g,'');
   if(c){const f=FM.find(f=>f.id===+c||String(f.id).padStart(3,'0')===c.padStart(3,'0'));if(f)return f;}
-  const byAcme=FM.find(f=>f.acme.toLowerCase()===n);if(byAcme)return byAcme;
+  const e=FM.find(f=>f.acme.toLowerCase()===n);if(e)return e;
   return FM.find(f=>f.acme.toLowerCase().includes(n)||n.includes(f.acme.toLowerCase())||f.maker.toLowerCase().includes(n))||null;
 }
 
 function ru1(v){return Math.ceil(Math.round(v*1000)/100)/10;}
-function getHida(s){if(!s)return 1.5;if(s.includes('2倍'))return 2;if(s.includes('フラット'))return 1;return 1.5;}
+function hida(s){if(!s)return 1.5;if(s.includes('2倍'))return 2;if(s.includes('フラット'))return 1;return 1.5;}
 
-function calcYousyaku(w,h,style,opening,fabric,hasTassel){
-  if(!fabric||!w||!h)return null;
-  const hida=getHida(style);
-  const hSide=(opening==='片開き')?15:30;
-  const vA=fabric.vA||40;
-  const tAdd=hasTassel?0.2:0;
-  if(fabric.yoko&&fabric.width>=290){
-    const raw=(w*hida+hSide)/100;
-    return{type:'③横づかい',nubaki:null,cutLen:null,yousyaku:ru1(raw+tAdd),
-      formula:`(${w}×${hida}+${hSide})÷100=${ru1(raw)}m${tAdd>0?` +タッセル${tAdd}m`:''}`};
-  }
-  if(fabric.repeat>0){
-    const nb=Math.ceil((w*hida+hSide)/fabric.width);
-    const rc=Math.ceil((h+vA)/fabric.repeat);
-    const cl=rc*fabric.repeat;
-    const raw=cl*nb/100;
-    return{type:'②リピート有り',nubaki:nb,cutLen:cl,yousyaku:ru1(raw+tAdd),
-      formula:`継ぎ巾=${nb}枚 × 裁ち切り=${cl}cm ÷100=${ru1(raw)}m${tAdd>0?` +タッセル${tAdd}m`:''}`};
-  }
-  const nb=Math.ceil((w*hida+hSide)/fabric.width);
-  const cl=h+vA;
-  const raw=cl*nb/100;
-  return{type:'①リピート無し',nubaki:nb,cutLen:cl,yousyaku:ru1(raw+tAdd),
-    formula:`ROUNDUP((${w}×${hida}+${hSide})÷${fabric.width},0)=${nb}枚 × ${cl}cm ÷100=${ru1(raw)}m${tAdd>0?` +タッセル${tAdd}m`:''}`};
+function calc(w,h,style,opening,f,hasTassel){
+  if(!f||!w||!h)return null;
+  const hd=hida(style),hS=(opening==='片開き')?15:30,vA=f.vA||40,tA=hasTassel?.2:0;
+  if(f.yoko&&f.width>=290){const raw=(w*hd+hS)/100;return{type:'③横づかい',nb:null,cl:null,yq:ru1(raw+tA),formula:`(${w}×${hd}+${hS})÷100=${ru1(raw)}m${tA>0?` +タッセル${tA}m`:''}`};}
+  if(f.repeat>0){const nb=Math.ceil((w*hd+hS)/f.width),rc=Math.ceil((h+vA)/f.repeat),cl=rc*f.repeat,raw=cl*nb/100;return{type:'②リピート有り',nb,cl,yq:ru1(raw+tA),formula:`継ぎ巾=${nb}枚×裁ち切り=${cl}cm÷100=${ru1(raw)}m${tA>0?` +タッセル${tA}m`:''}`};}
+  const nb=Math.ceil((w*hd+hS)/f.width),cl=h+vA,raw=cl*nb/100;
+  return{type:'①リピート無し',nb,cl,yq:ru1(raw+tA),formula:`ROUNDUP((${w}×${hd}+${hS})÷${f.width},0)=${nb}枚×${cl}cm÷100=${ru1(raw)}m${tA>0?` +タッセル${tA}m`:''}`};
 }
 
 // ============================================================
 // 状態
 // ============================================================
-let currentOrder=null;
-let currentWinIdx=0;
-let staffList=JSON.parse(localStorage.getItem('acme_staff')||'[]');
+let order=null,winIdx=0,pdfUrl=null;
+let staffs=JSON.parse(localStorage.getItem('acme_staff')||'[]');
 let settings=JSON.parse(localStorage.getItem('acme_settings')||'{}');
 let customers=JSON.parse(localStorage.getItem('acme_customers')||'[]');
+let mFilter='all';
 
-if(localStorage.getItem('acme_api_key'))
-  document.getElementById('apiKeyInput').value=localStorage.getItem('acme_api_key');
+if(localStorage.getItem('acme_api_key'))document.getElementById('apiKey').value=localStorage.getItem('acme_api_key');
 
 // ============================================================
 // ナビ
 // ============================================================
-const crumbMap={dashboard:'ダッシュボード',master:'品番マスタ',customers:'顧客管理',settings:'設定'};
-function showPage(name){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.ac-side__nav a').forEach(a=>a.classList.remove('is-active'));
-  document.getElementById('page-'+name).classList.add('active');
-  document.getElementById('nav-'+name).classList.add('is-active');
-  document.getElementById('headerCrumb').innerHTML=`メイン / <b>${crumbMap[name]}</b>`;
-  if(name==='master')renderMasterTable();
+const crumbs={dashboard:'ダッシュボード',master:'品番マスタ',customers:'顧客管理',settings:'設定'};
+function goPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav-a').forEach(a=>a.classList.remove('on'));
+  document.getElementById('page-'+name).classList.add('on');
+  document.getElementById('nav-'+name).classList.add('on');
+  document.getElementById('crumb').innerHTML=`メイン / <b>${crumbs[name]}</b>`;
+  if(name==='master')renderMaster();
   if(name==='customers')renderCustomers();
-  if(name==='settings')renderStaffSettings();
+  if(name==='settings')renderStaffList();
 }
 
 // ============================================================
-// 担当者セレクト
-// ============================================================
-function renderStaffSelect(){
-  const sel=document.getElementById('staffSelect');
-  if(!sel)return;
-  const cur=sel.value;
-  sel.innerHTML='<option value="">— 選択してください —</option>'+
-    staffList.map(s=>`<option value="${s}"${cur===s?' selected':''}>${s}</option>`).join('');
-}
-
-// ============================================================
-// ダッシュボード表示制御
+// ステップ
 // ============================================================
 function setStep(n){
   [1,2,3].forEach(i=>{
     const el=document.getElementById('step'+i);
-    el.className='ac-step'+(i<n?' done':i===n?' active':'');
-    el.querySelector('.ac-step__num').textContent=i<n?'✓':i;
+    el.className='step'+(i<n?' done':i===n?' active':'');
+    document.getElementById('sn'+i).textContent=i<n?'✓':i;
   });
+  document.getElementById('stepsRight').textContent=n===2?`自動保存済み ${new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})}`:'';}
+
+// ============================================================
+// 担当者
+// ============================================================
+function renderStaffSel(){
+  const sel=document.getElementById('staffSel');const cur=sel.value;
+  sel.innerHTML='<option value="">— 選択してください —</option>'+staffs.map(s=>`<option${cur===s?' selected':''}>${s}</option>`).join('');
 }
 
-function showDashContent(order){
-  document.getElementById('dashEmpty').style.display=order?'none':'flex';
-  document.getElementById('dashContent').style.display=order?'block':'none';
-  document.getElementById('actionBar').style.display=order?'flex':'none';
+// ============================================================
+// ダッシュボード
+// ============================================================
+function showContent(o){
+  document.getElementById('emptyState').style.display=o?'none':'flex';
+  const dc=document.getElementById('dashContent');
+  dc.style.display=o?'flex':'none';
+  document.getElementById('actionBar').style.display=o?'flex':'none';
+  if(!o)return;
+  renderStaffSel();
+  document.getElementById('fileName').textContent=o.filename||'—';
+  document.getElementById('fileMeta').textContent=`AI抽出完了 / 顧客情報 + 窓情報${o.windows.length}件`;
+  const c=o.customer;
+  document.getElementById('fn').value=c.name||'';
+  document.getElementById('fk').value=c.kana||'';
+  document.getElementById('ft').value=c.tel||'';
+  document.getElementById('fz').value=c.zip||'';
+  document.getElementById('fa').value=c.address||'';
+  document.getElementById('fs').value=c.store||'';
+  document.getElementById('fst').value=c.staff||'';
+  document.getElementById('fdel').value=c.delivery||'customer';
+  document.getElementById('fdd').value=c.delivdate||'';
+  renderWinTabs();renderWinForm();renderPreview();renderSummary();renderCheck();
+}
+
+function mod(el){el.classList.remove('ai');el.classList.add('mod');}
+function syncC(){
   if(!order)return;
-  renderStaffSelect();
-  document.getElementById('fileName').textContent=order.filename||'—';
-  document.getElementById('fileMeta').textContent=`AI抽出完了 / 顧客情報 + 窓情報${order.windows.length}件`;
-  const c=order.customer;
-  document.getElementById('f_name').value=c.name||'';
-  document.getElementById('f_kana').value=c.kana||'';
-  document.getElementById('f_tel').value=c.tel||'';
-  document.getElementById('f_zip').value=c.zip||'';
-  document.getElementById('f_address').value=c.address||'';
-  document.getElementById('f_store').value=c.store||'';
-  document.getElementById('f_staff').value=c.staff||'';
-  document.getElementById('f_delivery').value=c.delivery||'customer';
-  document.getElementById('f_delivdate').value=c.delivdate||'';
-  renderWindowTabs();
-  renderWindowForm();
-  renderPreview();
-  renderSummary();
-  renderCheckPanel();
+  order.customer={...order.customer,name:document.getElementById('fn').value,kana:document.getElementById('fk').value,tel:document.getElementById('ft').value,zip:document.getElementById('fz').value,address:document.getElementById('fa').value,store:document.getElementById('fs').value,staff:document.getElementById('fst').value,delivery:document.getElementById('fdel').value,delivdate:document.getElementById('fdd').value};
 }
 
-function markMod(el){el.classList.remove('ai');el.classList.add('mod');}
-function syncCustomer(){
-  if(!currentOrder)return;
-  currentOrder.customer={...currentOrder.customer,
-    name:document.getElementById('f_name').value,kana:document.getElementById('f_kana').value,
-    tel:document.getElementById('f_tel').value,zip:document.getElementById('f_zip').value,
-    address:document.getElementById('f_address').value,store:document.getElementById('f_store').value,
-    staff:document.getElementById('f_staff').value,delivery:document.getElementById('f_delivery').value,
-    delivdate:document.getElementById('f_delivdate').value};
+// PDF表示
+function togglePdfView(){
+  const p=document.getElementById('pdfViewPanel');
+  const show=p.style.display==='none';
+  p.style.display=show?'block':'none';
+  if(show&&pdfUrl)document.getElementById('pdfFrame').src=pdfUrl;
 }
 
 // ============================================================
 // 窓タブ・フォーム
 // ============================================================
-function renderWindowTabs(){
-  if(!currentOrder)return;
-  const cnt=currentOrder.windows.length;
-  document.getElementById('winCount').textContent=cnt+'窓';
-  document.getElementById('windowTabs').innerHTML=
-    currentOrder.windows.map((w,i)=>
-      `<button class="ac-tab${i===currentWinIdx?' is-active':''}" onclick="selWin(${i})">${w.label||`窓${i+1}`}</button>`
-    ).join('')+`<button class="ac-tab__add" onclick="addWin()">+</button>`;
+function renderWinTabs(){
+  if(!order)return;
+  document.getElementById('winCnt').textContent=order.windows.length+'窓';
+  document.getElementById('winTabs').innerHTML=
+    order.windows.map((w,i)=>`<button class="tab${i===winIdx?' on':''}" onclick="selWin(${i})">${w.label||`窓${i+1}`}</button>`).join('')+
+    `<button class="tab-add" onclick="addWin()">+</button>`;
 }
-function selWin(i){currentWinIdx=i;renderWindowTabs();renderWindowForm();renderPreview();renderSummary();}
+function selWin(i){winIdx=i;renderWinTabs();renderWinForm();renderPreview();renderSummary();}
 function addWin(){
-  currentOrder.windows.push({label:`窓${currentOrder.windows.length+1}`,type:'ドレープ',style:'1.5倍ヒダ',fabricId:null,finishW:null,finishH:null,opening:'両開き',hook:'Aフック',windows:1,tassel:0,lining:'なし'});
-  currentWinIdx=currentOrder.windows.length-1;
-  renderWindowTabs();renderWindowForm();
+  order.windows.push({label:`窓${order.windows.length+1}`,type:'ドレープ',style:'1.5倍ヒダ',fabricId:null,finishW:null,finishH:null,opening:'両開き',hook:'Aフック',windows:1,tassel:0,lining:'なし'});
+  winIdx=order.windows.length-1;renderWinTabs();renderWinForm();
 }
-function updWin(k,v){if(currentOrder)currentOrder.windows[currentWinIdx][k]=v;}
+function uw(k,v){if(order)order.windows[winIdx][k]=v;}
 
-function renderWindowForm(){
-  if(!currentOrder)return;
-  const win=currentOrder.windows[currentWinIdx];
-  if(!win)return;
-  const f=FM.find(x=>x.id===win.fabricId);
-  const calc=(win.finishW&&win.finishH&&f)?calcYousyaku(win.finishW,win.finishH,win.style,win.opening,f,win.tassel>0):null;
-  const fOpts=FM.map(x=>`<option value="${x.id}"${win.fabricId===x.id?' selected':''}>${String(x.id).padStart(3,'0')}. ${x.maker}（${x.acme}）</option>`).join('');
-
-  document.getElementById('windowForm').innerHTML=`
-    <div class="grid-4" style="margin-bottom:14px;">
-      <div class="ac-field"><label class="ac-field__label">場所ラベル</label><input type="text" class="ac-field__input" value="${win.label||''}" oninput="updWin('label',this.value);renderWindowTabs()"></div>
-      <div class="ac-field"><label class="ac-field__label">種類 <span class="ac-ai">AI</span></label><select class="ac-field__select ai" onchange="updWin('type',this.value)"><option${win.type==='ドレープ'?' selected':''}>ドレープ</option><option${win.type==='レース'?' selected':''}>レース</option></select></div>
-      <div class="ac-field"><label class="ac-field__label">スタイル <span class="ac-ai">AI</span></label><select class="ac-field__select ai" onchange="updWin('style',this.value);renderWindowForm();renderPreview();renderSummary()"><option${win.style==='1.5倍ヒダ'?' selected':''}>1.5倍ヒダ</option><option${win.style==='2倍ヒダ'?' selected':''}>2倍ヒダ</option><option${win.style==='フラット'?' selected':''}>フラット</option></select></div>
-      <div class="ac-field"><label class="ac-field__label">開き方 <span class="ac-ai">AI</span></label><select class="ac-field__select ai" onchange="updWin('opening',this.value);renderWindowForm();renderPreview();renderSummary()"><option${win.opening==='両開き'?' selected':''}>両開き</option><option${win.opening==='片開き'?' selected':''}>片開き</option></select></div>
+function renderWinForm(){
+  if(!order)return;
+  const w=order.windows[winIdx];if(!w)return;
+  const f=FM.find(x=>x.id===w.fabricId);
+  const c=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;
+  const opts=FM.map(x=>`<option value="${x.id}"${w.fabricId===x.id?' selected':''}>${String(x.id).padStart(3,'0')}. ${x.maker}（${x.acme}）</option>`).join('');
+  document.getElementById('winForm').innerHTML=`
+    <div class="g4" style="margin-bottom:14px;">
+      <div class="field"><label class="field-label">場所ラベル</label><input type="text" class="field-input" value="${w.label||''}" oninput="uw('label',this.value);renderWinTabs()"></div>
+      <div class="field"><label class="field-label">種類 <span class="ai-tag">AI</span></label><select class="field-sel ai" onchange="uw('type',this.value)"><option${w.type==='ドレープ'?' selected':''}>ドレープ</option><option${w.type==='レース'?' selected':''}>レース</option></select></div>
+      <div class="field"><label class="field-label">スタイル <span class="ai-tag">AI</span></label><select class="field-sel ai" onchange="uw('style',this.value);renderWinForm();renderPreview();renderSummary()"><option${w.style==='1.5倍ヒダ'?' selected':''}>1.5倍ヒダ</option><option${w.style==='2倍ヒダ'?' selected':''}>2倍ヒダ</option><option${w.style==='フラット'?' selected':''}>フラット</option></select></div>
+      <div class="field"><label class="field-label">開き方 <span class="ai-tag">AI</span></label><select class="field-sel ai" onchange="uw('opening',this.value);renderWinForm();renderPreview();renderSummary()"><option${w.opening==='両開き'?' selected':''}>両開き</option><option${w.opening==='片開き'?' selected':''}>片開き</option></select></div>
     </div>
-    <div class="grid-4" style="margin-bottom:14px;">
-      <div class="ac-field ac-field--unit"><label class="ac-field__label">仕上がり幅 <span class="ac-ai">AI</span></label><input type="number" class="ac-field__input ai" value="${win.finishW||''}" oninput="updWin('finishW',+this.value);renderWindowForm();renderPreview();renderSummary()"><span class="ac-field__unit">cm</span></div>
-      <div class="ac-field ac-field--unit"><label class="ac-field__label">仕上がり丈 <span class="ac-ai">AI</span></label><input type="number" class="ac-field__input ai" value="${win.finishH||''}" oninput="updWin('finishH',+this.value);renderWindowForm();renderPreview();renderSummary()"><span class="ac-field__unit">cm</span></div>
-      <div class="ac-field"><label class="ac-field__label">フック <span class="ac-ai">AI</span></label><select class="ac-field__select ai" onchange="updWin('hook',this.value)"><option${win.hook==='Aフック'?' selected':''}>Aフック</option><option${win.hook==='Bフック'?' selected':''}>Bフック</option></select></div>
-      <div class="ac-field"><label class="ac-field__label">窓数</label><input type="number" class="ac-field__input" value="${win.windows||1}" min="1" oninput="updWin('windows',+this.value)"></div>
+    <div class="g4" style="margin-bottom:14px;">
+      <div class="field field-unit"><label class="field-label">仕上がり幅 <span class="ai-tag">AI</span></label><input type="number" class="field-input ai" value="${w.finishW||''}" oninput="uw('finishW',+this.value);renderWinForm();renderPreview();renderSummary()"><span class="field-unit-label">cm</span></div>
+      <div class="field field-unit"><label class="field-label">仕上がり丈 <span class="ai-tag">AI</span></label><input type="number" class="field-input ai" value="${w.finishH||''}" oninput="uw('finishH',+this.value);renderWinForm();renderPreview();renderSummary()"><span class="field-unit-label">cm</span></div>
+      <div class="field"><label class="field-label">フック <span class="ai-tag">AI</span></label><select class="field-sel ai" onchange="uw('hook',this.value)"><option${w.hook==='Aフック'?' selected':''}>Aフック</option><option${w.hook==='Bフック'?' selected':''}>Bフック</option></select></div>
+      <div class="field"><label class="field-label">窓数</label><input type="number" class="field-input" value="${w.windows||1}" min="1" oninput="uw('windows',+this.value)"></div>
     </div>
-    <div class="grid-2" style="margin-bottom:14px;">
-      <div class="ac-field"><label class="ac-field__label">タッセル本数 <span class="ac-ai">AI</span></label><input type="number" class="ac-field__input ai" value="${win.tassel||0}" min="0" oninput="updWin('tassel',+this.value);renderWindowForm();renderPreview();renderSummary()"></div>
-      <div class="ac-field"><label class="ac-field__label">裏地</label><select class="ac-field__select" onchange="updWin('lining',this.value)"><option${win.lining==='なし'?' selected':''}>なし</option><option${win.lining==='遮光裏地A'?' selected':''}>遮光裏地A</option><option${win.lining==='遮光裏地B'?' selected':''}>遮光裏地B</option></select></div>
+    <div class="g2" style="margin-bottom:14px;">
+      <div class="field"><label class="field-label">タッセル本数 <span class="ai-tag">AI</span></label><input type="number" class="field-input ai" value="${w.tassel||0}" min="0" oninput="uw('tassel',+this.value);renderWinForm();renderPreview();renderSummary()"></div>
+      <div class="field"><label class="field-label">裏地</label><select class="field-sel" onchange="uw('lining',this.value)"><option${w.lining==='なし'?' selected':''}>なし</option><option${w.lining==='遮光裏地A'?' selected':''}>遮光裏地A</option><option${w.lining==='遮光裏地B'?' selected':''}>遮光裏地B</option></select></div>
     </div>
-    <div class="grid-1" style="margin-bottom:12px;">
-      <div class="ac-field"><label class="ac-field__label">生地品番 <span class="ac-ai">AI</span></label><select class="ac-field__select ai" onchange="updWin('fabricId',+this.value);renderWindowForm();renderPreview();renderSummary()"><option value="">-- 選択 --</option>${fOpts}</select></div>
+    <div class="g1" style="margin-bottom:12px;">
+      <div class="field"><label class="field-label">生地品番 <span class="ai-tag">AI</span></label><select class="field-sel ai" onchange="uw('fabricId',+this.value);renderWinForm();renderPreview();renderSummary();renderCheck()"><option value="">-- 選択 --</option>${opts}</select></div>
     </div>
-    ${f?`<div class="ac-chips">
-      <span class="ac-chip"><b>巾</b> ${f.width}cm</span>
-      <span class="ac-chip"><b>リピート</b> ${f.repeat>0?f.repeat+'cm':'無し'}</span>
-      <span class="ac-chip"><b>裾</b> ${f.hem||'—'}</span>
-      <span class="ac-chip"><b>上下縫代</b> ${f.vA!=null?f.vA+'cm':'—'}</span>
-      <span class="ac-chip"><b>発注先</b> ${f.supplier||'要確認'}</span>
-      ${f.note?`<span class="ac-chip ac-chip--warn">⚠ ${f.note}</span>`:''}
+    ${f?`<div class="chips">
+      <span class="chip"><b>巾</b> ${f.width}cm</span>
+      <span class="chip"><b>リピート</b> ${f.repeat>0?f.repeat+'cm':'無し'}</span>
+      <span class="chip"><b>裾</b> ${f.hem||'—'}</span>
+      <span class="chip"><b>縫代</b> ${f.vA!=null?f.vA+'cm':'—'}</span>
+      <span class="chip"><b>発注先</b> ${f.supplier||'要確認'}</span>
+      ${f.note?`<span class="chip chip-warn">⚠ ${f.note}</span>`:''}
     </div>`:''}
-    ${win.style==='フラット'?`<div style="margin-top:10px;padding:10px 14px;background:rgba(154,122,74,.06);border:1px solid rgba(154,122,74,.2);border-radius:var(--r);font-size:13px;color:var(--warn);">⚠ フラットスタイルはBフック推奨。倍率1倍で計算されます。</div>`:''}
+    ${w.style==='フラット'?`<div style="margin-top:10px;padding:10px 14px;background:rgba(154,122,74,.06);border:1px solid rgba(154,122,74,.2);border-radius:var(--r);font-size:13px;color:var(--warn);">⚠ フラットスタイルはBフック推奨。倍率1倍で計算されます。</div>`:''}
+    ${c?`<div style="margin-top:12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px;">
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;"><span style="color:var(--mute);">計算方式</span><span style="font-weight:600;">${c.type}</span></div>
+      ${c.nb!=null?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;"><span style="color:var(--mute);">継ぎ巾</span><span style="font-family:var(--mono);font-weight:600;">${c.nb} 枚</span></div>`:''}
+      ${c.cl!=null?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;"><span style="color:var(--mute);">裁ち切り</span><span style="font-family:var(--mono);font-weight:600;">${c.cl} cm</span></div>`:''}
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;align-items:baseline;"><span style="color:var(--mute);">要尺</span><span style="font-family:var(--mono);font-weight:700;font-size:22px;color:var(--ok);">${c.yq} m</span></div>
+      <div style="font-size:10px;color:var(--mute2);font-family:var(--mono);margin-top:8px;padding-top:8px;border-top:1px solid var(--line);line-height:1.9;">${c.formula}</div>
+    </div>`:`<div style="margin-top:12px;padding:12px 16px;background:rgba(154,122,74,.06);border:1px solid rgba(154,122,74,.2);border-radius:var(--r);font-size:13px;color:var(--warn);">品番とサイズを入力すると自動計算されます</div>`}
   `;
 }
 
 // ============================================================
-// 計算サマリー（右サイド）
+// 計算サマリー
 // ============================================================
 function renderSummary(){
-  if(!currentOrder){document.getElementById('sumWins').innerHTML='';document.getElementById('sumTotal').style.display='none';return;}
-  const wins=currentOrder.windows;
-  const winsHtml=wins.map((win,i)=>{
-    const f=FM.find(x=>x.id===win.fabricId);
-    const calc=(win.finishW&&win.finishH&&f)?calcYousyaku(win.finishW,win.finishH,win.style,win.opening,f,win.tassel>0):null;
-    return `<div class="ac-sum__win">
-      <div class="ac-sum__win-label">${win.label||`窓${i+1}`}</div>
-      <div class="ac-sum__win-row">
-        <span style="font-size:13px;color:var(--mute);">要尺</span>
-        <span class="ac-sum__val">${calc?calc.yousyaku:'—'}<span class="ac-sum__val-unit">${calc?'m':''}</span></span>
-      </div>
-      ${calc?`<div class="ac-sum__sub">${calc.nubaki!=null?calc.nubaki+'枚 × '+calc.cutLen+'cm':''}</div>`:''}
-      ${f?`<div class="ac-sum__sub">${f.maker}</div>`:''}
+  if(!order){document.getElementById('sumWins').innerHTML='<div style="padding:20px 16px;font-size:13px;color:var(--mute2);text-align:center;">案件を読み込むと<br>ここに表示されます</div>';document.getElementById('sumTotal').style.display='none';return;}
+  document.getElementById('sumWins').innerHTML=order.windows.map((w,i)=>{
+    const f=FM.find(x=>x.id===w.fabricId);
+    const c=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;
+    return`<div class="sum-win">
+      <div class="sum-win-label">${w.label||`窓${i+1}`}</div>
+      <div class="sum-win-row"><span style="font-size:13px;color:var(--mute);">要尺</span><span class="sum-val">${c?c.yq:'—'}<span class="sum-val-u">${c?'m':''}</span></span></div>
+      ${c&&c.nb!=null?`<div class="sum-sub">${c.nb}枚 × ${c.cl}cm</div>`:''}
+      ${f?`<div class="sum-sub">${f.maker}</div>`:''}
     </div>`;
   }).join('');
-  document.getElementById('sumWins').innerHTML=winsHtml;
-
-  // 合計
-  const totals={};
-  wins.forEach(win=>{
-    const f=FM.find(x=>x.id===win.fabricId);
-    if(!f)return;
-    const calc=(win.finishW&&win.finishH)?calcYousyaku(win.finishW,win.finishH,win.style,win.opening,f,win.tassel>0):null;
-    if(!calc)return;
-    totals[f.maker]=(totals[f.maker]||0)+calc.yousyaku;
-  });
-  if(Object.keys(totals).length>0){
+  const tots={};
+  order.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const c=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;if(!c)return;tots[f.maker]=(tots[f.maker]||0)+c.yq;});
+  if(Object.keys(tots).length){
     document.getElementById('sumTotal').style.display='block';
-    document.getElementById('sumTotalRows').innerHTML=Object.entries(totals).map(([k,v])=>`
-      <div class="ac-sum__total-row">
-        <span class="ac-sum__total-name">${k}</span>
-        <span class="ac-sum__total-val">${ru1(v)}<span style="font-size:16px;font-weight:500;">m</span></span>
-      </div>
-    `).join('');
-  }else{
-    document.getElementById('sumTotal').style.display='none';
-  }
-
-  // 要確認チェック
-  renderCheckPanel();
+    document.getElementById('sumTotal').innerHTML='<div style="font-size:11px;color:var(--mute);margin-bottom:10px;">合計</div>'+
+      Object.entries(tots).map(([k,v])=>`<div class="sum-total-row"><span class="sum-total-name">${k}</span><span class="sum-total-val">${ru1(v)}<span style="font-size:16px;font-weight:500;">m</span></span></div>`).join('');
+  }else{document.getElementById('sumTotal').style.display='none';}
 }
 
-function renderCheckPanel(){
-  if(!currentOrder){
-    document.getElementById('checkCount').textContent='0件';
-    document.getElementById('checkBody').innerHTML='<span style="color:var(--mute2);">案件を読み込むと確認事項が表示されます</span>';
-    return;
-  }
+// ============================================================
+// 要確認
+// ============================================================
+function renderCheck(){
+  if(!order){document.getElementById('checkCnt').textContent='0件';document.getElementById('checkBody').innerHTML='<div class="check-ok">AI抽出と元PDFの差異はありません</div>';return;}
   const issues=[];
-  currentOrder.windows.forEach((win,i)=>{
-    const label=win.label||`窓${i+1}`;
-    if(!win.fabricId) issues.push(`${label}: 品番が未選択`);
-    if(!win.finishW||!win.finishH) issues.push(`${label}: サイズが未入力`);
-    if(win.style==='フラット'&&win.hook==='Aフック') issues.push(`${label}: フラットスタイルはBフック推奨`);
-    const f=FM.find(x=>x.id===win.fabricId);
-    if(f&&f.note) issues.push(`${label}: ${f.note}`);
+  order.windows.forEach((w,i)=>{
+    const label=w.label||`窓${i+1}`;
+    if(!w.fabricId)issues.push(`${label}: 品番が未選択`);
+    if(!w.finishW||!w.finishH)issues.push(`${label}: サイズが未入力`);
+    if(w.style==='フラット'&&w.hook==='Aフック')issues.push(`${label}: フラットスタイルはBフック推奨`);
+    const f=FM.find(x=>x.id===w.fabricId);
+    if(f&&f.note)issues.push(`${label}: ${f.note}`);
   });
-  if(!currentOrder.customer.name) issues.push('顧客名が未入力');
-  document.getElementById('checkCount').textContent=issues.length+'件';
-  if(issues.length===0){
-    document.getElementById('checkBody').innerHTML='<span style="color:var(--ok);font-weight:600;">✓ AI抽出と元PDFの差異はありません</span>';
-  }else{
-    document.getElementById('checkBody').innerHTML=issues.map(i=>
-      `<div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--red);">⚠ ${i}</div>`
-    ).join('');
-  }
+  if(!order.customer.name)issues.push('顧客名が未入力');
+  document.getElementById('checkCnt').textContent=issues.length+'件';
+  document.getElementById('checkBody').innerHTML=issues.length===0
+    ?'<div class="check-ok">✓ AI抽出と元PDFの差異はありません</div>'
+    :issues.map(i=>`<div class="check-item">⚠ ${i}</div>`).join('');
 }
 
 // ============================================================
-// 発注書プレビュー
+// プレビュー
 // ============================================================
-function buildPreview(order,compact){
-  if(!order)return'';
-  const c=order.customer;
-  const s=settings;
-  const today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'});
-  const delivLabel={customer:'お客様直送',store:'店入れ',contractor:'取付業者直送'}[c.delivery]||'お客様直送';
-  const staffName=document.getElementById('staffSelect')?.value||'';
+function buildPreview(o,compact){
+  if(!o)return'';
+  const c=o.customer,s=settings,today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'});
+  const dL={customer:'お客様直送',store:'店入れ',contractor:'取付業者直送'}[c.delivery]||'お客様直送';
+  const sn=document.getElementById('staffSel')?.value||'';
   const fs=compact?10:12;
-
-  const rows=order.windows.map((win,i)=>{
-    const f=FM.find(x=>x.id===win.fabricId);
-    const calc=(win.finishW&&win.finishH&&f)?calcYousyaku(win.finishW,win.finishH,win.style,win.opening,f,win.tassel>0):null;
-    return`<tr>
-      <td class="l" style="font-size:${fs}px;">${win.label||`窓${i+1}`}</td>
-      <td style="font-size:${fs}px;">${win.type}</td>
-      <td style="font-size:${fs}px;">${win.style}</td>
-      <td class="l" style="font-size:${fs}px;">${f?f.maker:(win.fabricName||'—')}</td>
-      <td style="font-size:${fs}px;">${win.finishW||'—'}</td>
-      <td style="font-size:${fs}px;">${win.finishH||'—'}</td>
-      <td style="font-size:${fs}px;">${win.opening}</td>
-      <td style="font-size:${fs}px;">${win.hook}</td>
-      <td style="font-size:${fs}px;">${win.windows||1}</td>
-      <td style="font-size:${fs}px;">${win.tassel||0}</td>
-      <td style="font-size:${fs}px;">${win.lining||'なし'}</td>
-      <td style="font-size:${fs}px;">${f?(f.hem||'—'):'—'}</td>
-      <td style="font-size:${fs}px;">${calc?(calc.nubaki!=null?calc.nubaki+'枚×'+calc.cutLen+'cm':'—'):'—'}</td>
-      <td class="hl" style="font-size:${compact?11:13}px;font-weight:700;">${calc?calc.yousyaku+'m':'—'}</td>
-    </tr>`;
+  const rows=o.windows.map((w,i)=>{
+    const f=FM.find(x=>x.id===w.fabricId);
+    const r=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;
+    return`<tr><td class="l" style="font-size:${fs}px;">${w.label||`窓${i+1}`}</td><td style="font-size:${fs}px;">${w.type}</td><td style="font-size:${fs}px;">${w.style}</td><td class="l" style="font-size:${fs}px;">${f?f.maker:(w.fabricName||'—')}</td><td style="font-size:${fs}px;">${w.finishW||'—'}</td><td style="font-size:${fs}px;">${w.finishH||'—'}</td><td style="font-size:${fs}px;">${w.opening}</td><td style="font-size:${fs}px;">${w.hook}</td><td style="font-size:${fs}px;">${w.windows||1}</td><td style="font-size:${fs}px;">${w.tassel||0}</td><td style="font-size:${fs}px;">${w.lining||'なし'}</td><td style="font-size:${fs}px;">${f?(f.hem||'—'):'—'}</td><td style="font-size:${fs}px;">${r?(r.nb!=null?r.nb+'枚×'+r.cl+'cm':'—'):'—'}</td><td class="hl" style="font-size:${compact?11:13}px;font-weight:700;">${r?r.yq+'m':'—'}</td></tr>`;
   }).join('');
-
-  const totals={};
-  order.windows.forEach(win=>{
-    const f=FM.find(x=>x.id===win.fabricId);
-    if(!f)return;
-    const calc=(win.finishW&&win.finishH)?calcYousyaku(win.finishW,win.finishH,win.style,win.opening,f,win.tassel>0):null;
-    if(!calc)return;
-    totals[f.maker]=(totals[f.maker]||0)+calc.yousyaku;
-  });
-  const sumRows=Object.entries(totals).map(([k,v])=>`<div class="ac-preview-summary-row"><span>${k}</span><span style="font-weight:700;">${ru1(v)}m</span></div>`).join('');
-
-  const cls=compact?'ac-preview-':'ac-preview-';
+  const tots={};o.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const r=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;if(!r)return;tots[f.maker]=(tots[f.maker]||0)+r.yq;});
+  const sumRows=Object.entries(tots).map(([k,v])=>`<div class="preview-summary-row"><span>${k}</span><span style="font-weight:700;">${ru1(v)}m</span></div>`).join('');
   return`
-    <div class="${cls}title" style="font-size:${compact?15:18}px;">A C M E 専 用 発 注 書</div>
-    <div style="font-size:${compact?10:11}px;color:#666;display:flex;justify-content:space-between;margin-bottom:${compact?8:12}px;">
-      <span>進弘産業株式会社 御中　FAX: 05-8669-1384</span>
-      <span>発行: ${today}　納期: 午前〆7日後出荷</span>
+    <div class="preview-title" style="font-size:${compact?15:18}px;">A C M E 専 用 発 注 書</div>
+    <div style="font-size:${compact?10:11}px;color:#666;display:flex;justify-content:space-between;margin-bottom:${compact?8:12}px;"><span>進弘産業株式会社 御中　FAX: 05-8669-1384</span><span>発行: ${today}　納期: 午前〆7日後出荷</span></div>
+    <div class="preview-inforow">
+      <div class="preview-ibox"><div class="preview-ibox-label">お客様情報</div><div style="font-weight:700;font-size:${compact?12:14}px;">${c.name||'—'} 様</div><div style="color:#555;font-size:${compact?10:11}px;margin-top:2px;">〒${c.zip||''} ${c.address||''}</div><div style="font-size:${compact?10:11}px;">TEL: ${c.tel||'—'}</div></div>
+      <div class="preview-ibox"><div class="preview-ibox-label">配送・担当</div><div style="font-size:${compact?11:12}px;">${c.store||'—'} / ${c.staff||'—'} 様</div><div style="font-size:${compact?10:11}px;">${dL}${c.delivdate?' '+c.delivdate:''}</div>${sn?`<div style="font-size:${compact?10:11}px;margin-top:4px;padding-top:4px;border-top:1px solid #eee;">発注担当: <strong>${sn}</strong></div>`:''}</div>
+      <div style="flex:0 0 auto;text-align:right;font-size:${compact?9:10}px;line-height:1.9;color:#666;">${s.company||'andC株式会社'}<br>${s.address||'〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階'}<br>TEL: ${s.tel||'03-6303-3706'} / FAX: ${s.fax||'03-5726-8198'}</div>
     </div>
-    <div class="${cls}inforow">
-      <div class="${cls}infobox">
-        <div class="${cls}infobox-label">お客様情報</div>
-        <div style="font-weight:700;font-size:${compact?12:14}px;">${c.name||'—'} 様</div>
-        <div style="color:#555;font-size:${compact?10:11}px;margin-top:2px;">〒${c.zip||''} ${c.address||''}</div>
-        <div style="font-size:${compact?10:11}px;">TEL: ${c.tel||'—'}</div>
-      </div>
-      <div class="${cls}infobox">
-        <div class="${cls}infobox-label">配送・担当</div>
-        <div style="font-size:${compact?11:12}px;">${c.store||'—'} / ${c.staff||'—'} 様</div>
-        <div style="font-size:${compact?10:11}px;">${delivLabel}${c.delivdate?' '+c.delivdate:''}</div>
-        ${staffName?`<div style="font-size:${compact?10:11}px;margin-top:4px;padding-top:4px;border-top:1px solid #eee;">発注担当: <strong>${staffName}</strong></div>`:''}
-      </div>
-      <div style="flex:0 0 auto;text-align:right;font-size:${compact?9:10}px;line-height:1.9;color:#666;">
-        ${s.company||'andC株式会社'}<br>
-        ${(s.address||'〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階').replace('ベルザ恵比寿4階','<br>ベルザ恵比寿4階')}<br>
-        TEL: ${s.tel||'03-6303-3706'} / FAX: ${s.fax||'03-5726-8198'}
-      </div>
-    </div>
-    <table class="${cls}table">
-      <thead><tr>
-        <th>取付場所</th><th>種類</th><th>スタイル</th><th>メーカー生地名</th>
-        <th>幅cm</th><th>丈cm</th><th>開き方</th><th>フック</th>
-        <th>窓数</th><th>タッセル</th><th>裏地</th><th>裾</th>
-        <th>継ぎ巾×裁ち切り</th><th>要尺</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    ${Object.keys(totals).length>0?`<div class="${cls}summary"><div class="${cls}summary-title">品番別合計m数</div>${sumRows}</div>`:''}
-    <div class="${cls}sign">
-      内容をご確認いただき、ご署名の上、ご返信をお願いします。
-      <div class="${cls}sign-box"></div>
-    </div>
-  `;
+    <table class="preview-table"><thead><tr><th>取付場所</th><th>種類</th><th>スタイル</th><th>メーカー生地名</th><th>幅cm</th><th>丈cm</th><th>開き方</th><th>フック</th><th>窓数</th><th>タッセル</th><th>裏地</th><th>裾</th><th>継ぎ巾×裁ち切り</th><th>要尺</th></tr></thead><tbody>${rows}</tbody></table>
+    ${Object.keys(tots).length?`<div class="preview-summary"><div class="preview-summary-title">品番別合計m数</div>${sumRows}</div>`:''}
+    <div class="preview-sign">内容をご確認いただき、ご署名の上、ご返信をお願いします。<div class="preview-sign-box"></div></div>`;
 }
 
-function renderPreview(){
-  if(!currentOrder)return;
-  document.getElementById('previewContent').innerHTML=buildPreview(currentOrder,true);
-}
-function openModal(){
-  if(!currentOrder)return;
-  document.getElementById('modalContent').innerHTML=`<div style="background:#fff;padding:24px;border:1px solid #e0e0e0;border-radius:4px;">${buildPreview(currentOrder,false)}</div>`;
-  document.getElementById('modal').classList.add('show');
-}
-function closeModal(e){if(!e||e.target===document.getElementById('modal'))document.getElementById('modal').classList.remove('show');}
+function renderPreview(){if(!order)return;document.getElementById('previewContent').innerHTML=buildPreview(order,true);}
+function openModal(){if(!order)return;document.getElementById('modalContent').innerHTML=`<div style="background:#fff;padding:24px;border:1px solid #e0e0e0;border-radius:4px;">${buildPreview(order,false)}</div>`;document.getElementById('modal').classList.add('on');}
+function closeModal(e){if(!e||e.target===document.getElementById('modal'))document.getElementById('modal').classList.remove('on');}
 
 // ============================================================
 // PDF出力
 // ============================================================
 function exportPDF(){
-  if(!currentOrder)return;
-  syncCustomer();
-  const c=currentOrder.customer;
-  const s=settings;
-  const today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'});
-  const delivLabel={customer:'お客様直送',store:'店入れ',contractor:'取付業者直送'}[c.delivery]||'お客様直送';
-  const staffName=document.getElementById('staffSelect')?.value||'';
-
-  const rows=currentOrder.windows.map((win,i)=>{
-    const f=FM.find(x=>x.id===win.fabricId);
-    const calc=(win.finishW&&win.finishH&&f)?calcYousyaku(win.finishW,win.finishH,win.style,win.opening,f,win.tassel>0):null;
-    return`<tr><td class="left">${win.label||`窓${i+1}`}</td><td>${win.type}</td><td>${win.style}</td><td class="left">${f?f.maker:(win.fabricName||'—')}</td><td>${win.finishW||'—'}</td><td>${win.finishH||'—'}</td><td>${win.opening}</td><td>${win.hook}</td><td>${win.windows||1}</td><td>${win.tassel||0}</td><td>${win.lining||'なし'}</td><td>${f?(f.hem||'—'):'—'}</td><td>${calc?(calc.nubaki!=null?calc.nubaki+'枚×'+calc.cutLen+'cm':'—'):'—'}</td><td class="po-yq">${calc?calc.yousyaku+'m':'—'}</td></tr>`;
-  }).join('');
-
-  const totals={};
-  currentOrder.windows.forEach(win=>{
-    const f=FM.find(x=>x.id===win.fabricId);if(!f)return;
-    const calc=(win.finishW&&win.finishH)?calcYousyaku(win.finishW,win.finishH,win.style,win.opening,f,win.tassel>0):null;if(!calc)return;
-    totals[f.maker]=(totals[f.maker]||0)+calc.yousyaku;
-  });
-  const sumRows=Object.entries(totals).map(([k,v])=>`<tr><td class="left">${k}</td><td class="po-yq">${ru1(v)}m</td></tr>`).join('');
-
+  if(!order)return;syncC();
+  const c=order.customer,s=settings,today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'});
+  const dL={customer:'お客様直送',store:'店入れ',contractor:'取付業者直送'}[c.delivery]||'お客様直送';
+  const sn=document.getElementById('staffSel')?.value||'';
+  const rows=order.windows.map((w,i)=>{const f=FM.find(x=>x.id===w.fabricId);const r=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;return`<tr><td class="left">${w.label||`窓${i+1}`}</td><td>${w.type}</td><td>${w.style}</td><td class="left">${f?f.maker:(w.fabricName||'—')}</td><td>${w.finishW||'—'}</td><td>${w.finishH||'—'}</td><td>${w.opening}</td><td>${w.hook}</td><td>${w.windows||1}</td><td>${w.tassel||0}</td><td>${w.lining||'なし'}</td><td>${f?(f.hem||'—'):'—'}</td><td>${r?(r.nb!=null?r.nb+'枚×'+r.cl+'cm':'—'):'—'}</td><td class="po-yq">${r?r.yq+'m':'—'}</td></tr>`;}).join('');
+  const tots={};order.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const r=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;if(!r)return;tots[f.maker]=(tots[f.maker]||0)+r.yq;});
+  const sumR=Object.entries(tots).map(([k,v])=>`<tr><td class="left">${k}</td><td class="po-yq">${ru1(v)}m</td></tr>`).join('');
   document.getElementById('printArea').innerHTML=`
     <div class="po-title">A C M E 専 用 発 注 書</div>
     <div class="po-meta"><div>進弘産業株式会社 御中　FAX: 05-8669-1384</div><div>発行日: ${today}　納期: 午前〆 7日後出荷</div></div>
     <div style="display:flex;gap:8mm;margin-bottom:4mm;">
-      <div style="flex:1;"><div class="po-st">お客様情報</div>
-        <table class="po-it"><tr><th>お客様名</th><td><strong>${c.name||'—'} 様</strong>（${c.kana||''}）</td></tr>
-        <tr><th>住所</th><td>〒${c.zip||''} ${c.address||''}</td></tr>
-        <tr><th>TEL</th><td>${c.tel||''}</td></tr></table>
-      </div>
-      <div style="flex:1;"><div class="po-st">配送情報</div>
-        <table class="po-it"><tr><th>店舗</th><td>${c.store||''}</td></tr>
-        <tr><th>担当者</th><td>${c.staff||''} 様</td></tr>
-        <tr><th>配送</th><td>${delivLabel}${c.delivdate?' '+c.delivdate:''}</td></tr></table>
-      </div>
-      <div style="flex:0 0 56mm;text-align:right;">
-        <div class="po-st">発注元</div>
-        <div class="po-sender">${s.company||'andC株式会社'}<br>${s.address||'〒150-0011 東京都渋谷区東3-16-1<br>ベルザ恵比寿4階'}<br>TEL: ${s.tel||'03-6303-3706'}<br>FAX: ${s.fax||'03-5726-8198'}<br>発注担当: <strong>${staffName||'___________'}</strong></div>
-      </div>
+      <div style="flex:1;"><div class="po-st">お客様情報</div><table class="po-it"><tr><th>お客様名</th><td><strong>${c.name||'—'} 様</strong>（${c.kana||''}）</td></tr><tr><th>住所</th><td>〒${c.zip||''} ${c.address||''}</td></tr><tr><th>TEL</th><td>${c.tel||''}</td></tr></table></div>
+      <div style="flex:1;"><div class="po-st">配送情報</div><table class="po-it"><tr><th>店舗</th><td>${c.store||''}</td></tr><tr><th>担当者</th><td>${c.staff||''} 様</td></tr><tr><th>配送</th><td>${dL}${c.delivdate?' '+c.delivdate:''}</td></tr></table></div>
+      <div style="flex:0 0 56mm;text-align:right;"><div class="po-st">発注元</div><div class="po-sender">${s.company||'andC株式会社'}<br>${s.address||'〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階'}<br>TEL: ${s.tel||'03-6303-3706'}<br>FAX: ${s.fax||'03-5726-8198'}<br>発注担当: <strong>${sn||'___________'}</strong></div></div>
     </div>
     <div class="po-st">発注明細</div>
     <table class="po-mt"><thead><tr><th>取付場所</th><th>種類</th><th>スタイル</th><th>メーカー生地名</th><th>幅cm</th><th>丈cm</th><th>開き方</th><th>フック</th><th>窓数</th><th>タッセル</th><th>裏地</th><th>裾</th><th>継ぎ巾×裁ち切り</th><th>要尺(m)</th></tr></thead><tbody>${rows}</tbody></table>
-    ${Object.keys(totals).length>0?`<div class="po-st">品番別合計m数</div><table class="po-mt" style="width:auto;"><thead><tr><th style="min-width:120px;">生地名</th><th style="min-width:60px;">合計要尺</th></tr></thead><tbody>${sumRows}</tbody></table>`:''}
-    <div class="po-footer">
-      <div class="po-sign">内容をご確認いただき、ご署名の上、ご返信をお願いします。</div>
-      <div class="po-sign-box"></div>
-    </div>`;
+    ${Object.keys(tots).length?`<div class="po-st">品番別合計m数</div><table class="po-mt" style="width:auto;"><thead><tr><th style="min-width:120px;">生地名</th><th style="min-width:60px;">合計要尺</th></tr></thead><tbody>${sumR}</tbody></table>`:''}
+    <div class="po-footer"><div class="po-sign">内容をご確認いただき、ご署名の上、ご返信をお願いします。</div><div class="po-sign-box"></div></div>`;
   window.print();
 }
 
-// ============================================================
-// 発注確定・削除
-// ============================================================
-function generateOrder(){
-  syncCustomer();
-  if(!currentOrder)return;
-  currentOrder.status='done';
-  setStep(3);
-  const idx=customers.findIndex(c=>c.id===currentOrder.id);
-  if(idx>=0)customers[idx]=currentOrder;
-  else customers.unshift(currentOrder);
+function confirmOrder(){
+  syncC();if(!order)return;
+  order.status='done';setStep(3);
+  const idx=customers.findIndex(x=>x.id===order.id);
+  if(idx>=0)customers[idx]=order;else customers.unshift(order);
   localStorage.setItem('acme_customers',JSON.stringify(customers));
-  showToast('発注書を確定しました。顧客管理に保存されました。','success');
+  showToast('発注書を確定しました。顧客管理に保存されました。','ok');
 }
-function deleteOrder(){
+function clearOrder(){
   if(!confirm('この案件をクリアしますか？'))return;
-  currentOrder=null;currentWinIdx=0;
-  setStep(1);showDashContent(null);
-  showToast('クリアしました','success');
+  order=null;winIdx=0;pdfUrl=null;
+  setStep(1);showContent(null);
+  document.getElementById('pdfViewPanel').style.display='none';
+  showToast('クリアしました','ok');
 }
 
 // ============================================================
-// ファイルアップロード
+// ファイル処理
 // ============================================================
-const uz=document.getElementById('uploadZone');
-uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag');});
-uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
-uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag');[...e.dataTransfer.files].forEach(f=>processFile(f));});
-function handleFileSelect(e){[...e.target.files].forEach(f=>processFile(f));e.target.value='';}
+const dz=document.getElementById('dropZone');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');[...e.dataTransfer.files].forEach(f=>processFile(f));});
+function handleFiles(e){[...e.target.files].forEach(f=>processFile(f));e.target.value='';}
 
 async function processFile(file){
   setStep(1);
+  // PDFをBlobURLで保持（表示用）
+  if(pdfUrl)URL.revokeObjectURL(pdfUrl);
+  pdfUrl=URL.createObjectURL(file);
+
   showAI('PDF解析中...',`${file.name} を Claude が読み取っています`);
   try{
     const b64=await toB64(file);
@@ -1084,92 +939,69 @@ async function processFile(file){
     if(data.error)throw new Error(data.error.message||JSON.stringify(data.error));
     const text=data.content.find(x=>x.type==='text')?.text||'';
     const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
-    parsed.windows.forEach(win=>{const f=findFabric(win.fabricName,win.fabricCode);if(f)win.fabricId=f.id;});
-    currentOrder={id:'order_'+Date.now(),filename:file.name,status:'ai_done',customer:parsed.customer,windows:parsed.windows};
-    currentWinIdx=0;setStep(2);showDashContent(currentOrder);
-    showToast('PDF解析完了！内容を確認してください','success');
-  }catch(err){hideAI();showToast('エラー: '+err.message,'error');console.error(err);}
+    parsed.windows.forEach(w=>{const f=findF(w.fabricName,w.fabricCode);if(f)w.fabricId=f.id;});
+    order={id:'order_'+Date.now(),filename:file.name,status:'ai_done',customer:parsed.customer,windows:parsed.windows};
+    winIdx=0;setStep(2);showContent(order);
+    showToast('PDF解析完了！内容を確認してください','ok');
+  }catch(err){hideAI();showToast('エラー: '+err.message,'err');console.error(err);}
 }
-function toB64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>rej(new Error('読み込み失敗'));r.readAsDataURL(file);});}
+function toB64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>rej(new Error('読み込み失敗'));r.readAsDataURL(f);});}
 
 // ============================================================
 // 品番マスタ
 // ============================================================
-let masterFilter='all';
-function setMasterFilter(val,btn){masterFilter=val;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMasterTable();}
-function renderMasterTable(){
-  const q=(document.getElementById('masterSearch')?.value||'').toLowerCase();
-  const tc={ドレープ:'type-drape',レース:'type-race',遮光裏地:'type-lining'};
-  const data=FM.filter(f=>{
-    if(masterFilter!=='all'&&f.type!==masterFilter)return false;
+function setMF(v,btn){mFilter=v;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderMaster();}
+function renderMaster(){
+  const q=(document.getElementById('msearch')?.value||'').toLowerCase();
+  const tc={ドレープ:'t-d',レース:'t-r',遮光裏地:'t-l'};
+  document.getElementById('masterBody').innerHTML=FM.filter(f=>{
+    if(mFilter!=='all'&&f.type!==mFilter)return false;
     if(!q)return true;
     return f.maker.toLowerCase().includes(q)||f.acme.toLowerCase().includes(q)||String(f.id).includes(q);
-  });
-  document.getElementById('masterTableBody').innerHTML=data.map(f=>`<tr>
-    <td style="font-family:var(--mono);font-size:12px;">${String(f.id).padStart(3,'0')}</td>
-    <td><span class="type-badge ${tc[f.type]||''}">${f.type}</span></td>
-    <td style="font-weight:500;">${f.maker}</td><td>${f.acme}</td>
-    <td style="font-family:var(--mono);">${f.width}cm</td>
-    <td style="font-family:var(--mono);">${f.repeat>0?f.repeat+'cm':'—'}</td>
-    <td>${f.yoko?'○':'—'}</td><td>${f.hem||'—'}</td>
-    <td style="font-family:var(--mono);">${f.vA!=null?f.vA+'cm':'—'}</td>
-    <td>${f.supplier||'—'}</td>
-    <td style="color:var(--warn);font-size:12px;">${f.note||''}</td>
-  </tr>`).join('');
+  }).map(f=>`<tr><td style="font-family:var(--mono);font-size:12px;">${String(f.id).padStart(3,'0')}</td><td><span class="tbadge ${tc[f.type]||''}">${f.type}</span></td><td style="font-weight:500;">${f.maker}</td><td>${f.acme}</td><td style="font-family:var(--mono);">${f.width}cm</td><td style="font-family:var(--mono);">${f.repeat>0?f.repeat+'cm':'—'}</td><td>${f.yoko?'○':'—'}</td><td>${f.hem||'—'}</td><td style="font-family:var(--mono);">${f.vA!=null?f.vA+'cm':'—'}</td><td>${f.supplier||'—'}</td><td style="color:var(--warn);font-size:12px;">${f.note||''}</td></tr>`).join('');
 }
 
 // ============================================================
 // 顧客管理
 // ============================================================
 function renderCustomers(){
-  const grid=document.getElementById('customerGrid');
-  if(customers.length===0){grid.innerHTML='<div style="color:var(--mute2);font-size:13px;">確定済みの案件がありません</div>';return;}
-  const sl={ai_done:'AI済',done:'確定',pending:'未処理'};
-  grid.innerHTML=customers.map(o=>`
-    <div class="customer-card" onclick="loadCustomer('${o.id}')">
-      <div class="customer-card__name">${o.customer.name||'—'} 様</div>
-      <div class="customer-card__meta">${o.customer.tel||''}<br>${o.customer.address||''}<br>店舗: ${o.customer.store||'—'} / ${o.customer.staff||'—'}</div>
-      <div class="customer-card__foot">${o.windows.length}窓 ／ ${o.filename}</div>
-    </div>`).join('');
+  const g=document.getElementById('cgrid');
+  if(!customers.length){g.innerHTML='<div style="color:var(--mute2);font-size:13px;">確定済みの案件がありません</div>';return;}
+  g.innerHTML=customers.map(o=>`<div class="ccard" onclick="loadCustomer('${o.id}')"><div class="ccard-name">${o.customer.name||'—'} 様</div><div class="ccard-meta">${o.customer.tel||''}<br>${o.customer.address||''}<br>店舗: ${o.customer.store||'—'} / ${o.customer.staff||'—'}</div><div class="ccard-foot">${o.windows.length}窓 ／ ${o.filename}</div></div>`).join('');
 }
 function loadCustomer(id){
   const o=customers.find(x=>x.id===id);if(!o)return;
-  currentOrder=JSON.parse(JSON.stringify(o));currentWinIdx=0;
-  setStep(2);showPage('dashboard');showDashContent(currentOrder);
-  showToast(`${currentOrder.customer.name}様の案件を読み込みました`,'success');
+  order=JSON.parse(JSON.stringify(o));winIdx=0;
+  setStep(2);goPage('dashboard');showContent(order);
+  showToast(`${order.customer.name}様の案件を読み込みました`,'ok');
 }
 
 // ============================================================
 // 設定
 // ============================================================
-function renderStaffSettings(){
-  const list=document.getElementById('staffList');if(!list)return;
-  list.innerHTML=staffList.length===0?'<div style="font-size:12px;color:var(--mute2);padding:4px 0;">担当者が登録されていません</div>':
-    staffList.map((s,i)=>`<div class="staff-item"><span class="staff-item__name">${s}</span><button class="staff-item__del" onclick="delStaff(${i})">×</button></div>`).join('');
+function renderStaffList(){
+  const el=document.getElementById('staffList');if(!el)return;
+  el.innerHTML=staffs.length?staffs.map((s,i)=>`<div class="staff-item"><span class="staff-item-name">${s}</span><button class="staff-del" onclick="delStaff(${i})">×</button></div>`).join(''):'<div style="font-size:12px;color:var(--mute2);padding:4px 0;">担当者が登録されていません</div>';
 }
-function addStaff(){const inp=document.getElementById('staffAddInput');const n=inp.value.trim();if(!n)return;staffList.push(n);localStorage.setItem('acme_staff',JSON.stringify(staffList));inp.value='';renderStaffSettings();renderStaffSelect();showToast(`${n}を追加しました`,'success');}
-function delStaff(i){staffList.splice(i,1);localStorage.setItem('acme_staff',JSON.stringify(staffList));renderStaffSettings();renderStaffSelect();}
-function saveApiKey(){localStorage.setItem('acme_api_key',document.getElementById('apiKeyInput').value.trim());showToast('APIキーを保存しました','success');}
-function saveSettings(){
-  settings={company:document.getElementById('s_company').value,address:document.getElementById('s_address').value,tel:document.getElementById('s_tel').value,fax:document.getElementById('s_fax').value};
-  localStorage.setItem('acme_settings',JSON.stringify(settings));showToast('設定を保存しました','success');
-}
+function addStaff(){const i=document.getElementById('staffInp');const n=i.value.trim();if(!n)return;staffs.push(n);localStorage.setItem('acme_staff',JSON.stringify(staffs));i.value='';renderStaffList();renderStaffSel();showToast(`${n}を追加しました`,'ok');}
+function delStaff(i){staffs.splice(i,1);localStorage.setItem('acme_staff',JSON.stringify(staffs));renderStaffList();renderStaffSel();}
+function saveKey(){localStorage.setItem('acme_api_key',document.getElementById('apiKey').value.trim());showToast('APIキーを保存しました','ok');}
+function saveSettings(){settings={company:document.getElementById('sc').value,address:document.getElementById('sa').value,tel:document.getElementById('st').value,fax:document.getElementById('sf').value};localStorage.setItem('acme_settings',JSON.stringify(settings));showToast('設定を保存しました','ok');}
 
 // ============================================================
-// UI helpers
+// UI
 // ============================================================
-function showAI(l,s){document.getElementById('aiLabel').textContent=l;document.getElementById('aiSub').textContent=s;document.getElementById('aiOverlay').classList.add('show');}
-function hideAI(){document.getElementById('aiOverlay').classList.remove('show');}
-let toastTimer;
-function showToast(msg,type=''){
-  document.getElementById('toastIcon').textContent=type==='success'?'✓':type==='error'?'✕':'ℹ';
+function showAI(l,s){document.getElementById('aiLabel').textContent=l;document.getElementById('aiSub').textContent=s;document.getElementById('aiOv').classList.add('on');}
+function hideAI(){document.getElementById('aiOv').classList.remove('on');}
+let toastT;
+function showToast(msg,type){
+  document.getElementById('toastIc').textContent=type==='ok'?'✓':'✕';
   document.getElementById('toastMsg').textContent=msg;
-  const t=document.getElementById('toast');t.className=`toast show ${type}`;
-  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
+  const t=document.getElementById('toast');t.className=`toast on toast-${type}`;
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),3500);
 }
 
-// 初期化
-renderMasterTable();
+renderMaster();
 </script>
 </body>
 </html>
