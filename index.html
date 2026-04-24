@@ -41,7 +41,10 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
 .page.active{display:block;}
 
 /* ===== ダッシュボード ===== */
-.dash{max-width:720px;margin:0 auto;padding:16px 20px 32px;}
+.dash{max-width:1200px;margin:0 auto;padding:16px 24px 32px;}
+.dash-top{margin-bottom:10px;}
+.dash-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.dash-full{margin-bottom:10px;}
 .upload-zone{border:1.5px dashed var(--border2);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface);margin-bottom:10px;}
 .upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(37,99,235,.03);}
 .upload-icon{font-size:22px;margin-bottom:6px;opacity:.4;}
@@ -254,7 +257,7 @@ select option{background:var(--surface);}
 
         <div id="dashContent" style="display:none;">
           <!-- 発注担当者 -->
-          <div class="card">
+          <div class="card dash-top">
             <div class="card-title">発注担当者</div>
             <div class="staff-row">
               <span class="staff-label">andC 担当者</span>
@@ -264,70 +267,72 @@ select option{background:var(--surface);}
             </div>
           </div>
 
-          <!-- 顧客情報 -->
-          <div class="card">
-            <div class="card-title">顧客情報</div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">お客様名 <span class="ai-tag">AI</span></label>
-                <input type="text" class="form-input ai-filled" id="f_name" oninput="markMod(this);syncCustomer();renderPreview()">
+          <div class="dash-cols">
+            <!-- 顧客情報 -->
+            <div class="card">
+              <div class="card-title">顧客情報</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">お客様名 <span class="ai-tag">AI</span></label>
+                  <input type="text" class="form-input ai-filled" id="f_name" oninput="markMod(this);syncCustomer();renderPreview()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">フリガナ <span class="ai-tag">AI</span></label>
+                  <input type="text" class="form-input ai-filled" id="f_kana" oninput="markMod(this);syncCustomer();renderPreview()">
+                </div>
               </div>
-              <div class="form-group">
-                <label class="form-label">フリガナ <span class="ai-tag">AI</span></label>
-                <input type="text" class="form-input ai-filled" id="f_kana" oninput="markMod(this);syncCustomer();renderPreview()">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">電話番号 <span class="ai-tag">AI</span></label>
+                  <input type="text" class="form-input ai-filled" id="f_tel" oninput="markMod(this);syncCustomer();renderPreview()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">郵便番号 <span class="ai-tag">AI</span></label>
+                  <input type="text" class="form-input ai-filled" id="f_zip" oninput="markMod(this);syncCustomer();renderPreview()">
+                </div>
+              </div>
+              <div class="form-row single">
+                <div class="form-group">
+                  <label class="form-label">住所 <span class="ai-tag">AI</span></label>
+                  <input type="text" class="form-input ai-filled" id="f_address" oninput="markMod(this);syncCustomer();renderPreview()">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">お買上店舗 <span class="ai-tag">AI</span></label>
+                  <input type="text" class="form-input ai-filled" id="f_store" oninput="markMod(this);syncCustomer();renderPreview()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">担当者（店舗側） <span class="ai-tag">AI</span></label>
+                  <input type="text" class="form-input ai-filled" id="f_staff" oninput="markMod(this);syncCustomer();renderPreview()">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">配送方法 <span class="ai-tag">AI</span></label>
+                  <select class="form-select" id="f_delivery" onchange="syncCustomer();renderPreview()">
+                    <option value="customer">お客様直送</option>
+                    <option value="store">店入れ</option>
+                    <option value="contractor">取付業者直送</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">配送希望日時 <span class="ai-tag">AI</span></label>
+                  <input type="text" class="form-input ai-filled" id="f_delivdate" oninput="markMod(this);syncCustomer();renderPreview()">
+                </div>
               </div>
             </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">電話番号 <span class="ai-tag">AI</span></label>
-                <input type="text" class="form-input ai-filled" id="f_tel" oninput="markMod(this);syncCustomer();renderPreview()">
-              </div>
-              <div class="form-group">
-                <label class="form-label">郵便番号 <span class="ai-tag">AI</span></label>
-                <input type="text" class="form-input ai-filled" id="f_zip" oninput="markMod(this);syncCustomer();renderPreview()">
-              </div>
-            </div>
-            <div class="form-row single">
-              <div class="form-group">
-                <label class="form-label">住所 <span class="ai-tag">AI</span></label>
-                <input type="text" class="form-input ai-filled" id="f_address" oninput="markMod(this);syncCustomer();renderPreview()">
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">お買上店舗 <span class="ai-tag">AI</span></label>
-                <input type="text" class="form-input ai-filled" id="f_store" oninput="markMod(this);syncCustomer();renderPreview()">
-              </div>
-              <div class="form-group">
-                <label class="form-label">担当者（店舗側） <span class="ai-tag">AI</span></label>
-                <input type="text" class="form-input ai-filled" id="f_staff" oninput="markMod(this);syncCustomer();renderPreview()">
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">配送方法 <span class="ai-tag">AI</span></label>
-                <select class="form-select" id="f_delivery" onchange="syncCustomer();renderPreview()">
-                  <option value="customer">お客様直送</option>
-                  <option value="store">店入れ</option>
-                  <option value="contractor">取付業者直送</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">配送希望日時 <span class="ai-tag">AI</span></label>
-                <input type="text" class="form-input ai-filled" id="f_delivdate" oninput="markMod(this);syncCustomer();renderPreview()">
-              </div>
-            </div>
-          </div>
 
-          <!-- 窓情報 -->
-          <div class="card">
-            <div class="card-title">窓情報</div>
-            <div class="window-tabs" id="windowTabs"></div>
-            <div id="windowForm"></div>
+            <!-- 窓情報 -->
+            <div class="card">
+              <div class="card-title">窓情報</div>
+              <div class="window-tabs" id="windowTabs"></div>
+              <div id="windowForm"></div>
+            </div>
           </div>
 
           <!-- 発注書プレビュー -->
-          <div class="card">
+          <div class="card dash-full">
             <div class="card-title">発注書プレビュー</div>
             <div class="preview-hint">🔍 クリックで拡大</div>
             <div id="previewSheet" onclick="openModal()">
