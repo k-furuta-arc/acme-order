@@ -636,11 +636,19 @@ function findF(name,code){
 function ru1(v){return Math.ceil(Math.round(v*1000)/100)/10;}
 function hida(s){if(!s)return 1.5;if(s.includes('2倍'))return 2;if(s.includes('フラット'))return 1;return 1.5;}
 
-function calc(w,h,style,opening,f,hasTassel){
+function calcType(f){
+  if(!f)return'①リピート無し';
+  if(f.yoko&&f.width>=290)return'③横づかい';
+  if(f.repeat>0)return'②リピート有り';
+  return'①リピート無し';
+}
+
+function calc(w,h,style,opening,f,hasTassel,overrideType){
   if(!f||!w||!h)return null;
   const hd=hida(style),hS=(opening==='片開き')?15:30,vA=f.vA||40,tA=hasTassel?.2:0;
-  if(f.yoko&&f.width>=290){const raw=(w*hd+hS)/100;return{type:'③横づかい',nb:null,cl:null,yq:ru1(raw+tA),formula:`(${w}×${hd}+${hS})÷100=${ru1(raw)}m${tA>0?` +タッセル${tA}m`:''}`};}
-  if(f.repeat>0){const nb=Math.ceil((w*hd+hS)/f.width),rc=Math.ceil((h+vA)/f.repeat),cl=rc*f.repeat,raw=cl*nb/100;return{type:'②リピート有り',nb,cl,yq:ru1(raw+tA),formula:`継ぎ巾=${nb}枚×裁ち切り=${cl}cm÷100=${ru1(raw)}m${tA>0?` +タッセル${tA}m`:''}`};}
+  const type=overrideType||calcType(f);
+  if(type==='③横づかい'){const raw=(w*hd+hS)/100;return{type:'③横づかい',nb:null,cl:null,yq:ru1(raw+tA),formula:`(${w}×${hd}+${hS})÷100=${ru1(raw)}m${tA>0?` +タッセル${tA}m`:''}`};}
+  if(type==='②リピート有り'){const nb=Math.ceil((w*hd+hS)/f.width),rc=Math.ceil((h+vA)/f.repeat),cl=rc*f.repeat,raw=cl*nb/100;return{type:'②リピート有り',nb,cl,yq:ru1(raw+tA),formula:`継ぎ巾=${nb}枚×裁ち切り=${cl}cm÷100=${ru1(raw)}m${tA>0?` +タッセル${tA}m`:''}`};}
   const nb=Math.ceil((w*hd+hS)/f.width),cl=h+vA,raw=cl*nb/100;
   return{type:'①リピート無し',nb,cl,yq:ru1(raw+tA),formula:`ROUNDUP((${w}×${hd}+${hS})÷${f.width},0)=${nb}枚×${cl}cm÷100=${ru1(raw)}m${tA>0?` +タッセル${tA}m`:''}`};
 }
@@ -741,7 +749,7 @@ function renderWinTabs(){
 }
 function selWin(i){winIdx=i;renderWinTabs();renderWinForm();renderPreview();renderSummary();}
 function addWin(){
-  order.windows.push({label:`窓${order.windows.length+1}`,type:'ドレープ',style:'1.5倍ヒダ',fabricId:null,finishW:null,finishH:null,opening:'両開き',hook:'Aフック',windows:1,tassel:0,lining:'なし'});
+  order.windows.push({label:`窓${order.windows.length+1}`,type:'ドレープ',style:'1.5倍ヒダ',fabricId:null,finishW:null,finishH:null,opening:'両開き',hook:'Aフック',windows:1,tassel:0,lining:'なし',calcTypeOverride:null,note:''});
   winIdx=order.windows.length-1;renderWinTabs();renderWinForm();
 }
 function uw(k,v){if(order)order.windows[winIdx][k]=v;}
@@ -750,7 +758,9 @@ function renderWinForm(){
   if(!order)return;
   const w=order.windows[winIdx];if(!w)return;
   const f=FM.find(x=>x.id===w.fabricId);
-  const c=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;
+  const autoType=f?calcType(f):'①リピート無し';
+  const override=w.calcTypeOverride;
+  const c=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,override):null;
   const opts=FM.map(x=>`<option value="${x.id}"${w.fabricId===x.id?' selected':''}>${String(x.id).padStart(3,'0')}. ${x.maker}（${x.acme}）</option>`).join('');
   document.getElementById('winForm').innerHTML=`
     <div class="g4" style="margin-bottom:14px;">
@@ -770,7 +780,7 @@ function renderWinForm(){
       <div class="field"><label class="field-label">裏地</label><select class="field-sel" onchange="uw('lining',this.value)"><option${w.lining==='なし'?' selected':''}>なし</option><option${w.lining==='遮光裏地A'?' selected':''}>遮光裏地A</option><option${w.lining==='遮光裏地B'?' selected':''}>遮光裏地B</option></select></div>
     </div>
     <div class="g1" style="margin-bottom:12px;">
-      <div class="field"><label class="field-label">生地品番 <span class="ai-tag">AI</span></label><select class="field-sel ai" onchange="uw('fabricId',+this.value);renderWinForm();renderPreview();renderSummary();renderCheck()"><option value="">-- 選択 --</option>${opts}</select></div>
+      <div class="field"><label class="field-label">生地品番 <span class="ai-tag">AI</span></label><select class="field-sel ai" onchange="uw('fabricId',+this.value);uw('calcTypeOverride',null);renderWinForm();renderPreview();renderSummary();renderCheck()"><option value="">-- 選択 --</option>${opts}</select></div>
     </div>
     ${f?`<div class="chips">
       <span class="chip"><b>巾</b> ${f.width}cm</span>
@@ -781,13 +791,29 @@ function renderWinForm(){
       ${f.note?`<span class="chip chip-warn">⚠ ${f.note}</span>`:''}
     </div>`:''}
     ${w.style==='フラット'?`<div style="margin-top:10px;padding:10px 14px;background:rgba(154,122,74,.06);border:1px solid rgba(154,122,74,.2);border-radius:var(--r);font-size:13px;color:var(--warn);">⚠ フラットスタイルはBフック推奨。倍率1倍で計算されます。</div>`:''}
-    ${c?`<div style="margin-top:12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px;">
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;"><span style="color:var(--mute);">計算方式</span><span style="font-weight:600;">${c.type}</span></div>
+    <div style="margin-top:12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;">
+        <span style="color:var(--mute);">計算方式</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${override?`<span style="font-size:10px;color:var(--warn);font-family:var(--mono);">手動変更中</span>`:`<span style="font-size:10px;color:var(--mute2);font-family:var(--mono);">自動: ${autoType}</span>`}
+          <select class="field-sel" style="padding:4px 8px;font-size:12px;width:auto;" onchange="uw('calcTypeOverride',this.value||null);renderWinForm();renderPreview();renderSummary()">
+            <option value="">自動判定</option>
+            <option value="①リピート無し"${(override==='①リピート無し')?' selected':''}>①リピート無し</option>
+            <option value="②リピート有り"${(override==='②リピート有り')?' selected':''}>②リピート有り</option>
+            <option value="③横づかい"${(override==='③横づかい')?' selected':''}>③横づかい</option>
+          </select>
+        </div>
+      </div>
+      ${c?`
       ${c.nb!=null?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;"><span style="color:var(--mute);">継ぎ巾</span><span style="font-family:var(--mono);font-weight:600;">${c.nb} 枚</span></div>`:''}
       ${c.cl!=null?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;"><span style="color:var(--mute);">裁ち切り</span><span style="font-family:var(--mono);font-weight:600;">${c.cl} cm</span></div>`:''}
       <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;align-items:baseline;"><span style="color:var(--mute);">要尺</span><span style="font-family:var(--mono);font-weight:700;font-size:22px;color:var(--ok);">${c.yq} m</span></div>
       <div style="font-size:10px;color:var(--mute2);font-family:var(--mono);margin-top:8px;padding-top:8px;border-top:1px solid var(--line);line-height:1.9;">${c.formula}</div>
-    </div>`:`<div style="margin-top:12px;padding:12px 16px;background:rgba(154,122,74,.06);border:1px solid rgba(154,122,74,.2);border-radius:var(--r);font-size:13px;color:var(--warn);">品番とサイズを入力すると自動計算されます</div>`}
+      `:`<div style="padding:12px 0;font-size:13px;color:var(--warn);">品番とサイズを入力すると自動計算されます</div>`}
+    </div>
+    <div class="g1" style="margin-top:12px;">
+      <div class="field"><label class="field-label">備考</label><textarea class="field-input" rows="3" style="resize:vertical;font-size:13px;" placeholder="在庫メモ・特記事項など..." oninput="uw('note',this.value);renderPreview()">${w.note||''}</textarea></div>
+    </div>
   `;
 }
 
@@ -798,7 +824,7 @@ function renderSummary(){
   if(!order){document.getElementById('sumWins').innerHTML='<div style="padding:20px 16px;font-size:13px;color:var(--mute2);text-align:center;">案件を読み込むと<br>ここに表示されます</div>';document.getElementById('sumTotal').style.display='none';return;}
   document.getElementById('sumWins').innerHTML=order.windows.map((w,i)=>{
     const f=FM.find(x=>x.id===w.fabricId);
-    const c=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;
+    const c=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;
     return`<div class="sum-win">
       <div class="sum-win-label">${w.label||`窓${i+1}`}</div>
       <div class="sum-win-row"><span style="font-size:13px;color:var(--mute);">要尺</span><span class="sum-val">${c?c.yq:'—'}<span class="sum-val-u">${c?'m':''}</span></span></div>
@@ -807,7 +833,7 @@ function renderSummary(){
     </div>`;
   }).join('');
   const tots={};
-  order.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const c=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;if(!c)return;tots[f.maker]=(tots[f.maker]||0)+c.yq;});
+  order.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const c=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;if(!c)return;tots[f.maker]=(tots[f.maker]||0)+c.yq;});
   if(Object.keys(tots).length){
     document.getElementById('sumTotal').style.display='block';
     document.getElementById('sumTotal').innerHTML='<div style="font-size:11px;color:var(--mute);margin-bottom:10px;">合計</div>'+
@@ -847,10 +873,31 @@ function buildPreview(o,compact){
   const fs=compact?10:12;
   const rows=o.windows.map((w,i)=>{
     const f=FM.find(x=>x.id===w.fabricId);
-    const r=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;
-    return`<tr><td class="l" style="font-size:${fs}px;">${w.label||`窓${i+1}`}</td><td style="font-size:${fs}px;">${w.type}</td><td style="font-size:${fs}px;">${w.style}</td><td class="l" style="font-size:${fs}px;">${f?f.maker:(w.fabricName||'—')}</td><td style="font-size:${fs}px;">${w.finishW||'—'}</td><td style="font-size:${fs}px;">${w.finishH||'—'}</td><td style="font-size:${fs}px;">${w.opening}</td><td style="font-size:${fs}px;">${w.hook}</td><td style="font-size:${fs}px;">${w.windows||1}</td><td style="font-size:${fs}px;">${w.tassel||0}</td><td style="font-size:${fs}px;">${w.lining||'なし'}</td><td style="font-size:${fs}px;">${f?(f.hem||'—'):'—'}</td><td style="font-size:${fs}px;">${r?(r.nb!=null?r.nb+'枚×'+r.cl+'cm':'—'):'—'}</td><td class="hl" style="font-size:${compact?11:13}px;font-weight:700;">${r?r.yq+'m':'—'}</td></tr>`;
+    const r=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;
+    const fabInfo=f?`巾${f.width}cm${f.repeat>0?' / リピート'+f.repeat+'cm':' / リピート無し'}`:'';
+    return`<tr>
+      <td class="l" style="font-size:${fs}px;">${w.label||`窓${i+1}`}</td>
+      <td style="font-size:${fs}px;">${w.type}</td>
+      <td style="font-size:${fs}px;">${w.style}</td>
+      <td class="l" style="font-size:${fs}px;">${f?f.maker:(w.fabricName||'—')}${fabInfo?`<br><span style="font-size:${compact?8:9}px;color:#888;">${fabInfo}</span>`:''}</td>
+      <td style="font-size:${fs}px;">${w.finishW||'—'}</td>
+      <td style="font-size:${fs}px;">${w.finishH||'—'}</td>
+      <td style="font-size:${fs}px;">${w.opening}</td>
+      <td style="font-size:${fs}px;">${w.hook}</td>
+      <td style="font-size:${fs}px;">${w.windows||1}</td>
+      <td style="font-size:${fs}px;">${w.tassel||0}</td>
+      <td style="font-size:${fs}px;">${w.lining||'なし'}</td>
+      <td style="font-size:${fs}px;">${f?(f.hem||'—'):'—'}</td>
+      <td style="font-size:${fs}px;">${r?(r.nb!=null?r.nb+'枚×'+r.cl+'cm':'—'):'—'}</td>
+      <td class="hl" style="font-size:${compact?11:13}px;font-weight:700;">${r?r.yq+'m':'—'}</td>
+    </tr>`;
   }).join('');
-  const tots={};o.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const r=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;if(!r)return;tots[f.maker]=(tots[f.maker]||0)+r.yq;});
+  const tots={};
+  o.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const r=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;if(!r)return;tots[f.maker]=(tots[f.maker]||0)+r.yq;});
+
+  // 全窓の備考をまとめる
+  const allNotes=o.windows.filter(w=>w.note&&w.note.trim()).map(w=>`【${w.label||''}】${w.note.trim()}`).join('\n');
+
   const sumRows=Object.entries(tots).map(([k,v])=>`<div class="preview-summary-row"><span>${k}</span><span style="font-weight:700;">${ru1(v)}m</span></div>`).join('');
   return`
     <div class="preview-title" style="font-size:${compact?15:18}px;">A C M E 専 用 発 注 書</div>
@@ -861,7 +908,14 @@ function buildPreview(o,compact){
       <div style="flex:0 0 auto;text-align:right;font-size:${compact?9:10}px;line-height:1.9;color:#666;">${s.company||'andC株式会社'}<br>${s.address||'〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階'}<br>TEL: ${s.tel||'03-6303-3706'} / FAX: ${s.fax||'03-5726-8198'}</div>
     </div>
     <table class="preview-table"><thead><tr><th>取付場所</th><th>種類</th><th>スタイル</th><th>メーカー生地名</th><th>幅cm</th><th>丈cm</th><th>開き方</th><th>フック</th><th>窓数</th><th>タッセル</th><th>裏地</th><th>裾</th><th>継ぎ巾×裁ち切り</th><th>要尺</th></tr></thead><tbody>${rows}</tbody></table>
-    ${Object.keys(tots).length?`<div class="preview-summary"><div class="preview-summary-title">品番別合計m数</div>${sumRows}</div>`:''}
+    ${Object.keys(tots).length?`
+    <div style="display:flex;gap:10px;margin-top:10px;">
+      <div class="preview-summary" style="flex:1;"><div class="preview-summary-title">品番別合計M数</div>${sumRows}</div>
+      <div style="flex:2;border:1px solid #ddd;border-radius:3px;padding:8px 10px;">
+        <div class="preview-ibox-label" style="font-size:9px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">備考</div>
+        <div style="font-size:${compact?10:11}px;color:#333;white-space:pre-line;">${allNotes||'—'}</div>
+      </div>
+    </div>`:''}
     <div class="preview-sign">内容をご確認いただき、ご署名の上、ご返信をお願いします。<div class="preview-sign-box"></div></div>`;
 }
 
@@ -877,9 +931,16 @@ function exportPDF(){
   const c=order.customer,s=settings,today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'});
   const dL={customer:'お客様直送',store:'店入れ',contractor:'取付業者直送'}[c.delivery]||'お客様直送';
   const sn=document.getElementById('staffSel')?.value||'';
-  const rows=order.windows.map((w,i)=>{const f=FM.find(x=>x.id===w.fabricId);const r=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;return`<tr><td class="left">${w.label||`窓${i+1}`}</td><td>${w.type}</td><td>${w.style}</td><td class="left">${f?f.maker:(w.fabricName||'—')}</td><td>${w.finishW||'—'}</td><td>${w.finishH||'—'}</td><td>${w.opening}</td><td>${w.hook}</td><td>${w.windows||1}</td><td>${w.tassel||0}</td><td>${w.lining||'なし'}</td><td>${f?(f.hem||'—'):'—'}</td><td>${r?(r.nb!=null?r.nb+'枚×'+r.cl+'cm':'—'):'—'}</td><td class="po-yq">${r?r.yq+'m':'—'}</td></tr>`;}).join('');
-  const tots={};order.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const r=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0):null;if(!r)return;tots[f.maker]=(tots[f.maker]||0)+r.yq;});
+  const rows=order.windows.map((w,i)=>{
+    const f=FM.find(x=>x.id===w.fabricId);
+    const r=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;
+    const fabInfo=f?`巾${f.width}cm${f.repeat>0?' / リピート'+f.repeat+'cm':' / リピート無し'}`:'';
+    return`<tr><td class="left">${w.label||`窓${i+1}`}</td><td>${w.type}</td><td>${w.style}</td><td class="left">${f?f.maker:(w.fabricName||'—')}${fabInfo?`<br><span style="font-size:7pt;color:#888;">${fabInfo}</span>`:''}</td><td>${w.finishW||'—'}</td><td>${w.finishH||'—'}</td><td>${w.opening}</td><td>${w.hook}</td><td>${w.windows||1}</td><td>${w.tassel||0}</td><td>${w.lining||'なし'}</td><td>${f?(f.hem||'—'):'—'}</td><td>${r?(r.nb!=null?r.nb+'枚×'+r.cl+'cm':'—'):'—'}</td><td class="po-yq">${r?r.yq+'m':'—'}</td></tr>`;
+  }).join('');
+  const tots={};
+  order.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const r=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;if(!r)return;tots[f.maker]=(tots[f.maker]||0)+r.yq;});
   const sumR=Object.entries(tots).map(([k,v])=>`<tr><td class="left">${k}</td><td class="po-yq">${ru1(v)}m</td></tr>`).join('');
+  const allNotes=order.windows.filter(w=>w.note&&w.note.trim()).map(w=>`【${w.label||''}】${w.note.trim()}`).join('\n');
   document.getElementById('printArea').innerHTML=`
     <div class="po-title">A C M E 専 用 発 注 書</div>
     <div class="po-meta"><div>進弘産業株式会社 御中　FAX: 05-8669-1384</div><div>発行日: ${today}　納期: 午前〆 7日後出荷</div></div>
@@ -890,7 +951,17 @@ function exportPDF(){
     </div>
     <div class="po-st">発注明細</div>
     <table class="po-mt"><thead><tr><th>取付場所</th><th>種類</th><th>スタイル</th><th>メーカー生地名</th><th>幅cm</th><th>丈cm</th><th>開き方</th><th>フック</th><th>窓数</th><th>タッセル</th><th>裏地</th><th>裾</th><th>継ぎ巾×裁ち切り</th><th>要尺(m)</th></tr></thead><tbody>${rows}</tbody></table>
-    ${Object.keys(tots).length?`<div class="po-st">品番別合計m数</div><table class="po-mt" style="width:auto;"><thead><tr><th style="min-width:120px;">生地名</th><th style="min-width:60px;">合計要尺</th></tr></thead><tbody>${sumR}</tbody></table>`:''}
+    ${Object.keys(tots).length?`
+    <div style="display:flex;gap:6mm;margin-top:3mm;">
+      <div style="flex:0 0 auto;">
+        <div class="po-st">品番別合計M数</div>
+        <table class="po-mt" style="width:auto;"><thead><tr><th style="min-width:100px;">生地名</th><th style="min-width:50px;">合計要尺</th></tr></thead><tbody>${sumR}</tbody></table>
+      </div>
+      <div style="flex:1;">
+        <div class="po-st">備考</div>
+        <div style="border:1px solid #aaa;padding:4px 6px;font-size:8pt;min-height:20mm;line-height:1.8;white-space:pre-line;">${allNotes||''}</div>
+      </div>
+    </div>`:''}
     <div class="po-footer"><div class="po-sign">内容をご確認いただき、ご署名の上、ご返信をお願いします。</div><div class="po-sign-box"></div></div>`;
   window.print();
 }
@@ -939,7 +1010,7 @@ async function processFile(file){
     if(data.error)throw new Error(data.error.message||JSON.stringify(data.error));
     const text=data.content.find(x=>x.type==='text')?.text||'';
     const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
-    parsed.windows.forEach(w=>{const f=findF(w.fabricName,w.fabricCode);if(f)w.fabricId=f.id;});
+    parsed.windows.forEach(w=>{const f=findF(w.fabricName,w.fabricCode);if(f)w.fabricId=f.id;w.calcTypeOverride=null;w.note=w.note||'';});
     order={id:'order_'+Date.now(),filename:file.name,status:'ai_done',customer:parsed.customer,windows:parsed.windows};
     winIdx=0;setStep(2);showContent(order);
     showToast('PDF解析完了！内容を確認してください','ok');
