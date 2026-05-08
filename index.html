@@ -795,12 +795,12 @@ function renderWinForm(){
       <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;">
         <span style="color:var(--mute);">計算方式</span>
         <div style="display:flex;align-items:center;gap:8px;">
-          ${override?`<span style="font-size:10px;color:var(--warn);font-family:var(--mono);">手動変更中</span>`:`<span style="font-size:10px;color:var(--mute2);font-family:var(--mono);">自動: ${autoType}</span>`}
-          <select class="field-sel" style="padding:4px 8px;font-size:12px;width:auto;" onchange="uw('calcTypeOverride',this.value||null);renderWinForm();renderPreview();renderSummary()">
+          ${override?'<span style="font-size:10px;color:var(--warn);font-family:var(--mono);">手動変更中</span>':'<span style="font-size:10px;color:var(--mute2);font-family:var(--mono);">自動: '+autoType+'</span>'}
+          <select id="calcTypeOverrideSel" class="field-sel" style="padding:4px 8px;font-size:12px;width:auto;" onchange="setCalcTypeOverride(this.value)">
             <option value="">自動判定</option>
-            <option value="①リピート無し"${(override==='①リピート無し')?' selected':''}>①リピート無し</option>
-            <option value="②リピート有り"${(override==='②リピート有り')?' selected':''}>②リピート有り</option>
-            <option value="③横づかい"${(override==='③横づかい')?' selected':''}>③横づかい</option>
+            <option value="①リピート無し">①リピート無し</option>
+            <option value="②リピート有り">②リピート有り</option>
+            <option value="③横づかい">③横づかい</option>
           </select>
         </div>
       </div>
@@ -815,6 +815,16 @@ function renderWinForm(){
       <div class="field"><label class="field-label">備考</label><textarea class="field-input" rows="3" style="resize:vertical;font-size:13px;" placeholder="在庫メモ・特記事項など..." oninput="uw('note',this.value);renderPreview()">${w.note||''}</textarea></div>
     </div>
   `;
+  // セレクトの選択状態をDOMに反映（テンプレート文字列内では動的にできないため）
+  const sel=document.getElementById('calcTypeOverrideSel');
+  if(sel)sel.value=override||'';
+}
+
+function setCalcTypeOverride(val){
+  uw('calcTypeOverride',val||null);
+  renderWinForm();
+  renderPreview();
+  renderSummary();
 }
 
 // ============================================================
@@ -913,7 +923,7 @@ function buildPreview(o,compact){
       <div class="preview-summary" style="flex:1;"><div class="preview-summary-title">品番別合計M数</div>${sumRows}</div>
       <div style="flex:2;border:1px solid #ddd;border-radius:3px;padding:8px 10px;">
         <div class="preview-ibox-label" style="font-size:9px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">備考</div>
-        <div style="font-size:${compact?10:11}px;color:#333;white-space:pre-line;">${allNotes||'—'}</div>
+        <div style="font-size:${compact?10:11}px;color:#333;white-space:pre-line;">${allNotes||''}</div>
       </div>
     </div>`:''}
     <div class="preview-sign">内容をご確認いただき、ご署名の上、ご返信をお願いします。<div class="preview-sign-box"></div></div>`;
@@ -959,7 +969,7 @@ function exportPDF(){
       </div>
       <div style="flex:1;">
         <div class="po-st">備考</div>
-        <div style="border:1px solid #aaa;padding:4px 6px;font-size:8pt;min-height:20mm;line-height:1.8;white-space:pre-line;">${allNotes||''}</div>
+        <div style="border:1px solid #aaa;padding:4px 6px;font-size:8pt;min-height:20mm;line-height:1.8;white-space:pre-line;">${allNotes}</div>
       </div>
     </div>`:''}
     <div class="po-footer"><div class="po-sign">内容をご確認いただき、ご署名の上、ご返信をお願いします。</div><div class="po-sign-box"></div></div>`;
