@@ -254,25 +254,42 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);height:100
 
 /* 印刷 */
 @media print{
-  @page{size:A4 landscape;margin:10mm 12mm;}
+  @page{size:A4 landscape;margin:8mm 10mm;}
   body,html{background:#fff !important;}
   .hdr,.body,.toast,.ai-ov,.modal-ov{display:none !important;}
-  #printArea{display:block !important;}
-  .po-title{text-align:center;font-size:16pt;font-weight:bold;letter-spacing:.3em;margin-bottom:5mm;border-bottom:2px solid #000;padding-bottom:3mm;}
-  .po-meta{font-size:8pt;display:flex;justify-content:space-between;margin-bottom:3mm;}
-  .po-st{font-size:8pt;font-weight:bold;border-left:3px solid #000;padding-left:4px;margin:3mm 0 2mm;}
-  .po-it{width:100%;border-collapse:collapse;font-size:9pt;margin-bottom:3mm;}
-  .po-it th{background:#f0f0f0;border:1px solid #aaa;padding:3px 6px;font-weight:bold;white-space:nowrap;width:70px;}
+  #printArea{display:block !important;font-family:"Noto Sans JP",sans-serif;}
+  .po-title{text-align:center;font-size:15pt;font-weight:bold;letter-spacing:.25em;margin-bottom:4mm;border-bottom:2px solid #000;padding-bottom:2mm;}
+  .po-meta{font-size:7.5pt;display:flex;justify-content:space-between;margin-bottom:2.5mm;color:#444;}
+  .po-st{font-size:7.5pt;font-weight:bold;border-left:3px solid #000;padding-left:4px;margin:2.5mm 0 1.5mm;}
+  .po-it{width:100%;border-collapse:collapse;font-size:8.5pt;margin-bottom:2.5mm;}
+  .po-it th{background:#f0f0f0;border:1px solid #aaa;padding:3px 6px;font-weight:bold;white-space:nowrap;width:65px;}
   .po-it td{border:1px solid #aaa;padding:3px 6px;}
-  .po-mt{width:100%;border-collapse:collapse;font-size:8pt;}
-  .po-mt th{background:#e8e8e8;border:1px solid #888;padding:3px 2px;text-align:center;font-size:7pt;}
-  .po-mt td{border:1px solid #aaa;padding:3px 2px;text-align:center;vertical-align:middle;}
-  .po-mt td.left{text-align:left;}
-  .po-yq{font-weight:bold;}
-  .po-footer{margin-top:5mm;border-top:1px solid #ccc;padding-top:3mm;}
-  .po-sign{font-size:9pt;line-height:2;margin-bottom:6px;}
-  .po-sign-box{border:1px solid #000;width:60mm;height:18mm;display:inline-block;}
-  .po-sender{font-size:8pt;text-align:right;line-height:1.9;}
+  .po-mt{width:100%;border-collapse:collapse;table-layout:fixed;}
+  .po-mt th{background:#e8e8e8;border:1px solid #999;padding:4px 3px;text-align:center;font-size:7pt;font-weight:bold;white-space:nowrap;overflow:hidden;}
+  .po-mt td{border:1px solid #bbb;padding:4px 3px;text-align:center;vertical-align:middle;font-size:8pt;word-break:break-all;}
+  .po-mt td.left{text-align:left;word-break:normal;}
+  .po-mt td.fabric{text-align:left;font-size:7.5pt;line-height:1.4;}
+  .po-mt td.fabric small{display:block;color:#666;font-size:6.5pt;}
+  .po-yq{font-weight:bold;font-size:9pt;color:#1a6b3c;}
+  .po-footer{margin-top:4mm;border-top:1px solid #ccc;padding-top:2mm;}
+  .po-sign{font-size:8.5pt;line-height:2;margin-bottom:4px;}
+  .po-sign-box{border:1px solid #000;width:55mm;height:16mm;display:inline-block;}
+  .po-sender{font-size:7.5pt;text-align:right;line-height:1.9;}
+  /* 列幅を固定 */
+  .po-mt .col-place{width:12%;}
+  .po-mt .col-type{width:5%;}
+  .po-mt .col-style{width:7%;}
+  .po-mt .col-fabric{width:16%;}
+  .po-mt .col-w{width:5%;}
+  .po-mt .col-h{width:5%;}
+  .po-mt .col-open{width:5%;}
+  .po-mt .col-hook{width:5%;}
+  .po-mt .col-win{width:4%;}
+  .po-mt .col-tassel{width:5%;}
+  .po-mt .col-lining{width:5%;}
+  .po-mt .col-hem{width:8%;}
+  .po-mt .col-cut{width:10%;}
+  .po-mt .col-yq{width:8%;}
 }
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
@@ -965,8 +982,24 @@ function exportPDF(){
     const f=FM.find(x=>x.id===w.fabricId);
     const r=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;
     const dispYq=w.yqOverride!=null?w.yqOverride:r?r.yq:null;
-    const fabInfo=f?`巾${f.width}cm${f.repeat>0?' / リピート'+f.repeat+'cm':' / リピート無し'}`:'';
-    return`<tr><td class="left">${w.label||`窓${i+1}`}</td><td>${w.type}</td><td>${w.style}</td><td class="left">${f?f.maker:(w.fabricName||'—')}${fabInfo?`<br><span style="font-size:7pt;color:#888;">${fabInfo}</span>`:''}</td><td>${w.finishW||'—'}</td><td>${w.finishH||'—'}</td><td>${w.opening}</td><td>${w.hook}</td><td>${w.windows||1}</td><td>${w.tassel||0}</td><td>${w.lining||'なし'}</td><td>${f?(f.hem||'—'):'—'}</td><td>${r?(r.nb!=null?r.nb+'枚×'+r.cl+'cm':'—'):'—'}</td><td class="po-yq">${dispYq!=null?dispYq+'m':'—'}</td></tr>`;
+    const fabInfo=f?`巾${f.width}cm / リピート${f.repeat>0?f.repeat+'cm':'無し'}`:'';
+    const cutInfo=r?(r.nb!=null?`${r.nb}×${r.cl}cm`:'—'):'—';
+    return`<tr>
+      <td class="left col-place">${w.label||`窓${i+1}`}</td>
+      <td class="col-type">${w.type}</td>
+      <td class="col-style">${w.style}</td>
+      <td class="fabric col-fabric">${f?f.maker:(w.fabricName||'—')}${fabInfo?`<small>${fabInfo}</small>`:''}</td>
+      <td class="col-w">${w.finishW||'—'}</td>
+      <td class="col-h">${w.finishH||'—'}</td>
+      <td class="col-open">${w.opening}</td>
+      <td class="col-hook">${w.hook}</td>
+      <td class="col-win">${w.windows||1}</td>
+      <td class="col-tassel">${w.tassel||0}</td>
+      <td class="col-lining">${w.lining||'なし'}</td>
+      <td class="col-hem">${f?(f.hem||'—'):'—'}</td>
+      <td class="col-cut">${cutInfo}</td>
+      <td class="po-yq col-yq">${dispYq!=null?dispYq+'m':'—'}</td>
+    </tr>`;
   }).join('');
   const tots={};
   order.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const r=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;const yq=w.yqOverride!=null?w.yqOverride:r?r.yq:null;if(!yq)return;tots[f.maker]=(tots[f.maker]||0)+yq;});
@@ -981,7 +1014,22 @@ function exportPDF(){
       <div style="flex:0 0 56mm;text-align:right;"><div class="po-st">発注元</div><div class="po-sender">${s.company||'andC株式会社'}<br>${s.address||'〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階'}<br>TEL: ${s.tel||'03-6303-3706'}<br>FAX: ${s.fax||'03-5726-8198'}<br>発注担当: <strong>${sn||'___________'}</strong></div></div>
     </div>
     <div class="po-st">発注明細</div>
-    <table class="po-mt"><thead><tr><th>取付場所</th><th>種類</th><th>スタイル</th><th>メーカー生地名</th><th>幅cm</th><th>丈cm</th><th>開き方</th><th>フック</th><th>窓数</th><th>タッセル</th><th>裏地</th><th>裾</th><th>継ぎ巾×裁ち切り</th><th>要尺(m)</th></tr></thead><tbody>${rows}</tbody></table>
+    <table class="po-mt"><thead><tr>
+      <th class="col-place">取付場所</th>
+      <th class="col-type">種類</th>
+      <th class="col-style">スタイル</th>
+      <th class="col-fabric">メーカー生地名</th>
+      <th class="col-w">幅cm</th>
+      <th class="col-h">丈cm</th>
+      <th class="col-open">開き方</th>
+      <th class="col-hook">フック</th>
+      <th class="col-win">窓数</th>
+      <th class="col-tassel">タッセル</th>
+      <th class="col-lining">裏地</th>
+      <th class="col-hem">裾</th>
+      <th class="col-cut">継ぎ巾×裁ち切り</th>
+      <th class="col-yq">要尺(m)</th>
+    </tr></thead><tbody>${rows}</tbody></table>
     ${Object.keys(tots).length?`
     <div style="display:flex;gap:6mm;margin-top:3mm;">
       <div style="flex:0 0 auto;">
