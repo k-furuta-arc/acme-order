@@ -660,14 +660,51 @@ function calcType(f){
   return'①リピート無し';
 }
 
-function calc(w,h,style,opening,f,hasTassel,overrideType){
+// 裁ち切りを切り上げ整数に
+function ceilInt(v){return Math.ceil(v);}
+
+function calc(w,h,style,opening,f,tasselCount,overrideType,winCount,manualNb,manualCl){
   if(!f||!w||!h)return null;
-  const hd=hida(style),hS=(opening==='片開き')?15:30,vA=f.vA||40,tA=hasTassel?.2:0;
+  const hd=hida(style),hS=(opening==='片開き')?15:30,vA=f.vA||40;
+  const wins=winCount||1;
+  const tA=(tasselCount||0)*0.1; // タッセル1本=0.1m
   const type=overrideType||calcType(f);
-  if(type==='③横づかい'){const raw=(w*hd+hS)/100;return{type:'③横づかい',nb:null,cl:null,yq:ru1(raw+tA),formula:`(${w}×${hd}+${hS})÷100=${ru1(raw)}m${tA>0?` +タッセル${tA}m`:''}`};}
-  if(type==='②リピート有り'){const nb=Math.ceil((w*hd+hS)/f.width),rc=Math.ceil((h+vA)/f.repeat),cl=rc*f.repeat,raw=cl*nb/100;return{type:'②リピート有り',nb,cl,yq:ru1(raw+tA),formula:`継ぎ巾=${nb}枚×裁ち切り=${cl}cm÷100=${ru1(raw)}m${tA>0?` +タッセル${tA}m`:''}`};}
-  const nb=Math.ceil((w*hd+hS)/f.width),cl=h+vA,raw=cl*nb/100;
-  return{type:'①リピート無し',nb,cl,yq:ru1(raw+tA),formula:`ROUNDUP((${w}×${hd}+${hS})÷${f.width},0)=${nb}枚×${cl}cm÷100=${ru1(raw)}m${tA>0?` +タッセル${tA}m`:''}`};
+
+  let nb,cl,rawPerWin,formula,rawBase;
+
+  if(type==='③横づかい'){
+    rawPerWin=(w*hd+hS)/100;
+    nb=null;cl=null;
+    rawBase=manualNb!=null?manualNb:rawPerWin; // 横づかいはnbをm数として扱う
+    const total=ru1(rawBase*wins+tA);
+    const breakdown=tA>0?` (生地${ru1(rawBase*wins)}m + タッセル${tA}m)`:'';
+    formula=`(${w}×${hd}+${hS})÷100=${ru1(rawPerWin)}m × ${wins}窓${breakdown}`;
+    return{type,nb,cl,yq:total,yqBase:ru1(rawBase*wins),tA,wins,formula};
+  }
+
+  if(type==='②リピート有り'){
+    const nbAuto=Math.ceil((w*hd+hS)/f.width);
+    const rc=Math.ceil((h+vA)/f.repeat);
+    const clAuto=rc*f.repeat;
+    nb=manualNb!=null?manualNb:nbAuto;
+    cl=manualCl!=null?ceilInt(manualCl):ceilInt(clAuto);
+    rawPerWin=cl*nb/100;
+    const total=ru1(rawPerWin*wins+tA);
+    const breakdown=tA>0?` (生地${ru1(rawPerWin*wins)}m + タッセル${tA}m)`:'';
+    formula=`継ぎ巾${nb}枚 × 裁ち切り${cl}cm ÷100=${ru1(rawPerWin)}m × ${wins}窓${breakdown}`;
+    return{type,nb,cl,yq:total,yqBase:ru1(rawPerWin*wins),tA,wins,formula};
+  }
+
+  // ①リピート無し
+  const nbAuto=Math.ceil((w*hd+hS)/f.width);
+  const clAuto=h+vA;
+  nb=manualNb!=null?manualNb:nbAuto;
+  cl=manualCl!=null?ceilInt(manualCl):ceilInt(clAuto);
+  rawPerWin=cl*nb/100;
+  const total=ru1(rawPerWin*wins+tA);
+  const breakdown=tA>0?` (生地${ru1(rawPerWin*wins)}m + タッセル${tA}m)`:'';
+  formula=`ROUNDUP((${w}×${hd}+${hS})÷${f.width},0)=${nb}枚 × ${cl}cm ÷100=${ru1(rawPerWin)}m × ${wins}窓${breakdown}`;
+  return{type,nb,cl,yq:total,yqBase:ru1(rawPerWin*wins),tA,wins,formula};
 }
 
 // ============================================================
@@ -766,7 +803,7 @@ function renderWinTabs(){
 }
 function selWin(i){winIdx=i;renderWinTabs();renderWinForm();renderPreview();renderSummary();}
 function addWin(){
-  order.windows.push({label:`窓${order.windows.length+1}`,type:'ドレープ',style:'1.5倍ヒダ',fabricId:null,finishW:null,finishH:null,opening:'両開き',hook:'Aフック',windows:1,tassel:0,lining:'なし',calcTypeOverride:null,yqOverride:null,note:''});
+  order.windows.push({label:`窓${order.windows.length+1}`,type:'ドレープ',style:'1.5倍ヒダ',fabricId:null,finishW:null,finishH:null,opening:'両開き',hook:'Aフック',windows:1,tassel:0,lining:'なし',calcTypeOverride:null,yqOverride:null,manualNb:null,manualCl:null,note:''});
   winIdx=order.windows.length-1;renderWinTabs();renderWinForm();
 }
 function uw(k,v){if(order)order.windows[winIdx][k]=v;}
@@ -799,6 +836,7 @@ function renderWinForm(){
     <div class="g1" style="margin-bottom:12px;">
       <div class="field"><label class="field-label">生地品番 <span class="ai-tag">AI</span></label><select class="field-sel ai" onchange="uw('fabricId',+this.value);uw('calcTypeOverride',null);renderWinForm();renderPreview();renderSummary();renderCheck()"><option value="">-- 選択 --</option>${opts}</select></div>
     </div>
+    ${!w.fabricId&&w.fabricName?`<div style="padding:10px 14px;background:rgba(178,58,58,.08);border:1px solid rgba(178,58,58,.3);border-radius:var(--r);font-size:13px;color:var(--red);margin-bottom:12px;">⚠ 「${w.fabricName}」は品番マスタに未登録です。上のセレクトから該当生地を選択してください。</div>`:''}
     ${f?`<div class="chips">
       <span class="chip"><b>巾</b> ${f.width}cm</span>
       <span class="chip"><b>リピート</b> ${f.repeat>0?f.repeat+'cm':'無し'}</span>
@@ -822,21 +860,38 @@ function renderWinForm(){
         </div>
       </div>
       ${c?`
-      ${c.nb!=null?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;"><span style="color:var(--mute);">継ぎ巾</span><span style="font-family:var(--mono);font-weight:600;">${c.nb} 枚</span></div>`:''}
-      ${c.cl!=null?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;"><span style="color:var(--mute);">裁ち切り</span><span style="font-family:var(--mono);font-weight:600;">${c.cl} cm</span></div>`:''}
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px;">
-        <span style="color:var(--mute);">要尺</span>
+      ${c.nb!=null?`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;">
+        <span style="color:var(--mute);">継ぎ巾</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <input type="number" class="field-input" style="width:80px;padding:4px 8px;font-size:13px;text-align:right;" value="${w.manualNb!=null?w.manualNb:c.nb}" min="1" onchange="uw('manualNb',+this.value);renderWinForm();renderPreview();renderSummary()">
+          <span style="font-size:12px;color:var(--mute);">枚</span>
+          ${w.manualNb!=null?'<button onclick="clearManual(\'manualNb\')" style="font-size:10px;color:var(--mute2);background:none;border:1px solid var(--line);border-radius:3px;padding:2px 6px;cursor:pointer;">自動</button>':''}
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;">
+        <span style="color:var(--mute);">裁ち切り</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <input type="number" class="field-input" style="width:80px;padding:4px 8px;font-size:13px;text-align:right;" value="${w.manualCl!=null?w.manualCl:c.cl}" min="1" onchange="uw('manualCl',+this.value);renderWinForm();renderPreview();renderSummary()">
+          <span style="font-size:12px;color:var(--mute);">cm</span>
+          ${w.manualCl!=null?'<button onclick="clearManual(\'manualCl\')" style="font-size:10px;color:var(--mute2);background:none;border:1px solid var(--line);border-radius:3px;padding:2px 6px;cursor:pointer;">自動</button>':''}
+        </div>
+      </div>
+      `:''}
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;">
+        <span style="color:var(--mute);">要尺合計</span>
         <div style="display:flex;align-items:baseline;gap:10px;">
           ${w.yqOverride!=null?'<span style="font-size:10px;color:var(--warn);font-family:var(--mono);">手動上書き中</span>':''}
           <span style="font-family:var(--mono);font-weight:700;font-size:22px;color:var(--ok);">${w.yqOverride!=null?w.yqOverride:c.yq} m</span>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);">
-        <span style="font-size:12px;color:var(--mute);">手動上書き（空で自動に戻る）</span>
-        <input type="number" id="yqOverrideInput" step="0.1" class="field-input" style="width:100px;padding:5px 8px;font-size:13px;" placeholder="例: 9.1" value="${w.yqOverride!=null?w.yqOverride:''}" oninput="setYqOverride(this.value)">
+      ${(c.tA>0||c.wins>1)?`<div style="padding:4px 0 4px;font-size:11px;color:var(--mute);border-bottom:1px solid var(--line);">内訳: 生地${c.yqBase}m${c.tA>0?' + タッセル'+c.tA+'m ('+w.tassel+'本×0.1m)':''}${c.wins>1?' × '+c.wins+'窓':''}</div>`:''}
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 0;">
+        <span style="font-size:12px;color:var(--mute);">要尺を手動上書き（空で自動に戻る）</span>
+        <input type="number" id="yqOverrideInput" step="0.1" class="field-input" style="width:90px;padding:5px 8px;font-size:13px;" placeholder="例: 9.1" value="${w.yqOverride!=null?w.yqOverride:''}" oninput="setYqOverride(this.value)">
         <span style="font-size:12px;color:var(--mute);">m</span>
       </div>
-      <div style="font-size:10px;color:var(--mute2);font-family:var(--mono);margin-top:8px;padding-top:8px;border-top:1px solid var(--line);line-height:1.9;">${c.formula}</div>
+      <div style="font-size:10px;color:var(--mute2);font-family:var(--mono);margin-top:6px;padding-top:6px;border-top:1px solid var(--line);line-height:1.9;">${c.formula}</div>
       `:`<div style="padding:12px 0;font-size:13px;color:var(--warn);">品番とサイズを入力すると自動計算されます</div>`}
     </div>
     <div class="g1" style="margin-top:12px;">
@@ -846,6 +901,13 @@ function renderWinForm(){
   // セレクトの選択状態をDOMに反映（テンプレート文字列内では動的にできないため）
   const sel=document.getElementById('calcTypeOverrideSel');
   if(sel)sel.value=override||'';
+}
+
+function clearManual(key){
+  uw(key,null);
+  renderWinForm();
+  renderPreview();
+  renderSummary();
 }
 
 function setCalcTypeOverride(val){
@@ -869,7 +931,7 @@ function renderSummary(){
   if(!order){document.getElementById('sumWins').innerHTML='<div style="padding:20px 16px;font-size:13px;color:var(--mute2);text-align:center;">案件を読み込むと<br>ここに表示されます</div>';document.getElementById('sumTotal').style.display='none';return;}
   document.getElementById('sumWins').innerHTML=order.windows.map((w,i)=>{
     const f=FM.find(x=>x.id===w.fabricId);
-    const c=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;
+    const c=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel,w.calcTypeOverride,w.windows,w.manualNb,w.manualCl):null;
     const dispYq=w.yqOverride!=null?w.yqOverride:c?c.yq:null;
     return`<div class="sum-win">
       <div class="sum-win-label">${w.label||`窓${i+1}`}</div>
@@ -879,7 +941,7 @@ function renderSummary(){
     </div>`;
   }).join('');
   const tots={};
-  order.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const c=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;const yq=w.yqOverride!=null?w.yqOverride:c?c.yq:null;if(!yq)return;tots[f.maker]=(tots[f.maker]||0)+yq;});
+  order.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const c=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel,w.calcTypeOverride,w.windows,w.manualNb,w.manualCl):null;const yq=w.yqOverride!=null?w.yqOverride:c?c.yq:null;if(!yq)return;tots[f.maker]=(tots[f.maker]||0)+yq;});
   if(Object.keys(tots).length){
     document.getElementById('sumTotal').style.display='block';
     document.getElementById('sumTotal').innerHTML='<div style="font-size:11px;color:var(--mute);margin-bottom:10px;">合計</div>'+
@@ -902,6 +964,10 @@ function renderCheck(){
     if(f&&f.note)issues.push(`${label}: ${f.note}`);
   });
   if(!order.customer.name)issues.push('顧客名が未入力');
+  order.windows.forEach((w,i)=>{
+    const label=w.label||`窓${i+1}`;
+    if(!w.fabricId&&w.fabricName)issues.push(`${label}: 「${w.fabricName}」は品番マスタ未登録`);
+  });
   document.getElementById('checkCnt').textContent=issues.length+'件';
   document.getElementById('checkBody').innerHTML=issues.length===0
     ?'<div class="check-ok">✓ AI抽出と元PDFの差異はありません</div>'
@@ -919,7 +985,7 @@ function buildPreview(o,compact){
   const fs=compact?10:12;
   const rows=o.windows.map((w,i)=>{
     const f=FM.find(x=>x.id===w.fabricId);
-    const r=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;
+    const r=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel,w.calcTypeOverride,w.windows,w.manualNb,w.manualCl):null;
     const dispYq=w.yqOverride!=null?w.yqOverride:r?r.yq:null;
     const fabInfo=f?`巾${f.width}cm${f.repeat>0?' / リピート'+f.repeat+'cm':' / リピート無し'}`:'';
     return`<tr>
@@ -940,7 +1006,7 @@ function buildPreview(o,compact){
     </tr>`;
   }).join('');
   const tots={};
-  o.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const r=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;const yq=w.yqOverride!=null?w.yqOverride:r?r.yq:null;if(!yq)return;tots[f.maker]=(tots[f.maker]||0)+yq;});
+  o.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const r=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel,w.calcTypeOverride,w.windows,w.manualNb,w.manualCl):null;const yq=w.yqOverride!=null?w.yqOverride:r?r.yq:null;if(!yq)return;tots[f.maker]=(tots[f.maker]||0)+yq;});
 
   // 全窓の備考をまとめる
   const allNotes=o.windows.filter(w=>w.note&&w.note.trim()).map(w=>`【${w.label||''}】${w.note.trim()}`).join('\n');
@@ -980,15 +1046,16 @@ function exportPDF(){
   const sn=document.getElementById('staffSel')?.value||'';
   const rows=order.windows.map((w,i)=>{
     const f=FM.find(x=>x.id===w.fabricId);
-    const r=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;
+    const r=(w.finishW&&w.finishH&&f)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel,w.calcTypeOverride,w.windows,w.manualNb,w.manualCl):null;
     const dispYq=w.yqOverride!=null?w.yqOverride:r?r.yq:null;
     const fabInfo=f?`巾${f.width}cm / リピート${f.repeat>0?f.repeat+'cm':'無し'}`:'';
     const cutInfo=r?(r.nb!=null?`${r.nb}×${r.cl}cm`:'—'):'—';
+    const makerName=f?f.maker:w.fabricName?`⚠${w.fabricName}(要確認)`:'—';
     return`<tr>
       <td class="left col-place">${w.label||`窓${i+1}`}</td>
       <td class="col-type">${w.type}</td>
       <td class="col-style">${w.style}</td>
-      <td class="fabric col-fabric">${f?f.maker:(w.fabricName||'—')}${fabInfo?`<small>${fabInfo}</small>`:''}</td>
+      <td class="fabric col-fabric" style="${!f&&w.fabricName?'color:#B23A3A;font-weight:bold;':''}">${makerName}${f&&fabInfo?`<small>${fabInfo}</small>`:''}</td>
       <td class="col-w">${w.finishW||'—'}</td>
       <td class="col-h">${w.finishH||'—'}</td>
       <td class="col-open">${w.opening}</td>
@@ -1002,7 +1069,7 @@ function exportPDF(){
     </tr>`;
   }).join('');
   const tots={};
-  order.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const r=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel>0,w.calcTypeOverride):null;const yq=w.yqOverride!=null?w.yqOverride:r?r.yq:null;if(!yq)return;tots[f.maker]=(tots[f.maker]||0)+yq;});
+  order.windows.forEach(w=>{const f=FM.find(x=>x.id===w.fabricId);if(!f)return;const r=(w.finishW&&w.finishH)?calc(w.finishW,w.finishH,w.style,w.opening,f,w.tassel,w.calcTypeOverride,w.windows,w.manualNb,w.manualCl):null;const yq=w.yqOverride!=null?w.yqOverride:r?r.yq:null;if(!yq)return;tots[f.maker]=(tots[f.maker]||0)+yq;});
   const sumR=Object.entries(tots).map(([k,v])=>`<tr><td class="left">${k}</td><td class="po-yq">${ru1(v)}m</td></tr>`).join('');
   const allNotes=order.windows.filter(w=>w.note&&w.note.trim()).map(w=>`【${w.label||''}】${w.note.trim()}`).join('\n');
   document.getElementById('printArea').innerHTML=`
@@ -1089,7 +1156,7 @@ async function processFile(file){
     if(data.error)throw new Error(data.error.message||JSON.stringify(data.error));
     const text=data.content.find(x=>x.type==='text')?.text||'';
     const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
-    parsed.windows.forEach(w=>{const f=findF(w.fabricName,w.fabricCode);if(f)w.fabricId=f.id;w.calcTypeOverride=null;w.yqOverride=null;w.note=w.note||'';});
+    parsed.windows.forEach(w=>{const f=findF(w.fabricName,w.fabricCode);if(f)w.fabricId=f.id;w.calcTypeOverride=null;w.yqOverride=null;w.manualNb=null;w.manualCl=null;w.note=w.note||'';});
     order={id:'order_'+Date.now(),filename:file.name,status:'ai_done',customer:parsed.customer,windows:parsed.windows};
     winIdx=0;setStep(2);showContent(order);
     showToast('PDF解析完了！内容を確認してください','ok');
