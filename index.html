@@ -1002,7 +1002,10 @@ function buildPreview(o,compact){
       <td style="font-size:${fs}px;">${w.lining||'なし'}</td>
       <td style="font-size:${fs}px;">${f?(f.hem||'—'):'—'}</td>
       <td style="font-size:${fs}px;">${r?(r.nb!=null?r.nb+'枚×'+r.cl+'cm':'—'):'—'}</td>
-      <td class="hl" style="font-size:${compact?11:13}px;font-weight:700;">${w.yqOverride!=null?w.yqOverride+'m':r?r.yq+'m':'—'}</td>
+      <td class="hl" style="font-size:${compact?11:13}px;font-weight:700;vertical-align:top;">
+        <div>${w.yqOverride!=null?w.yqOverride+'m':r?r.yq+'m':'—'}</div>
+        ${r&&r.tA>0?`<div style="font-size:${compact?8:9}px;font-weight:400;color:#555;margin-top:2px;line-height:1.5;">ドレープ ${r.yqBase}m<br>タッセル ${r.tA}m</div>`:''}
+      </td>
     </tr>`;
   }).join('');
   const tots={};
