@@ -992,7 +992,7 @@ function buildPreview(o,compact){
       <td class="l" style="font-size:${fs}px;">${w.label||`窓${i+1}`}</td>
       <td style="font-size:${fs}px;">${w.type}</td>
       <td style="font-size:${fs}px;">${w.style}</td>
-      <td class="l" style="font-size:${fs}px;">${f?f.maker:(w.fabricName||'—')}${fabInfo?`<br><span style="font-size:${compact?8:9}px;color:#888;">${fabInfo}</span>`:''}</td>
+      <td class="l" style="font-size:${fs}px;${!f&&w.fabricName?'color:#B23A3A;':''}">${f?f.maker+(fabInfo?`<br><span style="font-size:${compact?8:9}px;color:#888;">${fabInfo}</span>`:''):w.fabricName?'⚠ 品番未選択':'—'}</td>
       <td style="font-size:${fs}px;">${w.finishW||'—'}</td>
       <td style="font-size:${fs}px;">${w.finishH||'—'}</td>
       <td style="font-size:${fs}px;">${w.opening}</td>
@@ -1055,7 +1055,7 @@ function exportPDF(){
       <td class="left col-place">${w.label||`窓${i+1}`}</td>
       <td class="col-type">${w.type}</td>
       <td class="col-style">${w.style}</td>
-      <td class="fabric col-fabric" style="${!f&&w.fabricName?'color:#B23A3A;font-weight:bold;':''}">${makerName}${f&&fabInfo?`<small>${fabInfo}</small>`:''}</td>
+      <td class="fabric col-fabric" style="${!f&&w.fabricName?'color:#B23A3A;':''}">${f?f.maker+(fabInfo?`<small>${fabInfo}</small>`:''):w.fabricName?'⚠ 品番未選択':'—'}</td>
       <td class="col-w">${w.finishW||'—'}</td>
       <td class="col-h">${w.finishH||'—'}</td>
       <td class="col-open">${w.opening}</td>
