@@ -550,8 +550,8 @@ select option{background:var(--bg);}
           <div class="sgrp-title">発注元情報</div>
           <div class="srow"><label class="slabel">会社名</label><input type="text" class="sinp" id="sc" value="andC株式会社"></div>
           <div class="srow"><label class="slabel">住所</label><input type="text" class="sinp" id="sa" value="〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階"></div>
-          <div class="srow"><label class="slabel">TEL</label><input type="text" class="sinp" id="st" value="03-6303-3706"></div>
-          <div class="srow"><label class="slabel">FAX</label><input type="text" class="sinp" id="sf" value="03-5726-8198"></div>
+          <div class="srow"><label class="slabel">TEL</label><input type="text" class="sinp" id="st" value="03-4243-1516"></div>
+          <div class="srow"><label class="slabel">FAX</label><input type="text" class="sinp" id="sf" value="03-6701-1859"></div>
           <button class="ssave" onclick="saveSettings()">保存</button>
         </div>
       </div>
@@ -1021,7 +1021,7 @@ function buildPreview(o,compact){
     <div class="preview-inforow">
       <div class="preview-ibox"><div class="preview-ibox-label">お客様情報</div><div style="font-weight:700;font-size:${compact?12:14}px;">${c.name||'—'} 様</div><div style="color:#555;font-size:${compact?10:11}px;margin-top:2px;">〒${c.zip||''} ${c.address||''}</div><div style="font-size:${compact?10:11}px;">TEL: ${c.tel||'—'}</div></div>
       <div class="preview-ibox"><div class="preview-ibox-label">配送・担当</div><div style="font-size:${compact?11:12}px;">${c.store||'—'} / ${c.staff||'—'} 様</div><div style="font-size:${compact?10:11}px;">${dL}${c.delivdate?' '+c.delivdate:''}</div>${sn?`<div style="font-size:${compact?10:11}px;margin-top:4px;padding-top:4px;border-top:1px solid #eee;">発注担当: <strong>${sn}</strong></div>`:''}</div>
-      <div style="flex:0 0 auto;text-align:right;font-size:${compact?9:10}px;line-height:1.9;color:#666;">${s.company||'andC株式会社'}<br>${s.address||'〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階'}<br>TEL: ${s.tel||'03-6303-3706'} / FAX: ${s.fax||'03-5726-8198'}</div>
+      <div style="flex:0 0 auto;text-align:right;font-size:${compact?9:10}px;line-height:1.9;color:#666;">${s.company||'andC株式会社'}<br>${s.address||'〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階'}<br>TEL: ${s.tel||'03-4243-1516'} / FAX: ${s.fax||'03-6701-1859'}</div>
     </div>
     <table class="preview-table"><thead><tr><th>取付場所</th><th>種類</th><th>スタイル</th><th>メーカー生地名</th><th>幅cm</th><th>丈cm</th><th>開き方</th><th>フック</th><th>窓数</th><th>タッセル</th><th>裏地</th><th>裾</th><th>継ぎ巾×裁ち切り</th><th>要尺</th></tr></thead><tbody>${rows}</tbody></table>
     ${Object.keys(tots).length?`
@@ -1084,7 +1084,7 @@ function exportPDF(){
     <div style="display:flex;gap:8mm;margin-bottom:4mm;">
       <div style="flex:1;"><div class="po-st">お客様情報</div><table class="po-it"><tr><th>お客様名</th><td><strong>${c.name||'—'} 様</strong>（${c.kana||''}）</td></tr><tr><th>住所</th><td>〒${c.zip||''} ${c.address||''}</td></tr><tr><th>TEL</th><td>${c.tel||''}</td></tr></table></div>
       <div style="flex:1;"><div class="po-st">配送情報</div><table class="po-it"><tr><th>店舗</th><td>${c.store||''}</td></tr><tr><th>担当者</th><td>${c.staff||''} 様</td></tr><tr><th>配送</th><td>${dL}${c.delivdate?' '+c.delivdate:''}</td></tr></table></div>
-      <div style="flex:0 0 56mm;text-align:right;"><div class="po-st">発注元</div><div class="po-sender">${s.company||'andC株式会社'}<br>${s.address||'〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階'}<br>TEL: ${s.tel||'03-6303-3706'}<br>FAX: ${s.fax||'03-5726-8198'}<br>発注担当: <strong>${sn||'___________'}</strong></div></div>
+      <div style="flex:0 0 56mm;text-align:right;"><div class="po-st">発注元</div><div class="po-sender">${s.company||'andC株式会社'}<br>${s.address||'〒150-0011 東京都渋谷区東3-16-1 ベルザ恵比寿4階'}<br>TEL: ${s.tel||'03-4243-1516'}<br>FAX: ${s.fax||'03-6701-1859'}<br>発注担当: <strong>${sn||'___________'}</strong></div></div>
     </div>
     <div class="po-st">発注明細</div>
     <table class="po-mt"><thead><tr>
