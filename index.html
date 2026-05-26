@@ -1065,7 +1065,10 @@ function exportPDF(){
       <td class="col-lining">${w.lining||'なし'}</td>
       <td class="col-hem">${f?(f.hem||'—'):'—'}</td>
       <td class="col-cut">${cutInfo}</td>
-      <td class="po-yq col-yq">${dispYq!=null?dispYq+'m':'—'}</td>
+      <td class="po-yq col-yq" style="vertical-align:top;">
+        <div>${dispYq!=null?dispYq+'m':'—'}</div>
+        ${r&&r.tA>0?`<div style="font-size:6.5pt;font-weight:400;color:#555;margin-top:2px;line-height:1.6;">ドレープ ${r.yqBase}m<br>タッセル ${r.tA}m</div>`:''}
+      </td>
     </tr>`;
   }).join('');
   const tots={};
@@ -1150,7 +1153,17 @@ async function processFile(file){
     const resp=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-opus-4-5',max_tokens:2000,messages:[{role:'user',content:[
         {type:mt==='application/pdf'?'document':'image',source:{type:'base64',media_type:mt,data:b64}},
-        {type:'text',text:`このACMEカーテン発注書からJSON形式で情報を抽出してください。JSON以外は出力しないでください。品名はSTANTON/LUCIO/GLASSELL/LEAF/OVERSHOTなどのACMEブランド名か3桁品番数字で記載されることが多いです。スタイルは「1.5倍ヒダ」「2倍ヒダ」「フラット」のいずれか。仕上がりサイズは「仕上がり」欄の幅×丈を使ってください。\n{"customer":{"name":"","kana":"","tel":"","zip":"","address":"","store":"","staff":"","delivery":"customer/store/contractor","delivdate":""},"windows":[{"label":"①掃き出し窓など","type":"ドレープ or レース","style":"1.5倍ヒダ/2倍ヒダ/フラット","fabricName":"品名","fabricCode":"品番数字のみ","finishW":幅数値,"finishH":丈数値,"opening":"両開き or 片開き","hook":"Aフック or Bフック","windows":窓数,"tassel":タッセル本数,"lining":"なし/裏地種別"}]}`}
+        {type:'text',text:`このACMEカーテン発注書からJSON形式で情報を抽出してください。JSON以外は出力しないでください。
+
+【重要ルール】
+- fabricNameは発注書に記載されている文字をそのままコピーしてください。絶対に推測・変換・補完しないでください。
+- 品名が読み取れない・不明な場合はfabricNameを空文字にしてください。
+- fabricCodeは3桁の品番数字のみ。記載がなければ空文字にしてください。
+- ACMEブランド名（STANTON/LUCIO/GLASSELL/LEAF/OVERSHOTなど）が記載されていればそのまま取得してください。
+- スタイルは「1.5倍ヒダ」「2倍ヒダ」「フラット」のいずれか。「床に垂らさない」などの表記は「フラット」として扱ってください。
+- 仕上がりサイズは「仕上がり」欄の幅×丈を使ってください。
+
+{"customer":{"name":"","kana":"","tel":"","zip":"","address":"","store":"","staff":"","delivery":"customer/store/contractor","delivdate":""},"windows":[{"label":"①掃き出し窓など","type":"ドレープ or レース","style":"1.5倍ヒダ/2倍ヒダ/フラット","fabricName":"発注書記載の品名をそのまま","fabricCode":"品番数字のみ","finishW":幅数値,"finishH":丈数値,"opening":"両開き or 片開き","hook":"Aフック or Bフック","windows":窓数,"tassel":タッセル本数,"lining":"なし/裏地種別"}]}`}
       ]}]})});
     const data=await resp.json();hideAI();
     if(data.error)throw new Error(data.error.message||JSON.stringify(data.error));
